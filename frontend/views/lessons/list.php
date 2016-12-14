@@ -13,23 +13,29 @@ foreach($schools as $school){
 		<?= (isset($postalcodes))? ' (' . implode(', ', array_unique(ArrayHelper::getColumn( $schools_venues[ $school->id ] , 'postalcode') )) . ')' : '' ?>
 	</h3>
 	<p class="school-info">
-		<?= ( $school->phone )? 'Tel: ' . $school->phone . '<br>':'' ?>
-		<?= ( $school->email )? 'Email : <a href="mailto:' . $school->email . '">' . $school->email . '</a><br>':'' ?>
-		<?= ( $school->facebook )? 'Facebook : <a href="' . $school->facebook . '">' . $school->facebook . '</a><br>':'' ?>
-		<?= ( $school->website )? '<a href="' . $school->website . '">' . $school->website . '</a><br>':'' ?>
+		<?= ( $school->phone )? '<a href="tel:' . $school->phone . '"><i class="fa fa-phone-square" aria-hidden="true"></i> ' . $school->phone . '</a> ':'' ?>
+		<?= ( $school->email )? '<a href="mailto:' . $school->email . '"><i class="fa fa-envelope" aria-hidden="true"></i> ' . $school->email . '</a><br>':'' ?>
+		<?= ( $school->facebook )? '<a href="' . $school->facebook . '"><i class="fa fa-facebook-square" aria-hidden="true"></i> On Facebook</a> ':'' ?>
+		<?= ( $school->website )? '<a href="' . $school->website . '"><i class="fa fa-globe" aria-hidden="true"></i> Website</a>':'' ?>
 	</p>
 	<?php
 	foreach ($schools_venues[ $school->id ] as $venue) {
 		?>
 		<h4><?= $venue->name ?>, <?= $venue->address ?></h4>
-		<table class="table striped condensed table-sm">
+		<table class="lessons table striped condensed table-sm">
 		<?php
 		foreach ($venues_lessons[ $venue->id ] as $lesson) {
 			?>
 			<tr>
-				<td class="dayname"><?= $lesson->dayname ?></td>
+				<td class="dayname">
+					<span class="sm"><?= $lesson->abbrevdayname ?></span>
+					<span class="lg"><?= $lesson->dayname ?></span>
+				</td>
 				<td class="starthour"><?= $lesson->start_hour ?></td>
-				<td class="levelname"><?= $lesson->levelname ?></td>
+				<td class="levelname">
+					<span class="sm"><?= $lesson->abbrevlevelname ?></span>
+					<span class="lg"><?= $lesson->levelname ?></span>
+				</td>
 				<td class="teachers"><?= $lesson->teachers ?></td>
 			</tr>
 			<?php

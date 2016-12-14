@@ -69,6 +69,22 @@ class Lesson extends ActiveRecord{
 	}
 
 	/**
+	 * Return a list of days for the dropdown in the edition form
+	 * @return array
+	 */
+	public static function getAbbrevDaysList(){
+		return array(
+			'1' => 'Mon.',
+			'2' => 'Tues.',
+			'3' => 'Wed.',
+			'4' => 'Thur.',
+			'5' => 'Fri.',
+			'6' => 'Sat.',
+			'0' => 'Sun.',
+		);
+	}
+
+	/**
 	 * Get a readable day name
 	 * @return string
 	 */
@@ -76,19 +92,51 @@ class Lesson extends ActiveRecord{
 		return self::getDaysList()[ $this->day ];
 	}
 
+	/**
+	 * Get an abbreviated day name
+	 * @return string
+	 */
+	public function getAbbrevDayname(){
+		return self::getAbbrevDaysList()[ $this->day ];
+	}
+
+	/**
+	 * The list of levels
+	 * @return array
+	 */
 	public static function getLevelsList(){
 		return array(
-			"0" => "Absolute Beginners (no experience)",
-			"1" => "Beginners (< 1 year)",
-			"2" => "Intermediates (1-2 years)",
-			"3" => "Intermediates advanced (2-3 years)",
-			"4" => "Advanced (3-5 years)",
-			"5" => "Experts (> 5 years)",
-			"P" => "Practica (for students)",
+			"0" => "Absolute Beginners",
+			"1" => "Beginners",
+			"2" => "Intermediates",
+			"3" => "Advanced Intermediates",
+			"4" => "Advanced",
+			"5" => "Experts",
+			"P" => "Practica",
 			"A" => "All levels",
 			"T" => "Technique",
 			"TW" => "Technique for women",
 			"TM" => "Technique for men",
+		);
+	}
+
+	/**
+	 * The list of levels abbreviated
+	 * @return array
+	 */
+	public static function getAbbrevLevelsList(){
+		return array(
+			"0" => "Abs. Beg.",
+			"1" => "Beginners",
+			"2" => "Inter.",
+			"3" => "Adv. inter.",
+			"4" => "Adv.",
+			"5" => "Experts",
+			"P" => "Pract.",
+			"A" => "All levels",
+			"T" => "Tech.",
+			"TW" => "Tech. 4 women",
+			"TM" => "Tech. 4 men",
 		);
 	}
 
@@ -98,5 +146,13 @@ class Lesson extends ActiveRecord{
 	 */
 	public function getLevelname(){
 		return self::getLevelsList()[ $this->level ];
+	}
+
+	/**
+	 * Get an abbreviated level name
+	 * @return string
+	 */
+	public function getAbbrevLevelname(){
+		return self::getAbbrevLevelsList()[ $this->level ];
 	}
 }
