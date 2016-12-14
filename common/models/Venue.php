@@ -57,7 +57,7 @@ class Venue extends ActiveRecord{
     public function getSchoolVenues(){
     	$user = Yii::$app->user->identity;
         $school = $user->school;
-    	$venues = Venue::find(['school_id' => $school->id])->asArray()->all();
+    	$venues = Venue::find()->where(['school_id' => $school->id])->asArray()->all();
 
     	return $venuesArray = ArrayHelper::map( $venues , 'id', 'name');
     }
