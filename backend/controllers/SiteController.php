@@ -30,7 +30,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index','import'],
+                        'actions' => ['logout', 'index','import','set-password','send-accesses'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -171,7 +171,12 @@ class SiteController extends Controller
         }
     }
 
-    function generate_password($length = 8) {
+    /**
+     * Generate a random password for a user
+     * @param  integer $length length of the password
+     * @return string         The password
+     */
+    private function generate_password($length = 8) {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $count = mb_strlen($chars);
 
@@ -181,5 +186,33 @@ class SiteController extends Controller
         }
 
         return $result;
+    }
+
+
+    /**
+     * Set a new password for a user
+     * @param  integer $id The id of the user you wanna set a password to
+     */
+    public function actionSetPassword( $id ){
+        $user = User::find()->where(['id' => $id])->one();
+        if( $user ){
+            $user->password = $user->clear_password = $this->generate_password();
+            $user->save();
+        }
+    }
+
+    /**
+     * Send the accesses to the backend
+     */
+    public function actionSendAccesses(){
+        $users = User::find()->where(['!=','clear_password',''])->all();
+        foreach ($users as $user) {
+            Yii::$app->mailer->compose('access', ['user' => $user])
+                ->setFrom('milonga@milonga.be')
+                ->setTo('milonga@milonga.be')
+                ->setSubject('Milonga.be : update your regular classes')
+                ->send();
+        }
+        
     }
 }
