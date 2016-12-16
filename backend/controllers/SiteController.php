@@ -212,6 +212,8 @@ class SiteController extends Controller
                 ->setTo('milonga@milonga.be')
                 ->setSubject('Milonga.be : update your regular classes')
                 ->send();
+            echo 'Sent access to '. $user->email.'<br>';
+            break;
         }
         
     }

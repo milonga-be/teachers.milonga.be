@@ -12,7 +12,7 @@ Password : <?= $user->clear_password ?><br>
 </p>
 <p>
 I hope you will enjoy using this new tool !<br>
-I'll stay available for any question you might have,
+I stay available for any question you might have,
 </p>
 <p>
 --<br>

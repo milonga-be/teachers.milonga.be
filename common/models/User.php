@@ -195,4 +195,13 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasOne(School::className(), ['id' => 'school_id'])
                         ->viaTable('user_school', ['user_id' => 'id']);
     }
+
+    /**
+     * Returns the schools of the user
+     * @return School
+     */
+    public function getSchools(){
+        return $this->hasMany(School::className(), ['id' => 'school_id'])
+                        ->viaTable('user_school', ['user_id' => 'id']);
+    }
 }

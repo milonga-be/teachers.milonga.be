@@ -37,18 +37,6 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => true,
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => 'localhost',
-                'username' => 'username',
-                'password' => 'password',
-                'port' => '587',
-                'encryption' => 'tls',
-            ],
-        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,

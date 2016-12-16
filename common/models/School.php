@@ -73,4 +73,15 @@ class School extends ActiveRecord{
     public function getDayVenues( $day ){
         return $this->getVenues()->joinWith('lessons')->where(['IN','lesson.day',$day ])->all();
     }
+
+    /**
+     * Get a list of the school venues
+     * @return array
+     */
+    public static function getSchools(){
+        $user = Yii::$app->user->identity;
+        $schools = $user->getSchools()->asArray()->all();
+
+        return $schoolsArray = ArrayHelper::map( $venues , 'id', 'name');
+    }
 }

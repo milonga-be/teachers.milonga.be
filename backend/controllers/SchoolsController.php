@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\Lesson;
 use common\models\School;
+use yii\data\ActiveDataProvider;
 
 /**
  * Site controller
@@ -36,7 +37,14 @@ class SchoolsController extends Controller{
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $user = Yii::$app->user->identity;
+        $query = $user->getSchools();
+
+        $provider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        return $this->render('index',['dataProvider' => $provider]);
     }
 
     /**
