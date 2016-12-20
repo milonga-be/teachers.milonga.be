@@ -209,11 +209,11 @@ class SiteController extends Controller
         foreach ($users as $user) {
             Yii::$app->mailer->compose('access', ['user' => $user])
                 ->setFrom('milonga@milonga.be')
-                ->setTo('milonga@milonga.be')
-                ->setSubject('Milonga.be : update your regular classes')
+                ->setTo($user->email)
+                ->setCc('milonga@milonga.be')
+                ->setSubject('Milonga.be : update your regular classes for January')
                 ->send();
             echo 'Sent access to '. $user->email.'<br>';
-            break;
         }
         
     }

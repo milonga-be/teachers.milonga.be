@@ -4,6 +4,7 @@ namespace common\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 
 class Venue extends ActiveRecord{
 
@@ -30,7 +31,7 @@ class Venue extends ActiveRecord{
      * @return array
      */
     public function getLessons(){
-        return $this->hasMany(Lesson::className(), ['venue_id' => 'id']);
+        return $this->hasMany(Lesson::className(), ['venue_id' => 'id'])->orderBy(new Expression(' MOD( `day` + 7 , 8 ) ASC,`start_hour` ASC') );
     }
 
     /* Returns the lessons for a certain level
