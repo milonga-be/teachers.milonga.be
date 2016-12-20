@@ -48,12 +48,3 @@ foreach($schools as $school){
 	</div>
 	<?php
 }
-
-$this->registerJs(
-	'
-	if(window.parent && window.parent.resizeIframe){
-		window.parent.resizeIframe();
-	}',
-	View::POS_LOAD
-);
-?>

@@ -19,7 +19,7 @@ class LessonsController extends Controller{
 	 * @return string
 	 */
 	public function actionPostalcodes( array $postalcodes = array(), $from = null , $to = null ){
-
+		session_write_close();
 		if($from && $to){
 			$venues = Venue::find()->where(['>=','postalcode',$from])->andWhere(['<=','postalcode',$to])->all();
 			$postalcodes = ArrayHelper::merge( ArrayHelper::getColumn($venues, 'postalcode'), $postalcodes );
@@ -53,7 +53,7 @@ class LessonsController extends Controller{
 	 * @return string
 	 */
 	public function actionLevel( $level ){
-
+		session_write_close();
 		$schools = School::find()->joinWith('lessons')->where(['=','lesson.level',$level ])->orderBy('name ASC')->all();
 
 		foreach ($schools as $school) {
@@ -78,7 +78,7 @@ class LessonsController extends Controller{
 	 * @return string
 	 */
 	public function actionDay( $day ){
-
+		session_write_close();
 		$schools = School::find()->joinWith('lessons')->where(['=','lesson.day',$day ])->orderBy('name ASC')->all();
 
 		foreach ($schools as $school) {
