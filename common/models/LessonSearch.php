@@ -6,6 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Lesson;
+use yii\db\Expression;
 
 /**
  * LessonsSearch represents the model behind the search form about `common\models\Lesson`.
@@ -40,9 +41,9 @@ class LessonSearch extends Lesson
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-			'sort'		=> [				
-				'defaultOrder'	=> ['day' => SORT_ASC]
-			]
+			// 'sort'		=> [				
+			// 	'defaultOrder'	=> [new Expression(' MOD( `day` + 7 , 8 ) ASC,`start_hour` ASC')]
+			// ]
         ]);
 
         $this->load($params);
@@ -66,6 +67,8 @@ class LessonSearch extends Lesson
         $query->andFilterWhere(['like', 'teachers', $this->teachers]);
         $query->andFilterWhere(['=', 'level', $this->level]);
         $query->andFilterWhere(['=', 'day', $this->day]);
+        if( !isset($_GET['sort']) )
+            $query->orderBy(new Expression(' MOD( `day` + 7 , 8 ) ASC,`start_hour` ASC') );
       
         return $dataProvider;
     }
