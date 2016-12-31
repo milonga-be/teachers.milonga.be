@@ -22,7 +22,7 @@ class AgendaController extends Controller{
 
 		$today = new \Datetime();
 		$endPeriod = clone $today;
-		$endPeriod->modify( ($weeks * 7) . ' days');
+		$endPeriod->modify( ($weeks * 7 + 1) . ' days');
 
 		$json_array = $this->getFromGoogleApi( 'https://www.googleapis.com/calendar/v3/calendars/' . $google_calendar_id . '/events?key=' . $google_api_key . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $today->format('c') ) . '&timeMax=' . urlencode( $endPeriod->format('c') )  );
 

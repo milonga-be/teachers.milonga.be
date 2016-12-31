@@ -14,7 +14,7 @@ function htmlize($text){
 }
 $i = 0;
 ?>
-<div class="events">
+<div class="events" data-nb="<?= sizeof($events) ?>">
 <?php
 foreach ($events as $event) {
 	?>
