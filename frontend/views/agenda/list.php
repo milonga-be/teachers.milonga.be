@@ -12,6 +12,20 @@ function htmlize($text){
 
 	return nl2br($html);
 }
+
+$this->registerJs(
+	"$('.milonga-description').expander({
+	  slicePoint: 300,
+	  widow: 2,
+	  expandEffect: 'slideDown',
+	  collapseEffect: 'slideUp',
+	  expandText: '...READ MORE',
+	  userCollapseText: 'LESS',
+	  afterExpand : function(){ $(this).find('.details').css('display', 'inline'); window.parent.resizeIframe();  },
+	  afterCollapse : function(){ window.parent.resizeIframe(); },
+	});"
+);
+
 $i = 0;
 ?>
 <div class="events" data-nb="<?= sizeof($events) ?>">

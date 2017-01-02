@@ -9,6 +9,8 @@ use yii\web\Controller;
  */
 class AgendaController extends Controller{
 
+	// public $layout = 'embed';
+
 	/**
 	 * List the events in the agenda
 	 * @param  integer $weeks  the number of weeks to display
