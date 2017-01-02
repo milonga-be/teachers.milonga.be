@@ -1,5 +1,7 @@
 <?php
 
+use yii\web\View;
+
 function htmlize($text){
 	$html=$text;
 	$html=str_replace(" euro","&euro;",$html);
@@ -24,6 +26,14 @@ $this->registerJs(
 	  afterExpand : function(){ $(this).find('.details').css('display', 'inline'); window.parent.resizeIframe();  },
 	  afterCollapse : function(){ window.parent.resizeIframe(); },
 	});"
+);
+
+$this->registerJs(
+	'
+	if(window.parent && window.parent.resizeIframe){
+		window.parent.resizeIframe();
+	}',
+	View::POS_LOAD
 );
 
 $i = 0;

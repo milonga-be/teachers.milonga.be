@@ -19,21 +19,54 @@ class AgendaController extends Controller{
 	 */
 	public function actionList( $weeks = 4 , $filter = null ){
 
+		$events = $this->getEvents( $weeks , $filter );
+
+		return $this->render('list',[ 'events' => $events ]);
+	}
+
+	/**
+	 * Returns a list of events, gathering them from Google
+	 * @param  integer $weeks  the number of weeks to list
+	 * @param  string $filter a comma separated list of values that must be in the event title
+	 * @return array         the events
+	 */
+	private function getEvents( $weeks , $filter ){
+		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
 
-		$today = new \Datetime();
-		$endPeriod = clone $today;
-		$endPeriod->modify( ($weeks * 7 + 1) . ' days');
+		$startDate = new \Datetime();
+		$endPeriod = clone $startDate;
+		if( $weeks < 12 )
+				$moveweeks = $weeks;
+			else{
+				$moveweeks = 12;
+			}
+		$endPeriod->modify( ($moveweeks * 7) . ' days');
+		$format = 'Y-m-d';
+		do{
 
-		$json_array = $this->getFromGoogleApi( 'https://www.googleapis.com/calendar/v3/calendars/' . $google_calendar_id . '/events?key=' . $google_api_key . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $today->format('c') ) . '&timeMax=' . urlencode( $endPeriod->format('c') )  );
+			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . $google_calendar_id . '/events?key=' . $google_api_key . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
+			$json_array = $this->getFromGoogleApi( $google_url );
 
-		$events = $json_array['items'];
-		if( !is_null($filter) ){
-			$events = $this->filterEvents( $filter , $events );
-		}
+			$collected_events = $json_array['items'];
+			if( !is_null($filter) ){
+				$collected_events = $this->filterEvents( $filter , $collected_events );
+			}
+			$events = array_merge( $events , $collected_events );
 
-		return $this->render('list',['events' => $events ]);
+			$startDate = $endPeriod;
+			$endPeriod = clone $startDate;
+			if( $weeks < 12 )
+				$moveweeks = $weeks;
+			else{
+				$moveweeks = 12;
+			}
+			$endPeriod->modify( ($moveweeks * 7) . ' days');
+			$weeks-= 12;
+		}while( $weeks > 0 );
+
+		return $events;
 	}
 
 	/**
