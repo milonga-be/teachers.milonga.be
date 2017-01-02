@@ -25,12 +25,28 @@ class AgendaController extends Controller{
 	}
 
 	/**
+	 * XML RSS for the newsletter sent by Mailchimp
+	 * @return string
+	 */
+	public function actionNewsletterRss(){
+		$response = Yii::$app->getResponse();
+    	$headers = $response->getHeaders();
+
+    	$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
+
+    	$milongas = $this->getEvents( 1 , 'milonga:,practica:' );
+    	$workshops = $this->getEvents( 1 , 'workshop:' );
+
+    	return $this->renderPartial('newsletter-rss',[ 'milongas' => $milongas , 'workshops' => $workshops ]);
+	}
+
+	/**
 	 * Returns a list of events, gathering them from Google
 	 * @param  integer $weeks  the number of weeks to list
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $weeks , $filter ){
+	private function getEvents( $weeks , $filter = null ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
@@ -47,7 +63,7 @@ class AgendaController extends Controller{
 		do{
 
 			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . $google_calendar_id . '/events?key=' . $google_api_key . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
-			$json_array = $this->getFromGoogleApi( $google_url );
+			$json_array = $this->getFromApi( $google_url );
 
 			$collected_events = $json_array['items'];
 			if( !is_null($filter) ){
@@ -103,11 +119,11 @@ class AgendaController extends Controller{
 	}
 
 	/**
-	 * Make a call to the Google API
+	 * Make a call to an API
 	 * @param  string $url the url to call
 	 * @return array
 	 */
-	private function getFromGoogleApi( $url ){
+	private function getFromApi( $url ){
 
 		$content = file_get_contents( $url );
 		if( $content ){
