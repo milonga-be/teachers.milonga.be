@@ -36,8 +36,33 @@ class AgendaController extends Controller{
 
     	$milongas = $this->getEvents( 1 , 'milonga:,practica:' );
     	$workshops = $this->getEvents( 1 , 'workshop:' );
+    	$pictures = $this->getPictures( 10 );
 
-    	return $this->renderPartial('newsletter-rss',[ 'milongas' => $milongas , 'workshops' => $workshops ]);
+    	return $this->renderPartial(
+    		'newsletter-rss',
+    		[ 
+    			'milongas' => $milongas , 
+    			'workshops' => $workshops,
+    			'pictures' => $pictures,
+    		]);
+	}
+
+	/**
+	 * Get the last pictures in the Flickr Group
+	 * @param  integer $count the number of photos to retrieve
+	 * @return array
+	 */
+	private function getPictures( $count ){
+		$flickr_group_id = Yii::$app->params['flickr-group-id'];
+		$flickr_api_key = Yii::$app->params['flickr-api-key'];
+
+		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1';
+		$json_array = $this->getFromApi( $flickr_url );
+
+		// var_dump($json_array);
+		// die();
+
+		return $json_array['photos']['photo'];
 	}
 
 	/**
@@ -62,7 +87,7 @@ class AgendaController extends Controller{
 		$format = 'Y-m-d';
 		do{
 
-			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . $google_calendar_id . '/events?key=' . $google_api_key . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
+			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($google_calendar_id) . '/events?key=' . urlencode($google_api_key) . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
 			$json_array = $this->getFromApi( $google_url );
 
 			$collected_events = $json_array['items'];
@@ -97,7 +122,7 @@ class AgendaController extends Controller{
 		$events_filtered = array();
 		foreach ($events as $event) {
 			$event_text = $event['summary'];
-
+			$fits = FALSE;
 			foreach( $filters as $filter ){
 				$filter_without_semicolons = str_replace([' :',':'], '', $filter );
 
@@ -111,8 +136,11 @@ class AgendaController extends Controller{
 						}
 					}
 					$event['summary'] = $event_text;
-					$events_filtered[] = $event;
+					$fits = TRUE;
 				}
+			}
+			if( $fits == TRUE ){
+				$events_filtered[] = $event;
 			}
 		}
 		return $events_filtered;
