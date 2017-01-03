@@ -1,7 +1,7 @@
 <?php
 echo '<?xml version="1.0" encoding="utf8"?>';
 
-function generateCData( $events ){
+function generateEventsCData( $events ){
 	$i = 0;
 	$events_cdata = '<![CDATA[';
 	foreach($events as $event){
@@ -20,6 +20,16 @@ function generateCData( $events ){
 	return $events_cdata;
 }
 
+function generatePicturesCData( $pictures ){
+	$i = 0;
+	$cdata = '<![CDATA[';
+	foreach($pictures as $picture){
+		$cdata.='<a href="' . $picture['url_o'] . '"><img height="120" title="' . $picture['title'] . '" src="' . $picture['url_q'] . '" /></a> ';
+	}
+	$cdata.=']]>';
+	return $cdata;
+}
+
 
 ?>
 <rss version="2.0">
@@ -30,10 +40,17 @@ function generateCData( $events ){
 		<language>en-us</language>
 		<copyright>Copyright (C) 2017 www.milonga.be</copyright>
 		<item>
+			<title>Recent Tango Pictures</title>
+			<description><?= generatePicturesCData( $pictures ) ?></description>
+			<link>http://www.milonga.be/tango-photos/</link>
+			<guid><?= microtime() ?></guid>
+			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
+		</item>
+		<item>
 			<title>Milongas this week in Belgium</title>
 			<description></description>
 			<link>http://www.milonga.be/dancing/</link>
-			<description><?= generateCData( $milongas ) ?></description>
+			<description><?= generateEventsCData( $milongas ) ?></description>
 			<guid><?= microtime() ?></guid>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
@@ -41,7 +58,7 @@ function generateCData( $events ){
 			<title>Workshops this week in Belgium</title>
 			<description></description>
 			<link>http://www.milonga.be/dancing/</link>
-			<description><?= generateCData( $workshops ) ?></description>
+			<description><?= generateEventsCData( $workshops ) ?></description>
 			<guid><?= microtime() ?></guid>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>

@@ -56,13 +56,18 @@ class AgendaController extends Controller{
 		$flickr_group_id = Yii::$app->params['flickr-group-id'];
 		$flickr_api_key = Yii::$app->params['flickr-api-key'];
 
-		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1';
+		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1&extras=url_q,url_o';
 		$json_array = $this->getFromApi( $flickr_url );
 
-		// var_dump($json_array);
-		// die();
+		if( isset($json_array['photos']) && isset($json_array['photos']['photo']) ){
+			if( isset($_GET['debug']) ){
+				var_dump($json_array['photos']['photo']);
+				die();
+			}
+			return $json_array['photos']['photo'];
+		}
 
-		return $json_array['photos']['photo'];
+		return array();
 	}
 
 	/**
