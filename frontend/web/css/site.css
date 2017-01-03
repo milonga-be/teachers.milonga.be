@@ -76,3 +76,10 @@ html body{
     max-width: 100%;
     border-radius: 5px;
 }
+.events a.more-link,
+.events a.less-link {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    font-style: italic;
+}
