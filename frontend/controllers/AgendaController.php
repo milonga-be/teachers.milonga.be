@@ -34,9 +34,9 @@ class AgendaController extends Controller{
 
     	$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
 
-    	$milongas = $this->getEvents( 1 , 'milonga:,practica:' );
+    	$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' );
     	$workshops = $this->getEvents( 1 , 'workshop:' );
-    	$pictures = $this->getPictures( 15 );
+    	$pictures = $this->getPictures( 14 );
 
     	return $this->renderPartial(
     		'newsletter-rss',
@@ -116,7 +116,7 @@ class AgendaController extends Controller{
 	}
 
 	/**
-	 * [filterEvents description]
+	 * Filter events with a catetory, summary must contain a certain string
 	 * @param  string $filter a string which must be in the title of the event
 	 * @param  array $events the list of events to filter
 	 * @return array         the events filtered
@@ -165,5 +165,57 @@ class AgendaController extends Controller{
 			return false;
 		}
 
+	}
+
+	/**
+	 * Send an alert to the organizers to alert them of the events in Milonga.be
+	 */
+	public function actionOrganizersAlert(){
+		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com' );
+		$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' );
+    	$workshops = $this->getEvents( 1 , 'workshop:' );
+
+    	$events = array_merge($milongas,$workshops);
+
+    	foreach ($events as $event) {
+    		// var_dump($event);
+    		// Official creator of the event
+    		if( isset($event['creator']['email']) ){
+    			$email = $event['creator']['email'];
+    			$emails[ $email ] = $email;
+    		}
+    		
+    		// Mailto in the event
+    		if( isset($event['description']) ){
+    			$event_html = $event['description'];
+    			// preg_match_all("#mailto:([a-z0-9\.\-\_]*@[a-z0-9\.\_\-]*)#",$event_html,$matches1,PREG_SET_ORDER);
+				preg_match_all('/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i',$event_html,$matches,PREG_SET_ORDER);
+
+				if($matches){
+					foreach($matches as $match){
+						$email = $match[0];
+						if( strlen($email)>5 ){
+							$emails[$email] = $email;
+						}
+					}
+				}
+    		}
+    		
+    	}
+
+    	// die();
+
+        foreach ($emails as $email) {
+        	if( !in_array( $email, $excludes ) ){
+        		Yii::$app->mailer->compose('alert',[ 'milongas' => $milongas , 'workshops' => $workshops ])
+	                ->setFrom('milonga@milonga.be')
+	                // ->setTo($email)
+	                ->setTo('milonga@milonga.be')
+	                ->setSubject('Milonga.be : please check your events')
+	                ->send();
+	            echo 'Sent alert to '. $email.'<br>';
+	            die();
+        	}
+        }
 	}
 }
