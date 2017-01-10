@@ -1,5 +1,5 @@
 <?php
-echo '<?xml version="1.0" encoding="utf8"?>';
+echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 function generateEventsCData( $events ){
 	$i = 0;
@@ -10,9 +10,9 @@ function generateEventsCData( $events ){
 			if( isset($events[$i-1]) ){
 				$events_cdata.='</ul>';
 			}
-			$events_cdata.='<h3>' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h3><ul>';
+			$events_cdata.='<h5>' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><ul>';
 		}
-		$events_cdata.='<li>' . $event['summary'] . '<br /><small><i>' . (new Datetime($event['start']['dateTime']))->format('H:i') . (( isset($event['location']) )?' @ ' . $event['location']:'') . '</i></small></li>';
+		$events_cdata.='<li>' . htmlspecialchars($event['summary']) . '<br /><small><i>' . (new Datetime($event['start']['dateTime']))->format('H:i') . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
 		$i++;
 
 	}
@@ -24,7 +24,7 @@ function generatePicturesCData( $pictures ){
 	$i = 0;
 	$cdata = '<![CDATA[';
 	foreach($pictures as $picture){
-		$cdata.='<a href="' . $picture['url_o'] . '"><img height="120" title="' . $picture['title'] . '" src="' . $picture['url_q'] . '" /></a> ';
+		$cdata.='<a href="http://www.milonga.be/tango-photos/"><img title="' . htmlspecialchars($picture['title']) . '" src="' . $picture['url_sq'] . '" /></a> ';
 	}
 	$cdata.=']]>';
 	return $cdata;
@@ -43,23 +43,18 @@ function generatePicturesCData( $pictures ){
 			<title>Recent Tango Pictures</title>
 			<description><?= generatePicturesCData( $pictures ) ?></description>
 			<link>http://www.milonga.be/tango-photos/</link>
-			<guid><?= microtime() ?></guid>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
 		<item>
 			<title>Milongas this week in Belgium</title>
-			<description></description>
 			<link>http://www.milonga.be/dancing/</link>
 			<description><?= generateEventsCData( $milongas ) ?></description>
-			<guid><?= microtime() ?></guid>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
 		<item>
 			<title>Workshops this week in Belgium</title>
-			<description></description>
 			<link>http://www.milonga.be/dancing/</link>
 			<description><?= generateEventsCData( $workshops ) ?></description>
-			<guid><?= microtime() ?></guid>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
 	</channel>

@@ -36,7 +36,7 @@ class AgendaController extends Controller{
 
     	$milongas = $this->getEvents( 1 , 'milonga:,practica:' );
     	$workshops = $this->getEvents( 1 , 'workshop:' );
-    	$pictures = $this->getPictures( 10 );
+    	$pictures = $this->getPictures( 15 );
 
     	return $this->renderPartial(
     		'newsletter-rss',
@@ -56,7 +56,7 @@ class AgendaController extends Controller{
 		$flickr_group_id = Yii::$app->params['flickr-group-id'];
 		$flickr_api_key = Yii::$app->params['flickr-api-key'];
 
-		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1&extras=url_q,url_o';
+		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1&extras=url_sq';
 		$json_array = $this->getFromApi( $flickr_url );
 
 		if( isset($json_array['photos']) && isset($json_array['photos']['photo']) ){
