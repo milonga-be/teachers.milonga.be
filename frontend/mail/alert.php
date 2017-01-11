@@ -1,6 +1,7 @@
 <p>Dear tango organizers,</p>
 
-<p>These are the events listed on the www.milonga.be agenda. Please check that all the information is correct.</p>
+<p>These are the events listed on the milonga.be agenda, and among them there is one you created.<br/>
+Please check that all the information is correct before we send our newsletter tomorrow at noon.</p>
 
 <p>
 How to add information to the milonga.be calendar:<br/>

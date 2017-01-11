@@ -76,12 +76,13 @@ class AgendaController extends Controller{
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $weeks , $filter = null ){
+	private function getEvents( $weeks , $filter = null , $startDate = null ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
 
-		$startDate = new \Datetime();
+		if( is_null($startDate) )
+			$startDate = new \Datetime();
 		$endPeriod = clone $startDate;
 		if( $weeks < 12 )
 				$moveweeks = $weeks;
@@ -171,9 +172,12 @@ class AgendaController extends Controller{
 	 * Send an alert to the organizers to alert them of the events in Milonga.be
 	 */
 	public function actionOrganizersAlert(){
+		$startDate = new \Datetime();
+		$startDate->modify('next friday');
+
 		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com' );
-		$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' );
-    	$workshops = $this->getEvents( 1 , 'workshop:' );
+		$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' , $startDate );
+    	$workshops = $this->getEvents( 1 , 'workshop:' , $startDate );
 
     	$events = array_merge($milongas,$workshops);
 
@@ -214,7 +218,7 @@ class AgendaController extends Controller{
 	                ->setSubject('Milonga.be : please check your events')
 	                ->send();
 	            echo 'Sent alert to '. $email.'<br>';
-	            die();
+	            // die();
         	}
         }
 	}
