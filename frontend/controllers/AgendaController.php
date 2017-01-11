@@ -213,8 +213,8 @@ class AgendaController extends Controller{
         	if( !in_array( $email, $excludes ) ){
         		Yii::$app->mailer->compose('alert',[ 'milongas' => $milongas , 'workshops' => $workshops ])
 	                ->setFrom('milonga@milonga.be')
-	                // ->setTo($email)
-	                ->setTo('milonga@milonga.be')
+	                ->setTo($email)
+                	->setCc('milonga@milonga.be')
 	                ->setSubject('Milonga.be : please check your events')
 	                ->send();
 	            echo 'Sent alert to '. $email.'<br>';
