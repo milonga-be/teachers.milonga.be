@@ -19,7 +19,7 @@ class AgendaController extends Controller{
 	 */
 	public function actionList( $weeks = 4 , $filter = null ){
 
-		$events = $this->getEvents( $weeks , $filter );
+		$events = $this->getEvents( $weeks * 7 , $filter );
 
 		return $this->render('list',[ 'events' => $events ]);
 	}
@@ -34,9 +34,11 @@ class AgendaController extends Controller{
 
     	$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
 
-    	$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' );
-    	$workshops = $this->getEvents( 1 , 'workshop:' );
+    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:' );
+    	$workshops = $this->getEvents( 9 , 'workshop:' );
     	$pictures = $this->getPictures( 14 );
+    	// $posts = $this->getLatestPosts();
+    	$posts = array();
 
     	return $this->renderPartial(
     		'newsletter-rss',
@@ -44,6 +46,7 @@ class AgendaController extends Controller{
     			'milongas' => $milongas , 
     			'workshops' => $workshops,
     			'pictures' => $pictures,
+    			'posts' => $posts,
     		]);
 	}
 
@@ -72,11 +75,11 @@ class AgendaController extends Controller{
 
 	/**
 	 * Returns a list of events, gathering them from Google
-	 * @param  integer $weeks  the number of weeks to list
+	 * @param  integer $days  the number of days to list
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $weeks , $filter = null , $startDate = null ){
+	private function getEvents( $days , $filter = null , $startDate = null ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
@@ -84,12 +87,12 @@ class AgendaController extends Controller{
 		if( is_null($startDate) )
 			$startDate = new \Datetime();
 		$endPeriod = clone $startDate;
-		if( $weeks < 12 )
-				$moveweeks = $weeks;
-			else{
-				$moveweeks = 12;
-			}
-		$endPeriod->modify( ($moveweeks * 7) . ' days');
+		if( $days < 84 )
+			$movedays = $days;
+		else{
+			$movedays = 84;
+		}
+		$endPeriod->modify( ($movedays) . ' days');
 		$format = 'Y-m-d';
 		do{
 
@@ -104,14 +107,14 @@ class AgendaController extends Controller{
 
 			$startDate = $endPeriod;
 			$endPeriod = clone $startDate;
-			if( $weeks < 12 )
-				$moveweeks = $weeks;
+			if( $days < 84 )
+				$movedays = $days;
 			else{
-				$moveweeks = 12;
+				$movedays = 84;
 			}
-			$endPeriod->modify( ($moveweeks * 7) . ' days');
-			$weeks-= 12;
-		}while( $weeks > 0 );
+			$endPeriod->modify( ($movedays) . ' days');
+			$days-= 84;
+		}while( $days > 0 );
 
 		return $events;
 	}
@@ -138,6 +141,7 @@ class AgendaController extends Controller{
 					foreach($prefixes as $prefix){
 						if (substr(strtolower($event_text), 0, strlen($prefix)) == strtolower($prefix)) {
     						$event_text = substr($event_text, strlen($prefix));
+    						$event['category'] = str_replace(':','',strtolower($prefix));
     						break;
 						}
 					}
@@ -168,6 +172,16 @@ class AgendaController extends Controller{
 
 	}
 
+	public function getLatestPosts(){
+		$url = 'http://www.milonga.be/feed/';
+		$feed = new \SimplePie();
+		$feed->enable_cache( false );
+		$feed->set_feed_url($url);
+		$feed->init();
+
+		return $feed->get_items(0,2);
+	}
+
 	/**
 	 * Send an alert to the organizers to alert them of the events in Milonga.be
 	 */
@@ -175,9 +189,9 @@ class AgendaController extends Controller{
 		$startDate = new \Datetime();
 		$startDate->modify('next friday');
 
-		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com' );
-		$milongas = $this->getEvents( 1 , 'milonga:,practica:,millonga:' , $startDate );
-    	$workshops = $this->getEvents( 1 , 'workshop:' , $startDate );
+		
+		$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:' , $startDate );
+    	$workshops = $this->getEvents( 9 , 'workshop:' , $startDate );
 
     	$events = array_merge($milongas,$workshops);
 
@@ -207,19 +221,23 @@ class AgendaController extends Controller{
     		
     	}
 
+
+    	$emails = array_filter( $emails , function($email){
+    		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com' );
+    		if( !in_array( $email, $excludes ) ){
+    			return true;
+    		}
+    		return false;
+    	} );
+
+    	var_dump($emails);
     	// die();
 
-        foreach ($emails as $email) {
-        	if( !in_array( $email, $excludes ) ){
-        		Yii::$app->mailer->compose('alert',[ 'milongas' => $milongas , 'workshops' => $workshops ])
-	                ->setFrom('milonga@milonga.be')
-	                ->setTo($email)
-                	->setCc('milonga@milonga.be')
-	                ->setSubject('Milonga.be : please check your events')
-	                ->send();
-	            echo 'Sent alert to '. $email.'<br>';
-	            // die();
-        	}
-        }
+        Yii::$app->mailer->compose('alert',[ 'milongas' => $milongas , 'workshops' => $workshops ])
+            ->setFrom('milonga@milonga.be')
+            ->setBcc($emails)
+        	->setTo('milonga@milonga.be')
+            ->setSubject('Milonga.be : please check your events')
+            ->send();
 	}
 }

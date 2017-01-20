@@ -12,7 +12,11 @@ function generateEventsCData( $events ){
 			}
 			$events_cdata.='<h5>' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><ul>';
 		}
-		$events_cdata.='<li>' . htmlspecialchars($event['summary']) . '<br /><small><i>' . (new Datetime($event['start']['dateTime']))->format('H:i') . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
+		$events_cdata.='<li>';
+		if( isset($event['category'])){
+			$events_cdata.='<small>' . strtoupper($event['category']) . '</small><br/>';
+		}
+		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/">' . htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (new Datetime($event['start']['dateTime']))->format('H:i') . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
 		$i++;
 
 	}
@@ -24,7 +28,7 @@ function generatePicturesCData( $pictures ){
 	$i = 0;
 	$cdata = '<![CDATA[';
 	foreach($pictures as $picture){
-		$cdata.='<a href="http://www.milonga.be/tango-photos/"><img title="' . htmlspecialchars($picture['title']) . '" src="' . $picture['url_sq'] . '" /></a> ';
+		$cdata.='<a target="_blank" href="http://www.milonga.be/tango-photos/"><img title="' . htmlspecialchars($picture['title']) . '" src="' . $picture['url_sq'] . '" /></a> ';
 	}
 	$cdata.=']]>';
 	return $cdata;
@@ -39,6 +43,14 @@ function generatePicturesCData( $pictures ){
 		<description>News about Tango in Belgium</description>
 		<language>en-us</language>
 		<copyright>Copyright (C) 2017 www.milonga.be</copyright>
+		<?php foreach ($posts as $post) { ?>
+		<item>
+			<title><?= $post->get_title() ?></title>
+			<description><?= $post->get_description() ?></description>
+			<link><?= $post->get_link() ?></link>
+			<pubDate><?= $post->get_date(\Datetime::RSS) ?></pubDate>
+		</item>
+		<? } ?>
 		<item>
 			<title>Recent Tango Pictures</title>
 			<description><?= generatePicturesCData( $pictures ) ?></description>

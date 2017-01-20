@@ -46,9 +46,13 @@ foreach ($events as $event) {
 	<h3 class="V12"><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h3>
 	<?php } ?>
 	<div class="V13">
+		<?php if(isset($event['category'])){ ?>
+			<h6><?= strtoupper($event['category'])?></h6>
+		<?php } ?>
 		<h4><?= $event['summary'] ?></h4>
 		<div class="milonga-data">
-		<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?><br>
+		<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?><br/>
+		
 		<?php if( isset($event['location']) ){ ?>
 		<?= $event['location']?>
 		<?php } ?>
