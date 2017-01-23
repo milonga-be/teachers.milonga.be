@@ -16,7 +16,7 @@ function generateEventsCData( $events ){
 		if( isset($event['category'])){
 			$events_cdata.='<small>' . strtoupper($event['category']) . '</small><br/>';
 		}
-		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/">' . htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (new Datetime($event['start']['dateTime']))->format('H:i') . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
+		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/">' . (new Datetime($event['start']['dateTime']))->format('H:i - ') . htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
 		$i++;
 
 	}
@@ -58,15 +58,9 @@ function generatePicturesCData( $pictures ){
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
 		<item>
-			<title>Milongas this week in Belgium</title>
+			<title>Milongas and workshops this week in Belgium</title>
 			<link>http://www.milonga.be/dancing/</link>
 			<description><?= generateEventsCData( $milongas ) ?></description>
-			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
-		</item>
-		<item>
-			<title>Workshops this week in Belgium</title>
-			<link>http://www.milonga.be/dancing/</link>
-			<description><?= generateEventsCData( $workshops ) ?></description>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
 		</item>
 	</channel>

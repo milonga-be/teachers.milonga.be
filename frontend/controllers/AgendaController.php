@@ -34,8 +34,12 @@ class AgendaController extends Controller{
 
     	$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
 
-    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:' );
-    	$workshops = $this->getEvents( 9 , 'workshop:' );
+    	$startDate = new \Datetime();
+    	if( $startDate->format('w') != 5 ){
+    		$startDate->modify('next friday');
+    	}
+
+    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:' , $startDate );
     	$pictures = $this->getPictures( 14 );
     	// $posts = $this->getLatestPosts();
     	$posts = array();
@@ -44,7 +48,6 @@ class AgendaController extends Controller{
     		'newsletter-rss',
     		[ 
     			'milongas' => $milongas , 
-    			'workshops' => $workshops,
     			'pictures' => $pictures,
     			'posts' => $posts,
     		]);
