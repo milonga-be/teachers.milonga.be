@@ -16,47 +16,25 @@ Boris Verdeyen Pazmiño<br>
 milonga@milonga.be<br>
 </p>
 <hr>
-<h4>MILONGAS: </h4>
+<h4>MILONGAS &amp; WORKSHOPS : </h4>
 
 <?php 
 $i = 0;
-$events = $milongas;
 foreach ($events as $event) { ?>
 	<?php if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ ?>
-	<h4><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h4>
+	<h4 style="color:#F66062;"><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h4>
 	<?php } ?>
 	<p>
-		<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?>
-		 - 
-		<?= $event['summary'] ?>
+		<?php if(isset($event['category'])){ ?>
+			<h6 style="margin-bottom:0px"><?= strtoupper($event['category'])?></h6>
+		<?php } ?>
+		<strong><?= $event['summary'] ?></strong><br>
+		<small><?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?></small>
 		<?php if( isset($event['location']) ){ ?>
-		<br><?= $event['location']?>
+		<br><small><?= $event['location']?></small>
 		<?php } ?>
 	</p>
 <?php
 	$i++;
 }
 ?>
-<hr>
-<h3>WORKSHOPS: </h3>
-<?php 
-$i = 0;
-$events = $workshops;
-foreach ($events as $event) { ?>
-	<?php if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ ?>
-	<h4><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h4>
-	<?php } ?>
-	<p>
-		
-		<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?>
-		 - 
-		<?= $event['summary'] ?>
-		<?php if( isset($event['location']) ){ ?>
-		<br><?= $event['location']?>
-		<?php } ?>
-	</p>
-<?php
-	$i++;
-}
-?>
-<hr>

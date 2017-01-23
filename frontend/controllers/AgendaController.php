@@ -193,10 +193,7 @@ class AgendaController extends Controller{
 		$startDate->modify('next friday');
 
 		
-		$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:' , $startDate );
-    	$workshops = $this->getEvents( 9 , 'workshop:' , $startDate );
-
-    	$events = array_merge($milongas,$workshops);
+		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:' , $startDate );
 
     	foreach ($events as $event) {
     		// var_dump($event);
@@ -236,7 +233,7 @@ class AgendaController extends Controller{
     	var_dump($emails);
     	// die();
 
-        Yii::$app->mailer->compose('alert',[ 'milongas' => $milongas , 'workshops' => $workshops ])
+        Yii::$app->mailer->compose('alert',[ 'events' => $events])
             ->setFrom('milonga@milonga.be')
             ->setBcc($emails)
         	->setTo('milonga@milonga.be')
