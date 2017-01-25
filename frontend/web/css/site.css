@@ -4,10 +4,10 @@ td.dayname,td.starthour{
 td.levelname{
     width:25%;
 }
-html body{
+/*html body{
     background-color: white;
     margin-top:20px;
-}
+}*/
 .school h4{
     margin-top:10px;
 }
@@ -33,6 +33,7 @@ html body{
 }
 .events h6{
     color: #777;
+    font-size:0.9em;
 }
 .events h4{
     margin-bottom: 2px;

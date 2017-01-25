@@ -27,7 +27,7 @@ AppAsset::register($this);
         document.domain = 'milonga.be';
     </script>
 </head>
-<body>
+<body style="background-color: white;margin-top:20px;">
 <?php $this->beginBody() ?>
 
 <?= Alert::widget() ?>
