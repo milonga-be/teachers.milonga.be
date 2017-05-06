@@ -17,11 +17,65 @@ class AgendaController extends Controller{
 	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
 	 * @return string
 	 */
-	public function actionList( $weeks = 4 , $filter = null ){
+	public function actionList( $weeks = 4 , $filter = null){
 
 		$events = $this->getEvents( $weeks * 7 , $filter );
+		$start = new \Datetime();
+		if($start->format('w') != 1){
+			$start->modify('previous monday');
+		}
+		$end = clone $start;
+		$end->modify('4 weeks');
 
-		return $this->render('list',[ 'events' => $events ]);
+		return $this->render('list', [ 'events' => $events , 'start' => $start, 'weeks' => $weeks ]);
+	}
+
+	/**
+	 * List the events in the agenda with a calendar
+	 * @param  integer $weeks  the number of weeks to display
+	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
+	 * @return string
+	 */
+	public function actionCalendar( $month = null, $year = null/*, $filter = null*/){
+		if(!$month){
+			$month = date('m');
+			$year = date('Y');
+		}
+		$start = new \Datetime($year.'-'.$month.'-01');
+		$month_first_day = clone $start;
+		if($start->format('w') != 1){
+			$start->modify('previous monday');
+		}
+		if($month == date('m') && $year == date('Y')){
+			$selected_day = new \Datetime();
+		}else{
+			$selected_day = clone $month_first_day;
+		}
+		$end = clone $start;
+		$end->modify('4 weeks');
+		$weeks = 5;
+		$events_sets = array();
+		$events = $this->getEvents( $weeks * 7, null, $start);
+		$events_by_date = array();
+		foreach ($events as $event) {
+			if(isset($event['start']['date'])){
+				$date = substr($event['start']['date'], 0, 4).substr($event['start']['date'], 5, 2).substr($event['start']['date'], 8, 2);
+			}else{
+				$date = (new \Datetime($event['start']['dateTime']))->format('Ymd');
+			}
+			$events_by_date[$date][] = $event;
+		}
+		foreach ($events_by_date as $date => $events) {
+			$events_by_date[$date] = array();
+			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:', $events);
+			if(sizeof($milongas))
+				$events_by_date[$date]['Milongas'] = $milongas;
+			$workshops = $this->filterEvents('workshop:,workhop:', $events);
+			if(sizeof($workshops))
+				$events_by_date[$date]['Workshops'] = $workshops;
+		}
+
+		return $this->render('calendar', [ 'events_by_date' => $events_by_date , 'start' => $start, 'month_first_day' => $month_first_day , 'weeks' => $weeks, 'selected_day' => $selected_day ]);
 	}
 
 	/**
@@ -39,8 +93,8 @@ class AgendaController extends Controller{
     		$startDate->modify('next friday');
     	}
 
-    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:' , $startDate );
-    	$pictures = $this->getPictures( 14 );
+    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:' , $startDate );
+    	$pictures = $this->getPictures( 9 );
     	// $posts = $this->getLatestPosts();
     	$posts = array();
 
@@ -62,7 +116,7 @@ class AgendaController extends Controller{
 		$flickr_group_id = Yii::$app->params['flickr-group-id'];
 		$flickr_api_key = Yii::$app->params['flickr-api-key'];
 
-		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1&extras=url_sq';
+		$flickr_url = 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=' . urlencode( $flickr_api_key ) . '&group_id=' . urlencode($flickr_group_id) . '&per_page=' . urlencode($count) . '&format=json&nojsoncallback=1&extras=url_q';
 		$json_array = $this->getFromApi( $flickr_url );
 
 		if( isset($json_array['photos']) && isset($json_array['photos']['photo']) ){
@@ -74,6 +128,27 @@ class AgendaController extends Controller{
 		}
 
 		return array();
+	}
+
+	/**
+	 * Get the picture attached to the event via Google Drive 
+	 * @param  string $fileId [description]
+	 * @return mixed
+	 */
+	public function actionEventPicture($fileId){
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL,"https://www.googleapis.com/drive/v2/files/".$fileId."?alt=media");
+		$headers = [
+			'Authorization: Bearer '.Yii::$app->params['google-api-key']
+		];
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION , true);
+		$output = curl_exec ($ch);
+		curl_close ($ch);
+
+		echo $output;
+		die();
 	}
 
 	/**
@@ -193,7 +268,7 @@ class AgendaController extends Controller{
 		$startDate->modify('next friday');
 
 		
-		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:' , $startDate );
+		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:' , $startDate );
 
     	foreach ($events as $event) {
     		// var_dump($event);
@@ -230,12 +305,12 @@ class AgendaController extends Controller{
     		return false;
     	} );
 
-    	var_dump($emails);
+    	var_dump(array_values($emails));
     	// die();
 
         Yii::$app->mailer->compose('alert',[ 'events' => $events])
             ->setFrom('milonga@milonga.be')
-            ->setBcc($emails)
+            ->setBcc(array_values($emails))
         	->setTo('milonga@milonga.be')
             ->setSubject('Milonga.be : please check your events')
             ->send();

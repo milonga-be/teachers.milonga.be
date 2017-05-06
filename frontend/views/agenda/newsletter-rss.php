@@ -28,7 +28,7 @@ function generatePicturesCData( $pictures ){
 	$i = 0;
 	$cdata = '<![CDATA[';
 	foreach($pictures as $picture){
-		$cdata.='<a target="_blank" href="http://www.milonga.be/tango-photos/"><img title="' . htmlspecialchars($picture['title']) . '" src="' . $picture['url_sq'] . '" /></a> ';
+		$cdata.='<a target="_blank" href="http://www.milonga.be/tango-photos/"><img title="' . htmlspecialchars($picture['title']) . '" src="' . $picture['url_q'] . '" /></a> ';
 	}
 	$cdata.=']]>';
 	return $cdata;
