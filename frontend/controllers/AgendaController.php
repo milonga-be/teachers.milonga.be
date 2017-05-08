@@ -67,7 +67,7 @@ class AgendaController extends Controller{
 		}
 		foreach ($events_by_date as $date => $events) {
 			$events_by_date[$date] = array();
-			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:', $events);
+			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,festival:', $events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);

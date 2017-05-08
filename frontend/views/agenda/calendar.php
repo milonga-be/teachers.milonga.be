@@ -6,21 +6,29 @@ use common\components\Htmlizer;
 $this->registerJs(
 	'$(".milonga-description .more-link").on("click",function(e){
 		e.preventDefault();
+		var desc_elt = $(this).parent();
 		$(this).hide();
-		$(this).parent().find(".more-content").slideDown(function(){
-			$(this).parent().find(".less-link").show();
+		desc_elt.find(".more-content").css("opacity", 0).slideDown("normal",function(){
+			desc_elt.find(".less-link").show();
 			window.parent.resizeIframe();
-		});
+		}).animate(
+    		{ opacity: 1 },
+    		{ queue: false, duration: "normal" }
+  		);
 	});
 
 	$(".milonga-description .less-link").on("click",function(e){
 		e.preventDefault();
+		var desc_elt = $(this).parent();
 		$(this).fadeOut();
-		$(this).parent().find(".more-content").slideUp(400, function(){ 
-			$(this).parent().find(".more-link").show();
+		desc_elt.find(".more-content").slideUp("normal",function(){ 
+			desc_elt.find(".more-link").show();
 			
 			window.parent.resizeIframe();
-		});
+		}).animate(
+    		{ opacity: 0 },
+    		{ queue: false, duration: "normal" }
+  		);
 	});'
 );
 $prev_month = clone $month_first_day;
