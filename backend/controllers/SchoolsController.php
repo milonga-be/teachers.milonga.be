@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use common\models\Lesson;
 use common\models\School;
 use yii\data\ActiveDataProvider;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -58,10 +59,10 @@ class SchoolsController extends Controller{
         $school = $user->school;
 
         if ($school->load(Yii::$app->request->post())) {
-            if($school->validate()){
-
-                $school->save();
-
+            $school->pictureFile = UploadedFile::getInstance($school, 'pictureFile');
+            $school->flyerFile = UploadedFile::getInstance($school, 'flyerFile');
+            $school->uploadFiles();
+            if($school->save()){
                 Yii::$app->getSession()->setFlash('success', ['title' => 'School updated']);
             }
         }

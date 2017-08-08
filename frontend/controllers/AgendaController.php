@@ -257,7 +257,7 @@ class AgendaController extends Controller{
 		$feed->set_feed_url($url);
 		$feed->init();
 
-		return $feed->get_items(0,2);
+		return $feed->get_items(0,3);
 	}
 
 	/**

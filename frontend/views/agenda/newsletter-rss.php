@@ -6,6 +6,10 @@ function generateEventsCData( $events ){
 	$events_cdata = '<![CDATA[';
 	foreach($events as $event){
 		$new_day = false;
+		if(!isset($events[$i]['start']['dateTime'])){
+			$events[$i]['start']['dateTime'] = $events[$i]['start']['date'];
+			$event = $events[$i];
+		}
 		if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ 
 			if( isset($events[$i-1]) ){
 				$events_cdata.='</ul>';
@@ -16,7 +20,10 @@ function generateEventsCData( $events ){
 		if( isset($event['category'])){
 			$events_cdata.='<small>' . strtoupper($event['category']) . '</small><br/>';
 		}
-		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/">' . (new Datetime($event['start']['dateTime']))->format('H:i - ') . htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
+		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/">';
+		if(!isset($event['start']['date']))
+			$events_cdata.=(new Datetime($event['start']['dateTime']))->format('H:i - ');
+		$events_cdata.=htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
 		$i++;
 
 	}
@@ -46,7 +53,7 @@ function generatePicturesCData( $pictures ){
 		<?php foreach ($posts as $post) { ?>
 		<item>
 			<title><?= $post->get_title() ?></title>
-			<description><?= $post->get_description() ?></description>
+			<description><![CDATA[<?= $post->get_description() ?><a href="<?= $post->get_link() ?>">Read more...</a>]]></description>
 			<link><?= $post->get_link() ?></link>
 			<pubDate><?= $post->get_date(\Datetime::RSS) ?></pubDate>
 		</item>

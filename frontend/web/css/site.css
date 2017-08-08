@@ -30,6 +30,11 @@ td.levelname{
     .lessons .lg{
         display: none;
     }
+
+    #agenda-calendar td, #agenda-calendar th{
+        padding:2px;
+        font-size:0.9em;
+    }
 }
 .events h6{
     color: #777;

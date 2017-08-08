@@ -21,7 +21,8 @@
         "fxp/composer-asset-plugin": "^1.2",
         "rmrevin/yii2-fontawesome": "2.*",
         "kartik-v/yii2-widgets": "^3.4",
-        "simplepie/simplepie": "^1.4"
+        "simplepie/simplepie": "^1.4",
+        "yiisoft/yii2-imagine": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

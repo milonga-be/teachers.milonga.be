@@ -113,7 +113,7 @@ $next_month->modify('first day');
 							<?php if(isset($event['start']['dateTime'])){ ?>
 								<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?><br/>
 							<?php }else if(isset($event['start']['date'])){ ?>
-								<?= (new Datetime($event['start']['date']))->format('F j') ?> - <?= (new Datetime($event['end']['date']))->format('F j')?><br/>
+								<?= (new Datetime($event['start']['date']))->format('D, F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format('D, F j')?><br/>
 							<?php } ?>
 							<?php if( isset($event['location']) ){ ?>
 							<?= $event['location']?>
