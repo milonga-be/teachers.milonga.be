@@ -19,11 +19,11 @@ echo $form->field($school, 'website');
 echo $form->field($school, 'phone');
 echo $form->field($school, 'pictureFile')->fileInput();
 if($school->picture){
-	echo '<p><a target="_blank" href="'.\Yii::$app->request->BaseUrl.'/uploads/'.$school->picture.'">See current picture</a></p>';
+	echo '<p><a target="_blank" href="'.$school->pictureUrl.'">See current picture</a></p>';
 }
 echo $form->field($school, 'flyerFile')->fileInput();
 if($school->flyer){
-	echo '<p><a target="_blank" href="'.\Yii::$app->request->BaseUrl.'/uploads/'.$school->flyer.'">See current flyer</a></p>';
+	echo '<p><a target="_blank" href="'.$school->flyerUrl.'">See current flyer</a></p>';
 }
 echo '<p class="text-right"><button type="submit" class="btn btn-success">Save</button></p>';
 

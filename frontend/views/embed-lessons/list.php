@@ -22,7 +22,7 @@ foreach($schools as $school){
 		<?= ( $school->email )? '<a href="mailto:' . $school->email . '"><i class="fa fa-envelope" aria-hidden="true"></i> ' . $school->email . '</a><br>':'' ?>
 		<?= ( $school->facebook )? '<a target="_blank" href="' . $school->facebook . '"><i class="fa fa-facebook-square" aria-hidden="true"></i> On Facebook</a> ':'' ?>
 		<?= ( $school->website )? '<a target="_blank" href="' . (( strpos($school->website,'http') === FALSE )? 'http://' . $school->website : $school->website) . '"><i class="fa fa-globe" aria-hidden="true"></i> Website</a><br>':'' ?>
-		<?= ( $school->flyer )? '<a class="swipebox" href="' . $school->flyer . '"><i class="fa fa-paperclip" aria-hidden="true"></i> Flyer</a>':'' ?>
+		<?= ( $school->flyer )? '<a class="swipebox" href="' . $school->flyerUrl . '"><i class="fa fa-paperclip" aria-hidden="true"></i> Flyer</a>':'' ?>
 	</p>
 	<?php
 	foreach ($schools_venues[ $school->id ] as $venue) {

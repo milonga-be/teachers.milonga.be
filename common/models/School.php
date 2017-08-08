@@ -64,12 +64,28 @@ class School extends ActiveRecord{
         }
     }
 
+    /**
+     * Get a absolute url to the thumb for the school
+     * @return string
+     */
     public function getThumbUrl(){
         return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->thumb;
     }
 
+    /**
+     * Get a absolute url to the original picture for the school
+     * @return string
+     */
     public function getPictureUrl(){
         return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->picture;
+    }
+
+    /**
+     * Get a absolute url to the flyer for the school
+     * @return string
+     */
+    public function getFlyerUrl(){
+        return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->flyer;
     }
 
 	/**
