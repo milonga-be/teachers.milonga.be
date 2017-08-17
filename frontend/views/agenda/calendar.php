@@ -3,46 +3,60 @@ use yii\web\View;
 use yii\helpers\Url;
 use common\components\Htmlizer;
 
-$this->registerJs(
-	'$(".milonga-description .more-link").on("click",function(e){
-		e.preventDefault();
-		var desc_elt = $(this).parent();
-		$(this).hide();
-		desc_elt.find(".more-content").css("opacity", 0).slideDown("normal",function(){
-			desc_elt.find(".less-link").show();
-			window.parent.resizeIframe();
-		}).animate(
-    		{ opacity: 1 },
-    		{ queue: false, duration: "normal" }
-  		);
-	});
+// $this->registerJs(
+// 	'$(".milonga-description .more-link").on("click",function(e){
+// 		e.preventDefault();
+// 		var desc_elt = $(this).parent();
+// 		$(this).hide();
+// 		desc_elt.find(".more-content").css("opacity", 0).slideDown("normal",function(){
+// 			desc_elt.find(".less-link").show();
+// 			window.parent.resizeIframe();
+// 		}).animate(
+//     		{ opacity: 1 },
+//     		{ queue: false, duration: "normal" }
+//   		);
+// 	});
 
-	$(".milonga-description .less-link").on("click",function(e){
-		e.preventDefault();
-		var desc_elt = $(this).parent();
-		$(this).fadeOut();
-		desc_elt.find(".more-content").slideUp("normal",function(){ 
-			desc_elt.find(".more-link").show();
+// 	$(".milonga-description .less-link").on("click",function(e){
+// 		e.preventDefault();
+// 		var desc_elt = $(this).parent();
+// 		$(this).fadeOut();
+// 		desc_elt.find(".more-content").slideUp("normal",function(){ 
+// 			desc_elt.find(".more-link").show();
 			
-			window.parent.resizeIframe();
-		}).animate(
-    		{ opacity: 0 },
-    		{ queue: false, duration: "normal" }
-  		);
-	});'
-);
+// 			window.parent.resizeIframe();
+// 		}).animate(
+//     		{ opacity: 0 },
+//     		{ queue: false, duration: "normal" }
+//   		);
+// 	});'
+// );
 $prev_month = clone $month_first_day;
 $prev_month->modify('-1 month');
 $prev_month->modify('first day');
 $next_month = clone $month_first_day;
 $next_month->modify('+1 month');
 $next_month->modify('first day');
+
+if($this->context->embedded == true){
+	$url_prev = '/dancing/?u-year='.$prev_month->format('Y').'&u-month='.$prev_month->format('m');
+}else{
+	$url_prev = Url::to(["agenda/calendar","year" => $prev_month->format('Y'), "month" => $prev_month->format('m')]);
+}
+
+if($this->context->embedded == true){
+	$url_next = '/dancing/?u-year='.$next_month->format('Y').'&u-month='.$next_month->format('m');
+}else{
+	$url_next = Url::to(["agenda/calendar","year" => $next_month->format('Y'), "month" => $next_month->format('m')]);
+}
+
+
 ?>
 <div class="agenda-set">
 	<h2>
-		<a class="prev-month glyphicon glyphicon-chevron-left" href="<?= Url::to(["agenda/calendar","year" => $prev_month->format('Y'), "month" => $prev_month->format('m')])?>"></a>
+		<a class="prev-month glyphicon glyphicon-chevron-left" href="<?= $url_prev ?>"></a>
 		<span><?= $month_first_day->format('F') ?></span>
-		<a class="next-month glyphicon glyphicon-chevron-right" href="<?= Url::to(["agenda/calendar","year" => $next_month->format('Y'), "month" => $next_month->format('m')])?>"></a>
+		<a class="next-month glyphicon glyphicon-chevron-right" href="<?= $url_next ?>"></a>
 	</h2>
 	<table id="agenda-calendar" class="calendar table table-striped condensed">
 		<tr class="agenda-daynames">
@@ -103,6 +117,15 @@ $next_month->modify('first day');
 					foreach ($events as $event) {
 					?>
 					<div class="V13">
+						<?php
+						// https://www.googleapis.com/drive/v2/files/fileId&alt=media
+						if(isset($event['attachments'][0])){
+							$file = $event['attachments'][0];
+							//echo '<img class="img-circle pull-left" src="'.Url::to(['agenda/event-picture','fileId' => $file['fileId']], true).'"/>';
+							// echo '*'.$event['attachments'][0]['fileUrl'].'*';
+							// var_dump($event['attachments'][0]);
+						}
+						?>
 						<?php if(isset($event['summary'])){ ?>
 						<h4><?= $event['summary'] ?></h4>
 						<?php } ?>
@@ -119,13 +142,7 @@ $next_month->modify('first day');
 							<?= $event['location']?>
 							<?php } ?>
 						</div>
-						<?php
-						// https://www.googleapis.com/drive/v2/files/fileId&alt=media
-						// if(isset($event['attachments'][0])){
-						// 	$file = $event['attachments'][0];
-						// 	echo '<img src="'.Url::to(['agenda/event-picture','fileId' => $file['fileId']]).'"/>';
-						// }
-						?>
+						
 						<?php if( isset($event['description']) ){ ?>
 						<div class="milonga-description">
 							<?php

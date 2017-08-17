@@ -10,6 +10,7 @@ use yii\web\Controller;
 class AgendaController extends Controller{
 
 	// public $layout = 'embed';
+	var $embedded = false;
 
 	/**
 	 * List the events in the agenda
