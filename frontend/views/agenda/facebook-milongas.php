@@ -15,7 +15,7 @@ function cmp($a, $b) {
 
 You want to dance tango ? <br/>
 This week milongas : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br>
-Details : http://www.milonga.be/dancing/<br><br>
+http://www.milonga.be/dancing/<br><br>
 
 <?php
 foreach ( $events as $weekday => $events ) {

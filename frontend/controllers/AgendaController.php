@@ -329,6 +329,10 @@ class AgendaController extends Controller{
             ->send();
 	}
 
+	/**
+	 * Compose a summary of the milongas for Facebook
+	 * @return mixed
+	 */
 	public function actionFacebookMilongas(){
 		$startDate = new \Datetime();
 		$endDate = clone $startDate;
@@ -341,6 +345,25 @@ class AgendaController extends Controller{
 			$events_by_weekdays[$event['start']['weekday']][] = $event;
 		}
 
-		return $this->render('facebook', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
+		return $this->render('facebook-milongas', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
+	}
+
+	/**
+	 * Compose a summary of the workshops for Facebook
+	 * @return mixed
+	 */
+	public function actionFacebookWorkshops(){
+		$startDate = new \Datetime();
+		$endDate = clone $startDate;
+		$endDate->modify('next sunday');
+		$events = $this->getEvents( 6 , 'workshops:,workshop:' , $startDate );
+
+		$events_by_days = array();
+
+		foreach ($events as $event) {
+			$events_by_weekdays[$event['start']['weekday']][] = $event;
+		}
+
+		return $this->render('facebook-workshops', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
 	}
 }
