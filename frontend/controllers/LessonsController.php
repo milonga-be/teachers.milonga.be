@@ -98,4 +98,34 @@ class LessonsController extends Controller{
         ]);
 	}
 
+	public function actionNewsletter(array $postalcodes = array(), $from = null , $to = null ){
+		session_write_close();
+		if($from && $to){
+			$venues = Venue::find()->where(['>=','postalcode',$from])->andWhere(['<=','postalcode',$to])->all();
+			$postalcodes = ArrayHelper::merge( ArrayHelper::getColumn($venues, 'postalcode'), $postalcodes );
+		}else if(!sizeof($postalcodes)){
+			$venues = Venue::find()->asArray()->all();
+			$postalcodes = ArrayHelper::getColumn($venues, 'postalcode');
+		}
+
+		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->orderBy('venue.postalcode ASC')->all();
+
+		foreach ($schools as $school) {
+			$schools_venues[ $school->id ] = $school->getPostalCodeVenues( $postalcodes );
+		}
+
+		foreach ($schools_venues as $venues) {
+			foreach($venues as $venue)
+				$venues_lessons[ $venue->id ] = $venue->lessons;
+		}
+
+		return $this->render('newsletter', [
+            'schools' => $schools,
+            'postalcodes' => $postalcodes,
+            'schools_venues' => $schools_venues,
+            'venues_lessons' => $venues_lessons,
+            
+        ]);
+	}
+
 }

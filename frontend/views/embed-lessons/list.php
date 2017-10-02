@@ -9,6 +9,7 @@ foreach($schools as $school){
 	?>
 	<div class="school">
 	<h3>
+		<a name="<?= $school->id?>"></a>
 		<?php
 		if($school->picture){
 			echo '<a class="swipebox" href="'.$school->pictureUrl.'"><img style="height:100px;float:left;margin-right:10px;border-radius:8px;margin-bottom:10px;" src="'.$school->thumbUrl.'"/></a>';

@@ -37,7 +37,7 @@ class AgendaController extends Controller{
 	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
 	 * @return string
 	 */
-	public function actionCalendar( $month = null, $year = null/*, $filter = null*/){
+	public function actionCalendar( $month = null, $year = null, $selected = null){
 		if(!$month){
 			$month = date('m');
 			$year = date('Y');
@@ -47,7 +47,9 @@ class AgendaController extends Controller{
 		if($start->format('w') != 1){
 			$start->modify('previous monday');
 		}
-		if($month == date('m') && $year == date('Y')){
+		if(!empty($selected)){
+			$selected_day = new \Datetime($selected);
+		}else if($month == date('m') && $year == date('Y')){
 			$selected_day = new \Datetime();
 		}else{
 			$selected_day = clone $month_first_day;
@@ -228,9 +230,19 @@ class AgendaController extends Controller{
 					$fits = TRUE;
 				}
 			}
+
+			// Adding some info to help
+			if(!isset($event['start']['dateTime']) && isset($event['start']['date'])){
+				$event['start']['dateTime'] = $event['start']['date'];
+			}
+			$datetime = new \Datetime($event['start']['dateTime']);
+			$event['start']['weekday'] = $datetime->format('N');
+
 			if( $fits == TRUE ){
 				$events_filtered[] = $event;
 			}
+
+			
 		}
 		return $events_filtered;
 	}
@@ -315,5 +327,20 @@ class AgendaController extends Controller{
         	->setTo('milonga@milonga.be')
             ->setSubject('Milonga.be : please check your events')
             ->send();
+	}
+
+	public function actionFacebookMilongas(){
+		$startDate = new \Datetime();
+		$endDate = clone $startDate;
+		$endDate->modify('next sunday');
+		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:' , $startDate );
+
+		$events_by_days = array();
+
+		foreach ($events as $event) {
+			$events_by_weekdays[$event['start']['weekday']][] = $event;
+		}
+
+		return $this->render('facebook', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
 	}
 }

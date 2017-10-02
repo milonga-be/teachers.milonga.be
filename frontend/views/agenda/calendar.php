@@ -127,6 +127,7 @@ if($this->context->embedded == true){
 						}
 						?>
 						<?php if(isset($event['summary'])){ ?>
+						<a name="<?= $event['id']?>"></a>
 						<h4><?= $event['summary'] ?></h4>
 						<?php } ?>
 						<div class="milonga-data">
