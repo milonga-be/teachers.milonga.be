@@ -23,7 +23,7 @@ foreach ( $events as $weekday => $events ) {
 	uasort($events, 'cmp');
 	foreach ($events as $event) {
 		$datetime = new Datetime($event['start']['dateTime']);
-		echo $datetime->format('H:i').' - _____ : ';
+		echo $datetime->format('H:i').' - _____: ';
 		echo ucwords(strtolower(str_replace('@', ' @ ', $event['summary'])));
 
 		echo '<br>';

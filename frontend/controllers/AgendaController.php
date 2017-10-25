@@ -70,7 +70,7 @@ class AgendaController extends Controller{
 		}
 		foreach ($events_by_date as $date => $events) {
 			$events_by_date[$date] = array();
-			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,festival:', $events);
+			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,festival:,film:', $events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);
@@ -96,7 +96,7 @@ class AgendaController extends Controller{
     		$startDate->modify('next friday');
     	}
 
-    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:' , $startDate );
+    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:' , $startDate );
     	$pictures = $this->getPictures( 9 );
     	// $posts = $this->getLatestPosts();
     	$posts = array();
@@ -216,7 +216,7 @@ class AgendaController extends Controller{
 			foreach( $filters as $filter ){
 				$filter_without_semicolons = str_replace([' :',':'], '', $filter );
 
-				if(stristr($event_text,$filter) || stristr(str_replace(' :',':',$event_text), $filter) || strtolower(substr($event_text, 0, strlen($filter_without_semicolons))) === strtolower($filter_without_semicolons) ){
+				if(stristr($event_text,$filter) || stristr(str_replace(' :',':',$event_text), $filter) || strtolower(substr(trim($event_text), 0, strlen($filter_without_semicolons))) === strtolower($filter_without_semicolons) ){
 					// stripping the category from the title
 					$prefixes = [ $filter , str_replace(':',' :',$filter) ];
 					foreach($prefixes as $prefix){
@@ -281,7 +281,7 @@ class AgendaController extends Controller{
 		$startDate->modify('next friday');
 
 		
-		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:' , $startDate );
+		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:' , $startDate );
 
     	foreach ($events as $event) {
     		// var_dump($event);
