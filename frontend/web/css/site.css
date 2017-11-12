@@ -42,16 +42,17 @@ td.levelname{
 }
 .events h4{
     margin-bottom: 2px;
-    margin-top:3px;
+    margin-top:4px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    display: inline-block;
+    display: block;
     padding-bottom: 10px;
     /*margin-top: 40px;*/
     font-size: 1em;
     color: #333;
     font-weight: normal;
     padding-bottom:0;
+    clear:none;
 }
 .events h3,.agenda-set h3{
     color: #F66062;
@@ -75,13 +76,14 @@ td.levelname{
 }
 .events .milonga-data{
     color: #333;
-    font-size:0.9em;
+    font-size:1em;
+    margin-left:48px;
 }
 .events .milonga-description{
     margin-top: 8px;
     padding-top: 4px;
     font-size: 0.9em;
-    
+    margin-left:48px;
     color: #777;
 }
 .V13{
@@ -93,7 +95,6 @@ td.levelname{
 }
 .milonga-description img{   
     max-width: 100%;
-    border-radius: 5px;
 }
 .milonga-description a{
     overflow-wrap: break-word;
@@ -161,3 +162,35 @@ td.other_month a{
 .prev-month,.next-month{
     font-size:0.8em;
 }
+.event_icon{
+    float:left;
+    width:40px;
+    height:40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right:8px;
+    margin-top:4px;
+    margin-bottom:8px;
+}
+.img_mask{
+    height: 200px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: 5px;
+    cursor: zoom-in;
+}
+.img_mask img{
+    position: absolute;
+    top:0;
+    width:100%;
+}
+/*.event_icon:after{
+    border: 1px solid rgba(0, 0, 0, .1);
+    bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0
+}*/

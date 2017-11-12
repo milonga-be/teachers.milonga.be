@@ -31,6 +31,8 @@ use common\components\Htmlizer;
 //   		);
 // 	});'
 // );
+// 
+// var_dump($events_by_date);
 $prev_month = clone $month_first_day;
 $prev_month->modify('-1 month');
 $prev_month->modify('first day');
@@ -117,28 +119,35 @@ if($this->context->embedded == true){
 					foreach ($events as $event) {
 					?>
 					<div class="V13">
-						<?php
-						// https://www.googleapis.com/drive/v2/files/fileId&alt=media
-						if(isset($event['attachments'][0])){
-							$file = $event['attachments'][0];
-							//echo '<img class="img-circle pull-left" src="'.Url::to(['agenda/event-picture','fileId' => $file['fileId']], true).'"/>';
-							// echo '*'.$event['attachments'][0]['fileUrl'].'*';
-							// var_dump($event['attachments'][0]);
+						<?php 
+						if(isset($event['school'])){
+							echo '<a class="swipebox" title="'.$event['school']['name'].'" href="'.$event['school']['picture'].'"><img class="event_icon" src="'.$event['school']['picture'].'"></a>';
+						}else{
+							echo '<div class="event_icon">&nbsp;</div>';
 						}
-						?>
-						<?php if(isset($event['summary'])){ ?>
+						if(isset($event['summary'])){ ?>
 						<a name="<?= $event['id']?>"></a>
-						<h4><?= $event['summary'] ?></h4>
+						<h4 data-creator="<?= $event['creator']['email']?>" data-id="<?= $event['id']?>">
+							
+							<?= $event['summary'] ?>
+						</h4>
 						<?php } ?>
 						<div class="milonga-data">
 							<?php if(isset($event['category'])){ ?>
-							<?= strtoupper($event['category'])?><br>
+							<?= strtoupper($event['category'])?>
 							<?php } ?>
-							<?php if(isset($event['start']['dateTime'])){ ?>
-								<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?><br/>
-							<?php }else if(isset($event['start']['date'])){ ?>
+							<div class="hours">
+								<?php if(isset($event['start']['dateTime'])){ ?>
+									<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?>
+									<?php if(isset($event['end']['dateTime'])){ ?>
+									 - 
+									 <?= (new Datetime($event['end']['dateTime']))->format('H:i')?>
+									 <?php } ?>
+									 <br/>
+								<?php }else if(isset($event['start']['date'])){ ?>
 								<?= (new Datetime($event['start']['date']))->format('D, F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format('D, F j')?><br/>
-							<?php } ?>
+								<?php } ?>
+							</div>
 							<?php if( isset($event['location']) ){ ?>
 							<?= $event['location']?>
 							<?php } ?>

@@ -3,6 +3,9 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
+use common\models\SchoolEmail;
+use common\models\User;
+use common\models\School;
 
 /**
  * Site controller
@@ -76,6 +79,11 @@ class AgendaController extends Controller{
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);
 			if(sizeof($workshops))
 				$events_by_date[$date]['Workshops'] = $workshops;
+		}
+
+		if(isset($_GET['debug'])){
+			var_dump($events_by_date);
+			die();
 		}
 
 		return $this->render('calendar', [ 'events_by_date' => $events_by_date , 'start' => $start, 'month_first_day' => $month_first_day , 'weeks' => $weeks, 'selected_day' => $selected_day ]);
@@ -238,11 +246,35 @@ class AgendaController extends Controller{
 			$datetime = new \Datetime($event['start']['dateTime']);
 			$event['start']['weekday'] = $datetime->format('N');
 
+			// Adding the picture
+			$creator_email = isset($event['creator']['email'])?$event['creator']['email']:null;
+			$organizer_email = isset($event['extendedProperties']['shared']['organizer'])?$event['extendedProperties']['shared']['organizer']:null;
+			if($organizer_email){
+				$school_email = $organizer_email;
+			}else{
+				$school_email = $creator_email;
+			}
+			if($school_email){
+				$school = School::findOne(['email' => $school_email]);
+				if(!$school){
+					$user = User::findOne(['email' => $school_email]);
+					if($user){
+						$school = $user->school;
+					}
+				}
+
+				if($school){
+					$event['school'] = array();
+					$event['school']['picture'] = $school->getPictureUrl();
+					$event['school']['name'] = $school->name;
+				}
+			}
+
 			if( $fits == TRUE ){
 				$events_filtered[] = $event;
 			}
 
-			
+
 		}
 		return $events_filtered;
 	}
