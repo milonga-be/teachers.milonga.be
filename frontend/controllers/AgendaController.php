@@ -3,7 +3,6 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use common\models\SchoolEmail;
 use common\models\User;
 use common\models\School;
 
