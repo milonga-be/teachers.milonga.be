@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\models\EventSearch;
 use backend\models\Event;
+use yii\web\UploadedFile;
 
 /**
  * Site controller
@@ -51,11 +52,46 @@ class AgendaController extends Controller{
     	$event = Event::findOne($id);
 
     	if ($event->load(Yii::$app->request->post())) {
+            $event->pictureFile = UploadedFile::getInstance($event, 'pictureFile');
+            $event->uploadFiles();
             if($event->save()){
                 Yii::$app->getSession()->setFlash('success', ['title' => 'Event updated']);
             }
         }
 
     	return $this->render('update', ['event' => $event]);
+    }
+
+    /**
+     * Create an event
+     * @return mixed
+     */
+    public function actionCreate(){
+        $event = new Event();
+        $event->type = 'MILONGA';
+
+        if ($event->load(Yii::$app->request->post())) {
+            $event->pictureFile = UploadedFile::getInstance($event, 'pictureFile');
+            $event->uploadFiles();
+            if($event->save()){
+                $this->redirect(['update', 'id' => $event->id]);
+                Yii::$app->getSession()->setFlash('success', ['title' => 'Event created']);
+                return;
+            }
+        }
+
+        return $this->render('update', ['event' => $event]);
+    }
+
+    /**
+     * Delete an event
+     * @return  mixed
+     */
+    public function actionDelete($id){
+        $event = Event::findOne($id);
+
+        $event->delete();
+        $this->redirect(['index']);
+        return;
     }
 }

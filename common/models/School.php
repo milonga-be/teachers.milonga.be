@@ -156,4 +156,13 @@ class School extends ActiveRecord{
 
         return $schoolsArray = ArrayHelper::map( $venues , 'id', 'name');
     }
+
+    /**
+     * Returns the user authorized for the school
+     * @return array
+     */
+    public function getUsers(){
+        return $this->hasMany(User::className(), ['id' => 'user_id'])
+                        ->viaTable('user_school', ['school_id' => 'id']);
+    }
 }

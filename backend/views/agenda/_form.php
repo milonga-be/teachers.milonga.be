@@ -39,9 +39,13 @@ $datepicker_options = [
 echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 
 echo $form->field($event, 'summary'); 
 echo $form->field($event, 'location'); 
-echo $form->field($event, 'description')->textarea(['rows' => 20]);
+echo $form->field($event, 'pictureFile')->fileInput();
+if($event->picture){
+	echo '<p><a target="_blank" href="'.$event->pictureUrl.'">See current picture</a></p>';
+}
+echo $form->field($event, 'description')->textarea(['rows' => 10]);
 
-echo '<p class="text-right"><button type="submit" class="btn btn-success">Save</button></p>'; 
+echo '<p class="text-right">'.(($event->id)?'<a onclick="return confirm(\'Do you really want to delete this event ?\');" href="'.Url::to(['delete', 'id' => $event->id]).'" class="btn btn-danger">Delete</a>':'').' <button type="submit" class="btn btn-success">Save</button></p>';
 
 ActiveForm::end();
 ?>
