@@ -33,7 +33,7 @@ class School extends ActiveRecord{
             $school_dir = \Yii::$app->basePath.'/../uploads/'.$this->id;
             @mkdir($school_dir);
             if($this->pictureFile){
-                $path = '/picture.' . $this->pictureFile->extension;
+                $path = '/picture'.date('YmdHis').'.' . $this->pictureFile->extension;
                 $complete_path = $school_dir.$path;
                 $this->pictureFile->saveAs($complete_path);
                 $this->picture = $this->id.$path;
@@ -46,7 +46,7 @@ class School extends ActiveRecord{
                     $white = Image::getImagine()->create(new Box($img_size, $img_size));
                     $thumbnail = $white->paste($thumbnail, new Point($img_size / 2 - $size->getWidth() / 2, $img_size / 2 - $size->getHeight() / 2));
                 }
-                $thumb_path = '/picture-thumb100.'.$this->pictureFile->extension;
+                $thumb_path = '/picture-thumb100'.date('YmdHis').'.'.$this->pictureFile->extension;
                 $thumbnail->save($school_dir.$thumb_path);
                 $this->thumb = $this->id.$thumb_path;
 

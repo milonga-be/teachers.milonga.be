@@ -21,6 +21,14 @@ AppAsset::register($this);
         <?php $this->head() ?>
         <link rel="stylesheet" id="ultrabootstrap-style-css" href="http://milonga.local/wp-content/themes/ultrabootstrap/style.css?ver=4.6.1" type="text/css" media="all">
         <link rel="stylesheet" id="ultrabootstrap-googlefonts-css" href="//fonts.googleapis.com/css?family=Roboto%3A400%2C300%2C700&amp;ver=4.6.1" type="text/css" media="all">
+        <style>
+            .note-toolbar .btn{
+                /* restoring lost summernote styles for the control buttons */
+                color:black !important;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+            }
+        </style>
     </head>
     <body>
         <?php $this->beginBody() ?>

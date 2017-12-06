@@ -147,6 +147,9 @@ class Event extends Model{
 		$event->location = $result->location;
 		$event->type = $analyse_summary['type'];
 		$event->description = $result->description;
+		if(!strpos($event->description, '<a ') && !strpos($event->description, '<b')){
+			$event->description = nl2br($event->description);
+		}
 		// Dates
 		$startDateTime = new \DateTime($result->start->dateTime);
 		$event->start = $startDateTime->format('d-m-Y H:i');
