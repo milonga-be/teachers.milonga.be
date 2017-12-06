@@ -13,8 +13,10 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/site.css',
+        'css/swipebox.min.css'
     ];
     public $js = [
+        'js/jquery.swipebox.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',

@@ -176,15 +176,17 @@ td.other_month a{
     height: 200px;
     position: relative;
     display: block;
-    overflow: hidden;
+    /*overflow: hidden;*/
     border-radius: 5px;
     cursor: zoom-in;
+    background-size:cover;
+    background-position: center;
 }
-.img_mask img{
+/*.img_mask img{
     position: absolute;
     top:0;
     width:100%;
-}
+}*/
 /*.event_icon:after{
     border: 1px solid rgba(0, 0, 0, .1);
     bottom: 0;

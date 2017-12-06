@@ -118,3 +118,19 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
+.img_mask{
+    height: 200px;
+    width:500px;
+    position: relative;
+    display: block;
+    /*overflow: hidden;*/
+    border-radius: 5px;
+    cursor: zoom-in;
+    background-size:cover;
+    background-position: center;
+}
+/*.img_mask img{
+    position: absolute;
+    top:0;
+    width:100%;
+}*/

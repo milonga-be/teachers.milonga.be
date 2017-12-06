@@ -157,8 +157,9 @@ if($this->context->embedded == true){
 						<div class="milonga-description">
 							<?php
 							if(isset($event['extendedProperties']['shared']['picture'])){
+
 								$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
-								echo '<a href="'.$pictureUrl.'" class="swipebox img_mask"><img src="'.$pictureUrl.'"></a><br/>';
+								echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';
 							}
 							$html = Htmlizer::execute($event['description']);
 							$html_lines = explode('<br />', $html);

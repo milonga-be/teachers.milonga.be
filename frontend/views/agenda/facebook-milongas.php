@@ -13,7 +13,7 @@ function cmp($a, $b) {
 
 ?>
 
-You want to dance tango ? <br/>
+I want more tango !<br/>
 This week milongas : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br>
 http://www.milonga.be/dancing/<br><br>
 
