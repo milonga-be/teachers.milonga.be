@@ -41,8 +41,9 @@ echo $form->field($event, 'type')->dropDownList(Event::getTypes());
 echo $form->field($event, 'summary'); 
 echo $form->field($event, 'location'); 
 echo $form->field($event, 'pictureFile')->fileInput();
+echo '<input id="picture-remove" type="hidden" name="Event[pictureRemove]" value="0">';
 if($event->picture){
-	echo '<p><a class="swipebox img_mask" target="_blank" href="'.$event->pictureUrl.'" style="background-image:url('.$event->pictureUrl.');"></a></p>';
+	echo '<p id="picture-preview"><a class="swipebox img_mask" target="_blank" href="'.$event->pictureUrl.'" style="background-image:url('.$event->pictureUrl.');"></a>'.FA::icon('close').'</p>';
 }
 // echo $form->field($event, 'description')->textarea(['rows' => 10]);
 echo $form->field($event, 'description')->widget(Summernote::className(), 
@@ -59,6 +60,12 @@ echo '<p class="text-right">'.(($event->id)?'<a onclick="return confirm(\'Do you
 ActiveForm::end();
 
 $this->registerJs(
-	'$(".swipebox").swipebox({useSVG : false});'
+	'$(".swipebox").swipebox({useSVG : false});
+	$("#picture-preview .fa-close").on("click", function(e){
+		e.preventDefault();
+		$("#picture-preview").hide();
+		$("#picture-remove").val(1);
+	});
+	'
 );
 ?>

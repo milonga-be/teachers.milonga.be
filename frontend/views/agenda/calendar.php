@@ -156,7 +156,7 @@ if($this->context->embedded == true){
 						<?php if( isset($event['description']) ){ ?>
 						<div class="milonga-description">
 							<?php
-							if(isset($event['extendedProperties']['shared']['picture'])){
+							if(isset($event['extendedProperties']['shared']['picture']) && $event['extendedProperties']['shared']['picture']){
 
 								$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
 								echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';

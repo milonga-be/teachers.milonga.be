@@ -15,6 +15,7 @@ class Event extends Model{
 	var $end;
 	var $picture;
 	var $pictureFile;
+	var $pictureRemove;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -32,6 +33,7 @@ class Event extends Model{
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
+			[['pictureRemove'], 'boolean'],
 		];
 	}
 
@@ -98,11 +100,14 @@ class Event extends Model{
 	}
 
 	/**
-     * Upload and saves the files for the schoold
+     * Upload and saves the files for the event
      * @return boolean
      */
     public function uploadFiles()
     {
+    	if($this->pictureRemove){
+    		$this->picture = null;
+    	}
         if ($this->validate()) {
             $events_dir = \Yii::$app->basePath.'/../uploads/events/';
             $event_dir = $events_dir.$this->id;
