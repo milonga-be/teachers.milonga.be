@@ -25,6 +25,7 @@ echo $form->field($school, 'flyerFile')->fileInput();
 if($school->flyer){
 	echo '<p><a target="_blank" href="'.$school->flyerUrl.'">See current flyer</a></p>';
 }
+echo $form->field($school, 'description')->textarea(['rows' => 5]);
 echo '<p class="text-right"><button type="submit" class="btn btn-success">Save</button></p>';
 
 ActiveForm::end();

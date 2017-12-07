@@ -14,6 +14,11 @@ td.levelname{
 .school{
     margin-top:40px;
 }
+.school-description{
+    clear:both;
+    font-size:0.9em;
+    color:rgb(100, 100, 100);
+}
 .school-info .fa{
     font-size:1.2em;
 }

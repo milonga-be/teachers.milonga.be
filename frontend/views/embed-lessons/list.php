@@ -25,6 +25,9 @@ foreach($schools as $school){
 		<?= ( $school->website )? '<a target="_blank" href="' . (( strpos($school->website,'http') === FALSE )? 'http://' . $school->website : $school->website) . '"><i class="fa fa-globe" aria-hidden="true"></i> Website</a><br>':'' ?>
 		<?= ( $school->flyer )? '<a class="swipebox" href="' . $school->flyerUrl . '"><i class="fa fa-paperclip" aria-hidden="true"></i> Flyer</a>':'' ?>
 	</p>
+	<?php if($school->description){ ?>
+		<p class="school-description"><?= nl2br($school->description) ?></p>
+	<?php } ?>
 	<?php
 	foreach ($schools_venues[ $school->id ] as $venue) {
 		?>
