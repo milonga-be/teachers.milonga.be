@@ -48,6 +48,7 @@ class Event extends Model{
 	 * @return boolean
 	 */
 	public function save(){
+
 		if($this->validate()){
 			$user = Yii::$app->user->identity;
 			$id = $this->id;
@@ -81,9 +82,10 @@ class Event extends Model{
 			$event->setEnd($gedt);
 			$extentedProperties = new \Google_Service_Calendar_EventExtendedProperties();
 			$sharedProperties = array('organizer' => $user->email);
-			if($datas['picture']){
+			if($datas['picture'] || $this->pictureRemove){
 				$sharedProperties['picture'] = $datas['picture'];
 			}
+
 			$extentedProperties->setShared($sharedProperties);
 			$event->setExtendedProperties($extentedProperties);
 
@@ -106,7 +108,7 @@ class Event extends Model{
     public function uploadFiles()
     {
     	if($this->pictureRemove){
-    		$this->picture = null;
+    		$this->picture = "";
     	}
         if ($this->validate()) {
             $events_dir = \Yii::$app->basePath.'/../uploads/events/';
