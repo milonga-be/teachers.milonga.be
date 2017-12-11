@@ -237,8 +237,10 @@ class AgendaController extends Controller{
 					$fits = TRUE;
 				}
 			}
-			if(isset($event['description']))
-				$event['description'] = strip_tags($event['description'], '<br><a><p>');
+			if(isset($event['description'])){
+				$event['description'] = str_replace('</p>', '<br />', $event['description']);
+				$event['description'] = strip_tags($event['description'], '<br><a><b><i>');
+			}
 
 			// Adding some info to help
 			if(!isset($event['start']['dateTime']) && isset($event['start']['date'])){
