@@ -54,6 +54,9 @@ class EventSearch extends Event
 		$filtered_events = array();
 		$authorized_emails = array();
 		$user = Yii::$app->user->identity;
+		if($user->school && $user->school->email){
+			$authorized_emails[] = $user->school->email;
+		}
 		foreach ($user->school->users as $authorized_user) {
 			$authorized_emails[] = $authorized_user->email;
 		}

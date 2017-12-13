@@ -211,7 +211,7 @@ class SiteController extends Controller
                 ->setFrom('milonga@milonga.be')
                 ->setTo($user->email)
                 ->setCc('milonga@milonga.be')
-                ->setSubject('Milonga.be : update your regular classes for January')
+                ->setSubject('Update your regular classes for January')
                 ->send();
             echo 'Sent access to '. $user->email.'<br>';
         }
