@@ -240,6 +240,8 @@ class AgendaController extends Controller{
 			if(isset($event['description'])){
 				$event['description'] = str_replace('</p>', '<br />', $event['description']);
 				$event['description'] = strip_tags($event['description'], '<br><a><b><i>');
+				$event['description'] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $event['description']);
+				$event['description'] = str_replace('<br>', '<br />', $event['description']);
 			}
 
 			// Adding some info to help
