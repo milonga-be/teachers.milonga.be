@@ -24,7 +24,7 @@ $i = 0;
 		</div>
 		<?php if( isset($event['description']) ){ ?>
 		<div class="milonga-description">
-			<?= Htmlizer::execute($event['description'])?>
+			<?= Htmlizer::execute($event)?>
 		</div>
 		<?php } ?>
 	</div>

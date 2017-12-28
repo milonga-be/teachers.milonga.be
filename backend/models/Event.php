@@ -16,6 +16,9 @@ class Event extends Model{
 	var $picture;
 	var $pictureFile;
 	var $pictureRemove;
+	var $raw_recurrence;
+	var $recurrence_every;
+	var $recurrence_weekday;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -26,10 +29,25 @@ class Event extends Model{
 	const TYPE_SHOW = 'SHOW';
 	const TYPE_FESTIVAL = 'FESTIVAL';
 
+	const EVERY = 'every';
+	const EVERY_FIRST = '1';
+	const EVERY_SECOND = '2';
+	const EVERY_THIRD = '3';
+	const EVERY_FOURTH = '4';
+	const EVERY_FIFTH = '5';
+
+	const MONDAY = 'MO';
+	const TUESDAY = 'TU';
+	const WEDNESDAY = 'WE';
+	const THURSDAY = 'TH';
+	const FRIDAY = 'FR';
+	const SATURDAY = 'SA';
+	const SUNDAY = 'SU';
+
 	/** Which attributes can be modified and how **/
 	public function rules(){
 		return [
-			[['type', 'summary', 'description', 'location', 'start','end'], 'safe'],
+			[['type', 'summary', 'description', 'location', 'start','end', 'recurrence_every', 'recurrence_weekday'], 'safe'],
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
@@ -39,7 +57,9 @@ class Event extends Model{
 
 	public function attributeLabels(){
 		return [
-			'summary' => "Title"
+			'summary' => "Title",
+			'recurrence_every' => "Recurrence",
+			'recurrence_weekday' => "Weekday",
 		];
 	}
 
@@ -167,8 +187,38 @@ class Event extends Model{
 		if(isset($result->getExtendedProperties()->shared['picture'])){
 			$event->picture = $result->getExtendedProperties()->shared['picture'];
 		}
+		if($result->getRecurringEventId() && empty($result->getRecurrence())){
+			$master = Event::findOne($result->getRecurringEventId());
+			$event->raw_recurrence = $master->raw_recurrence;
+			$event->parseRawRecurrence();
+		}else if($result->getRecurrence()){
+			$event->raw_recurrence = $result->getRecurrence();
+		}
 
 		return $event;
+	}
+
+	/**
+	 * Parses the raw recurrence and fill the recurrence modifiable fields
+	 * @return boolean
+	 */
+	private function parseRawRecurrence(){
+		$rule = $this->raw_recurrence[1];
+		if(strpos($rule, 'FREQ=MONTHLY')){
+			if(strpos($rule, 'BYDAY=1')){
+				$this->recurrence_every = self::EVERY_FIRST;
+			}else if(strpos($rule, 'BYDAY=2')){
+				$this->recurrence_every = self::EVERY_SECOND;
+			}else if(strpos($rule, 'BYDAY=3')){
+				$this->recurrence_every = self::EVERY_THIRD;
+			}else if(strpos($rule, 'BYDAY=4')){
+				$this->recurrence_every = self::EVERY_FOURTH;
+			}else if(strpos($rule, 'BYDAY=5')){
+				$this->recurrence_every = self::EVERY_FIFTH;
+			}
+		}else if(strpos($rule, 'FREQ=WEEKLY')){
+			$this->recurrence_every = 'every';
+		}
 	}
 
 	/**
@@ -249,6 +299,39 @@ class Event extends Model{
 			self::TYPE_CONCERT => self::TYPE_CONCERT,
 			self::TYPE_SHOW => self::TYPE_SHOW,
 			self::TYPE_FESTIVAL => self::TYPE_FESTIVAL,
+		);
+	}
+
+	/**
+	 * Get the list of possible recurrence
+	 * @return array
+	 */
+	public static function getRecurrenceEveryList(){
+		return array(
+			'' => '',
+			self::EVERY => 'Every',
+			self::EVERY_FIRST => 'Every first',
+			self::EVERY_SECOND => 'Every second',
+			self::EVERY_THIRD => 'Every third',
+			self::EVERY_FOURTH => 'Every fourth',
+			self::EVERY_FIFTH => 'Every fifth',
+		);
+	}
+
+	/**
+	 * Get the list of possible recurrence
+	 * @return array
+	 */
+	public static function getRecurrenceWeekdaysList(){
+		return array(
+			'' => '',
+			self::MONDAY => 'Monday',
+			self::TUESDAY => 'Tuesday',
+			self::WEDNESDAY => 'Wednesday',
+			self::THURSDAY => 'Thursday',
+			self::FRIDAY => 'Friday',
+			self::SATURDAY => 'Saturday',
+			self::SUNDAY => 'Sunday',
 		);
 	}
 

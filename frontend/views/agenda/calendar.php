@@ -127,7 +127,7 @@ if($this->context->embedded == true){
 						}
 						if(isset($event['summary'])){ ?>
 						<a name="<?= $event['id']?>"></a>
-						<h4 data-creator="<?= $event['creator']['email']?>" data-id="<?= $event['id']?>">
+						<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= $event['email']?>" data-id="<?= $event['id']?>">
 							
 							<?= $event['summary'] ?>
 						</h4>
@@ -161,7 +161,7 @@ if($this->context->embedded == true){
 								$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
 								echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';
 							}
-							$html = Htmlizer::execute($event['description']);
+							$html = Htmlizer::execute($event);
 							$html_lines = explode('<br />', $html);
 							if(sizeof($html_lines) > 5){
 								echo implode('<br />', array_slice($html_lines, 0, 5));

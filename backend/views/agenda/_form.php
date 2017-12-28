@@ -36,6 +36,19 @@ $datepicker_options = [
 		<?= $form->field($event, 'end')->widget(DateTimePicker::classname(), $datepicker_options) ?>
 	</div>
 </div>
+<!-- 
+<?php
+var_dump($event->raw_recurrence);
+?>
+-->
+<div class="row">
+	<div class="col-md-6">
+		<?= $form->field($event, 'recurrence_every')->dropDownList(Event::getRecurrenceEveryList()) ?>
+	</div>
+	<div class="col-md-6">
+		<?= $form->field($event, 'recurrence_weekday')->dropDownList(Event::getRecurrenceWeekdaysList())?>
+	</div>
+</div>
 <?php
 echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 
 echo $form->field($event, 'summary'); 

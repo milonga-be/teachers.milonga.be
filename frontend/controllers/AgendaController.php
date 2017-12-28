@@ -260,6 +260,7 @@ class AgendaController extends Controller{
 				$school_email = $creator_email;
 			}
 			if($school_email){
+				$event['email'] = $school_email;
 				$school = School::findOne(['email' => $school_email]);
 				if(!$school){
 					$user = User::findOne(['email' => $school_email]);
