@@ -152,8 +152,6 @@ if($this->context->embedded == true){
 							<?= $event['location']?>
 							<?php } ?>
 						</div>
-						
-						<?php if( isset($event['description']) ){ ?>
 						<div class="milonga-description">
 							<?php
 							if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
@@ -173,7 +171,6 @@ if($this->context->embedded == true){
 							}
 							?>
 						</div>
-						<?php } ?>
 					</div>
 					<?php
 					}
