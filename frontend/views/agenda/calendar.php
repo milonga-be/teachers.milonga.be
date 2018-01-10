@@ -120,7 +120,7 @@ if($this->context->embedded == true){
 					?>
 					<div class="V13">
 						<?php 
-						if(isset($event['school'])){
+						if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
 							echo '<a class="swipebox" title="'.$event['school']['name'].'" href="'.$event['school']['picture'].'"><img class="event_icon" src="'.$event['school']['picture'].'"></a>';
 						}else{
 							echo '<div class="event_icon">&nbsp;</div>';

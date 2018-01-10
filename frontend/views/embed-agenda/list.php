@@ -22,11 +22,15 @@ $i = 0;
 			<?= $event['location']?>
 			<?php } ?>
 		</div>
-		<?php if( isset($event['description']) ){ ?>
 		<div class="milonga-description">
+			<?php
+			if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
+				$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
+				echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';
+			}
+			?>
 			<?= Htmlizer::execute($event)?>
 		</div>
-		<?php } ?>
 	</div>
 	<?php
 	$i++;

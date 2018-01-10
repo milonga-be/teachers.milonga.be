@@ -1,19 +1,7 @@
 <?php
 
 use yii\web\View;
-
-function htmlize($text){
-	$html=$text;
-	$html=str_replace(" euro","&euro;",$html);
-	$html=preg_replace("|http://([a-zA-Z0-9/_\-\.]+\.jp[e]?g)|", "<img src='httpx://$1' />", $html);
-	$html=preg_replace("|https://([a-zA-Z0-9/_\-\.]+\.jp[e]?g)|", "<img src='httpx://$1' />", $html);
-	$html=preg_replace("|http://([a-zA-Z0-9/_\-\.~\?=\&;]+)|", "<a target='_blank' href='http://$1'>$1</a>", $html);
-	$html=preg_replace("|https://([a-zA-Z0-9/_\-\.~\?=\&;]+)|", "<a target='_blank' href='https://$1'>$1</a>", $html);
-	$html=preg_replace("|([A-Za-z0-9._\-]+@[A-Za-z0-9\.]+\.[a-z]+)|", "<a href='mailto:$1'>$1</a>", $html);
-	$html=str_replace("httpx://", "http://", $html);
-
-	return nl2br($html);
-}
+use common\components\Htmlizer;
 
 $this->registerJs(
 	"$('.milonga-description').expander({
@@ -57,11 +45,15 @@ foreach ($events as $event) {
 		<?= $event['location']?>
 		<?php } ?>
 		</div>
-		<?php if( isset($event['description']) ){ ?>
 		<div class="milonga-description">
-			<?= htmlize($event['description'])?>
+			<?php
+			if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
+				$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
+				echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';
+			}
+			?>
+			<?= Htmlizer::execute($event)?>
 		</div>
-		<?php } ?>
 	</div>
 	<?php
 	$i++;

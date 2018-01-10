@@ -49,6 +49,33 @@ class LessonsController extends Controller{
 	}
 
 	/**
+	 * List the classes for Facebook
+	 * @return string
+	 */
+	public function actionFacebookList(){
+		$schools = School::find()->joinWith('venues')->orderBy('school.name ASC')->all();
+		$venues = Venue::find()->asArray()->all();
+		$postalcodes = ArrayHelper::getColumn($venues, 'postalcode');
+
+		foreach ($schools as $school) {
+			$schools_venues[ $school->id ] = $school->getPostalCodeVenues( $postalcodes );
+		}
+
+		foreach ($schools_venues as $venues) {
+			foreach($venues as $venue)
+				$venues_lessons[ $venue->id ] = $venue->lessons;
+		}
+
+		return $this->render('facebook-list', [
+            'schools' => $schools,
+            'postalcodes' => $postalcodes,
+            'schools_venues' => $schools_venues,
+            'venues_lessons' => $venues_lessons,
+            
+        ]);
+	}
+
+	/**
 	 * List the classes for a certain level
 	 * @return string
 	 */

@@ -78,7 +78,10 @@ class School extends ActiveRecord{
      * @return string
      */
     public function getPictureUrl(){
-        return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->picture;
+        if($this->picture)
+            return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->picture;
+        else
+            return null;
     }
 
     /**
