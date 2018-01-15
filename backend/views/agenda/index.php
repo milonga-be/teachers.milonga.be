@@ -39,9 +39,6 @@ echo '<h1>' . $this->title . '</h1>';
 			 			}
 			 			return Html::a($summary, ['agenda/update', 'id' => $data['id']]);
 			 		}
-			 	],
-			 	[
-			 		'attribute' => 'recurrence'
 			 	]
 			 ]
 	]) ?>

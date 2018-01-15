@@ -387,6 +387,25 @@ class AgendaController extends Controller{
 	}
 
 	/**
+	 * List the events in the agenda for a Facebook picture
+	 * @param  integer $weeks  the number of weeks to display
+	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
+	 * @return string
+	 */
+	public function actionFacebookPicture( $weeks = 1 , $filter = null){
+
+		$events = $this->getEvents( $weeks * 7 , $filter );
+		$start = new \Datetime();
+		if($start->format('w') != 1){
+			$start->modify('previous monday');
+		}
+		$end = clone $start;
+		$end->modify('4 weeks');
+
+		return $this->render('facebook-picture', [ 'events' => $events , 'start' => $start, 'weeks' => $weeks ]);
+	}
+
+	/**
 	 * Compose a summary of the workshops for Facebook
 	 * @return mixed
 	 */

@@ -16,6 +16,9 @@ use marqu3s\summernote\Summernote;
 	</div>
 </p>
 <?php
+echo '<!-- ';
+var_dump($event);
+echo '-->';
 
 $form = ActiveForm::begin([
 		'options' => ['enctype' => 'multipart/form-data']
@@ -42,12 +45,12 @@ var_dump($event->raw_recurrence);
 ?>
 -->
 <div class="row">
-	<div class="col-md-6">
-		<?= $form->field($event, 'recurrence_every')->dropDownList(Event::getRecurrenceEveryList()) ?>
-	</div>
+	<div class="col-md-12">
+		<?= $form->field($event, 'recurrence_every')->dropDownList(Event::getRecurrenceEveryList(), ['prompt' => 'Not recurrent']) ?>
+	</div><!-- 
 	<div class="col-md-6">
 		<?= $form->field($event, 'recurrence_weekday')->dropDownList(Event::getRecurrenceWeekdaysList())?>
-	</div>
+	</div> -->
 </div>
 <?php
 echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 

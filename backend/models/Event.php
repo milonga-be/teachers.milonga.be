@@ -29,12 +29,35 @@ class Event extends Model{
 	const TYPE_SHOW = 'SHOW';
 	const TYPE_FESTIVAL = 'FESTIVAL';
 
-	const EVERY = 'every';
-	const EVERY_FIRST = '1';
-	const EVERY_SECOND = '2';
-	const EVERY_THIRD = '3';
-	const EVERY_FOURTH = '4';
-	const EVERY_FIFTH = '5';
+	const EVERY = 'weekly';
+	const EVERY_FIRST_MONDAY = '1MO';
+	const EVERY_FIRST_TUESDAY = '1TU';
+	const EVERY_FIRST_WEDNESDAY = '1WE';
+	const EVERY_FIRST_THURSDAY = '1TH';
+	const EVERY_FIRST_FRIDAY = '1FR';
+	const EVERY_FIRST_SATURDAY = '1SA';
+	const EVERY_FIRST_SUNDAY = '1SU';
+	const EVERY_SECOND_MONDAY = '2MO';
+	const EVERY_SECOND_TUESDAY = '2TU';
+	const EVERY_SECOND_WEDNESDAY = '2WE';
+	const EVERY_SECOND_THURSDAY = '2TH';
+	const EVERY_SECOND_FRIDAY = '2FR';
+	const EVERY_SECOND_SATURDAY = '2SA';
+	const EVERY_SECOND_SUNDAY = '2SU';
+	const EVERY_THIRD_MONDAY = '3MO';
+	const EVERY_THIRD_TUESDAY = '3TU';
+	const EVERY_THIRD_WEDNESDAY = '3WE';
+	const EVERY_THIRD_THURSDAY = '3TH';
+	const EVERY_THIRD_FRIDAY = '3FR';
+	const EVERY_THIRD_SATURDAY = '3SA';
+	const EVERY_THIRD_SUNDAY = '3SU';
+	const EVERY_FOURTH_MONDAY = '4MO';
+	const EVERY_FOURTH_TUESDAY = '4TU';
+	const EVERY_FOURTH_WEDNESDAY = '4WE';
+	const EVERY_FOURTH_THURSDAY = '4TH';
+	const EVERY_FOURTH_FRIDAY = '4FR';
+	const EVERY_FOURTH_SATURDAY = '4SA';
+	const EVERY_FOURTH_SUNDAY = '4SU';
 
 	const MONDAY = 'MO';
 	const TUESDAY = 'TU';
@@ -203,21 +226,72 @@ class Event extends Model{
 	 * @return boolean
 	 */
 	private function parseRawRecurrence(){
-		$rule = $this->raw_recurrence[1];
-		if(strpos($rule, 'FREQ=MONTHLY')){
-			if(strpos($rule, 'BYDAY=1')){
-				$this->recurrence_every = self::EVERY_FIRST;
-			}else if(strpos($rule, 'BYDAY=2')){
-				$this->recurrence_every = self::EVERY_SECOND;
-			}else if(strpos($rule, 'BYDAY=3')){
-				$this->recurrence_every = self::EVERY_THIRD;
-			}else if(strpos($rule, 'BYDAY=4')){
-				$this->recurrence_every = self::EVERY_FOURTH;
-			}else if(strpos($rule, 'BYDAY=5')){
-				$this->recurrence_every = self::EVERY_FIFTH;
+		if(is_array($this->raw_recurrence)){
+			foreach ($this->raw_recurrence as $rule) {
+				if(strpos($rule, 'RRULE:')!==false){
+					if(strpos($rule, 'FREQ=MONTHLY')){
+						if(strpos($rule, 'BYDAY=1MO')){
+							$this->recurrence_every = self::EVERY_FIRST_MONDAY;
+						}else if(strpos($rule, 'BYDAY=1TU')){
+							$this->recurrence_every = self::EVERY_FIRST_TUESDAY;
+						}else if(strpos($rule, 'BYDAY=1WE')){
+							$this->recurrence_every = self::EVERY_FIRST_WEDNESDAY;
+						}else if(strpos($rule, 'BYDAY=1TH')){
+							$this->recurrence_every = self::EVERY_FIRST_THURSDAY;
+						}else if(strpos($rule, 'BYDAY=1FR')){
+							$this->recurrence_every = self::EVERY_FIRST_FRIDAY;
+						}else if(strpos($rule, 'BYDAY=1SA')){
+							$this->recurrence_every = self::EVERY_FIRST_SATURDAY;
+						}else if(strpos($rule, 'BYDAY=1SU')){
+							$this->recurrence_every = self::EVERY_FIRST_SUNDAY;
+						}elseif(strpos($rule, 'BYDAY=2MO')){
+							$this->recurrence_every = self::EVERY_SECOND_MONDAY;
+						}else if(strpos($rule, 'BYDAY=2TU')){
+							$this->recurrence_every = self::EVERY_SECOND_TUESDAY;
+						}else if(strpos($rule, 'BYDAY=2WE')){
+							$this->recurrence_every = self::EVERY_SECOND_WEDNESDAY;
+						}else if(strpos($rule, 'BYDAY=2TH')){
+							$this->recurrence_every = self::EVERY_SECOND_THURSDAY;
+						}else if(strpos($rule, 'BYDAY=2FR')){
+							$this->recurrence_every = self::EVERY_SECOND_FRIDAY;
+						}else if(strpos($rule, 'BYDAY=2SA')){
+							$this->recurrence_every = self::EVERY_SECOND_SATURDAY;
+						}else if(strpos($rule, 'BYDAY=2SU')){
+							$this->recurrence_every = self::EVERY_SECOND_SUNDAY;
+						}else if(strpos($rule, 'BYDAY=3MO')){
+							$this->recurrence_every = self::EVERY_THIRD_MONDAY;
+						}else if(strpos($rule, 'BYDAY=3TU')){
+							$this->recurrence_every = self::EVERY_THIRD_TUESDAY;
+						}else if(strpos($rule, 'BYDAY=3WE')){
+							$this->recurrence_every = self::EVERY_THIRD_WEDNESDAY;
+						}else if(strpos($rule, 'BYDAY=3TH')){
+							$this->recurrence_every = self::EVERY_THIRD_THURSDAY;
+						}else if(strpos($rule, 'BYDAY=3FR')){
+							$this->recurrence_every = self::EVERY_THIRD_FRIDAY;
+						}else if(strpos($rule, 'BYDAY=3SA')){
+							$this->recurrence_every = self::EVERY_THIRD_SATURDAY;
+						}else if(strpos($rule, 'BYDAY=3SU')){
+							$this->recurrence_every = self::EVERY_THIRD_SUNDAY;
+						}else if(strpos($rule, 'BYDAY=4MO')){
+							$this->recurrence_every = self::EVERY_FOURTH_MONDAY;
+						}else if(strpos($rule, 'BYDAY=4TU')){
+							$this->recurrence_every = self::EVERY_FOURTH_TUESDAY;
+						}else if(strpos($rule, 'BYDAY=4WE')){
+							$this->recurrence_every = self::EVERY_FOURTH_WEDNESDAY;
+						}else if(strpos($rule, 'BYDAY=4TH')){
+							$this->recurrence_every = self::EVERY_FOURTH_THURSDAY;
+						}else if(strpos($rule, 'BYDAY=4FR')){
+							$this->recurrence_every = self::EVERY_FOURTH_FRIDAY;
+						}else if(strpos($rule, 'BYDAY=4SA')){
+							$this->recurrence_every = self::EVERY_FOURTH_SATURDAY;
+						}else if(strpos($rule, 'BYDAY=4SU')){
+							$this->recurrence_every = self::EVERY_FOURTH_SUNDAY;
+						}
+					}else if(strpos($rule, 'FREQ=WEEKLY')){
+						$this->recurrence_every = 'weekly';
+					}
+				}
 			}
-		}else if(strpos($rule, 'FREQ=WEEKLY')){
-			$this->recurrence_every = 'every';
 		}
 	}
 
@@ -228,6 +302,7 @@ class Event extends Model{
 	 */
 	public static function filterType($summary){
 		$type = '';
+		$found_type = null;
 		$types = self::getTypes();
 		foreach ($types as $key => $type) {
 			if(substr($summary, 0, strlen($type) + 1) == $type.':'){
@@ -309,12 +384,43 @@ class Event extends Model{
 	public static function getRecurrenceEveryList(){
 		return array(
 			'' => '',
-			self::EVERY => 'Every',
-			self::EVERY_FIRST => 'Every first',
-			self::EVERY_SECOND => 'Every second',
-			self::EVERY_THIRD => 'Every third',
-			self::EVERY_FOURTH => 'Every fourth',
-			self::EVERY_FIFTH => 'Every fifth',
+			self::EVERY => 'Every week',
+			'Every first' => [
+				self::EVERY_FIRST_MONDAY => 'Every 1st Monday',
+				self::EVERY_FIRST_TUESDAY => 'Every 1st Tuesday',
+				self::EVERY_FIRST_WEDNESDAY => 'Every 1st Wednesday',
+				self::EVERY_FIRST_THURSDAY => 'Every 1st Thursday',
+				self::EVERY_FIRST_FRIDAY => 'Every 1st Friday',
+				self::EVERY_FIRST_SATURDAY => 'Every 1st Saturday',
+				self::EVERY_FIRST_SUNDAY => 'Every 1st Sunday'
+			],
+			'Every second' => [
+				self::EVERY_SECOND_MONDAY => 'Every 2nd Monday',
+				self::EVERY_SECOND_TUESDAY => 'Every 2nd Tuesday',
+				self::EVERY_SECOND_WEDNESDAY => 'Every 2nd Wednesday',
+				self::EVERY_SECOND_THURSDAY => 'Every 2nd Thursday',
+				self::EVERY_SECOND_FRIDAY => 'Every 2nd Friday',
+				self::EVERY_SECOND_SATURDAY => 'Every 2nd Saturday',
+				self::EVERY_SECOND_SUNDAY => 'Every 2nd Sunday'
+			],
+			'Every third' => [
+				self::EVERY_THIRD_MONDAY => 'Every 3d Monday',
+				self::EVERY_THIRD_TUESDAY => 'Every 3d Tuesday',
+				self::EVERY_THIRD_WEDNESDAY => 'Every 3d Wednesday',
+				self::EVERY_THIRD_THURSDAY => 'Every 3d Thursday',
+				self::EVERY_THIRD_FRIDAY => 'Every 3d Friday',
+				self::EVERY_THIRD_SATURDAY => 'Every 3d Saturday',
+				self::EVERY_THIRD_SUNDAY => 'Every 3d Sunday'
+			],
+			'Every fourth' => [
+				self::EVERY_FOURTH_MONDAY => 'Every 4th Monday',
+				self::EVERY_FOURTH_TUESDAY => 'Every 4th Tuesday',
+				self::EVERY_FOURTH_WEDNESDAY => 'Every 4th Wednesday',
+				self::EVERY_FOURTH_THURSDAY => 'Every 4th Thursday',
+				self::EVERY_FOURTH_FRIDAY => 'Every 4th Friday',
+				self::EVERY_FOURTH_SATURDAY => 'Every 4th Saturday',
+				self::EVERY_FOURTH_SUNDAY => 'Every 4th Sunday'
+			]
 		);
 	}
 

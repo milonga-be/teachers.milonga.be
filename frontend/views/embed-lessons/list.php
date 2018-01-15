@@ -5,16 +5,23 @@ use common\models\Lesson;
 use yii\helpers\ArrayHelper;
 use  yii\web\View;
 
+?>
+<div class="row post-list">
+<?php
 foreach($schools as $school){
 	?>
-	<div class="school">
+	<div class="col-lg-4 col-md-6 eq-blocks">
+    <div class="post-block">
+    	<?php
+		if($school->picture){
+		?>
+    	<a class="swipebox" title="<?= $school->name ?>"  href="<?= $school->pictureUrl ?>" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url(<?= $school->pictureUrl ?>);">
+
+    	</a>
+    	<?php } ?>
+	<div class="summary">
 	<h3>
 		<a name="<?= $school->id?>"></a>
-		<?php
-		if($school->picture){
-			echo '<a class="swipebox" href="'.$school->pictureUrl.'"><img style="height:100px;float:left;margin-right:10px;border-radius:8px;margin-bottom:10px;" src="'.$school->thumbUrl.'"/></a>';
-		}
-		?>
 		<?= $school->name ?>
 		<?= (isset($postalcodes))? ' (' . implode(', ', array_unique(ArrayHelper::getColumn( $schools_venues[ $school->id ] , 'postalcode') )) . ')' : '' ?>
 	</h3>
@@ -31,20 +38,19 @@ foreach($schools as $school){
 	<?php
 	foreach ($schools_venues[ $school->id ] as $venue) {
 		?>
-		<h4><?= $venue->name ?>, <?= $venue->address ?></h4>
-		<table class="lessons table striped condensed table-sm">
+		<h4 style="margin-top:20px"><?= $venue->name ?>, <?= $venue->address ?></h4>
+		<table class="lessons table striped condensed table-sm" style="font-size:0.9em">
 		<?php
 		foreach ($venues_lessons[ $venue->id ] as $lesson) {
 			?>
 			<tr>
-				<td class="dayname">
-					<span class="sm"><?= $lesson->abbrevdayname ?></span>
-					<span class="lg"><?= $lesson->dayname ?></span>
+				<td class="dayname" title="<?= $lesson->dayname ?>">
+					<?= $lesson->abbrevdayname ?>
 				</td>
 				<td class="starthour"><?= $lesson->start_hour ?></td>
 				<td class="levelname">
-					<span class="sm"><?= $lesson->abbrevlevelname ?></span>
-					<span class="lg"><?= $lesson->levelname ?></span>
+					<span class=""><?= $lesson->abbrevlevelname ?></span>
+					<!--span class="lg"><?= $lesson->levelname ?></span-->
 				</td>
 				<td class="teachers"><?= $lesson->teachers ?></td>
 			</tr>
@@ -56,5 +62,8 @@ foreach($schools as $school){
 	}
 	?>
 	</div>
+	</div></div>
 	<?php
 }
+?>
+</div>
