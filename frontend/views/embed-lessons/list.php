@@ -10,8 +10,8 @@ use  yii\web\View;
 <?php
 foreach($schools as $school){
 	?>
-	<div class="col-lg-4 col-md-6 eq-blocks">
-    <div class="post-block">
+	<div class="col-lg-4 col-md-6">
+    <div class="post-block eq-blocks">
     	<?php
 		if($school->picture){
 		?>
@@ -35,6 +35,11 @@ foreach($schools as $school){
 	<?php if($school->description){ ?>
 		<p class="school-description"><?= nl2br($school->description) ?></p>
 	<?php } ?>
+	<p id="schedule-button">
+		<a href="#" title="" onclick="jQuery(this).parent().parent().find('.schedules').toggle();jQuery(this).hide();jQuery(this).next().show();equalheight('.eq-blocks'); return false;" class="readmore">More </a>
+		<a href="#" title="" style="display:none;" onclick="jQuery(this).parent().parent().find('.schedules').toggle();jQuery(this).hide();jQuery(this).prev().show();equalheight('.eq-blocks'); return false;" class="readmore">Less </a>
+	</p>
+	<div class="schedules">
 	<?php
 	foreach ($schools_venues[ $school->id ] as $venue) {
 		?>
@@ -61,6 +66,7 @@ foreach($schools as $school){
 		<?php
 	}
 	?>
+	</div>
 	</div>
 	</div></div>
 	<?php

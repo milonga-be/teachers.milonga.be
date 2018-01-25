@@ -70,7 +70,10 @@ class School extends ActiveRecord{
      * @return string
      */
     public function getThumbUrl(){
-        return 'http://'.\Yii::$app->getRequest()->serverName.'/uploads/'.$this->thumb;
+        if($this->thumb)
+            return 'http://'.\Yii::$app->getRequest()->serverName.'/uploads/'.$this->thumb;
+        else
+            return null;
     }
 
     /**

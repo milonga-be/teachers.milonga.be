@@ -35,7 +35,7 @@ class EventSearch extends Event
 		$service = new \Google_Service_Calendar($client);
 		
 		$optParams = array(
-		  // 'maxResults' => 20,
+		  'maxResults' => 1000,
 		  'orderBy' => 'startTime',
 		  'singleEvents' => TRUE,
 		  'timeMin' => date('c'),

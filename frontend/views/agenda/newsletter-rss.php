@@ -12,22 +12,30 @@ function generateEventsCData( $events ){
 		}
 		if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ 
 			if( isset($events[$i-1]) ){
-				$events_cdata.='</ul>';
+				$events_cdata.='</table>';
 			}
-			$events_cdata.='<h5>' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><ul>';
+			$events_cdata.='<h5 style="font-family:sans-serif;">' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><table>';
 		}
-		$events_cdata.='<li>';
+		$events_cdata.='<tr>';
+		if(isset($event['school']) && isset($event['school']['thumb']) && !empty($event['school']['thumb'])){
+			$events_cdata.='<td valign="top"><img style="border-radius:50%;" width="40" height="40" src="'.$event['school']['thumb'].'"/>&nbsp;</td>';
+		}else{
+			$events_cdata.= '<td>&nbsp;</td>';
+		}
+		$events_cdata.='<td style="line-height:1.2;padding-bottom:20px;font-family:sans-serif;">';
+		$events_cdata.='<a style="text-transform:uppercase;text-decoration:none;color:black;" target="_blank" href="http://www.milonga.be/dancing/?u-selected='.(new Datetime($event['start']['dateTime']))->format('Y-m-d').'#'.$event['id'].'">';
+		
+		$events_cdata.=htmlspecialchars($event['summary']) . '</a><br />';
 		if( isset($event['category'])){
-			$events_cdata.='<small>' . strtoupper($event['category']) . '</small><br/>';
+			$events_cdata.='<span style="font-size:0.8em;color:#777;">' . strtoupper($event['category']) . '</span><br/>';
 		}
-		$events_cdata.='<a target="_blank" href="http://www.milonga.be/dancing/?u-selected='.(new Datetime($event['start']['dateTime']))->format('Y-m-d').'#'.$event['id'].'">';
 		if(!isset($event['start']['date']))
-			$events_cdata.=(new Datetime($event['start']['dateTime']))->format('H:i - ');
-		$events_cdata.=htmlspecialchars($event['summary']) . '</a><br /><small><i>' . (( isset($event['location']) )?' @ ' . htmlspecialchars($event['location']) : '') . '</i></small></li>';
+			$events_cdata.='<span style="font-size:0.8em;color:#777;">' . (new Datetime($event['start']['dateTime']))->format('H:i').' - '.(new Datetime($event['end']['dateTime']))->format('H:i').'</span><br/>';
+		$events_cdata.='<span style="font-size:0.8em;color:#777;">' . (( isset($event['location']) )?'' . htmlspecialchars($event['location']) : '') . '</span></td></tr>';
 		$i++;
 
 	}
-	$events_cdata.='</ul>]]>';
+	$events_cdata.='</table>]]>';
 	return $events_cdata;
 }
 
@@ -58,14 +66,14 @@ function generatePicturesCData( $pictures ){
 			<pubDate><?= $post->get_date(\Datetime::RSS) ?></pubDate>
 		</item>
 		<? } ?>
-		<item>
+		<!--item>
 			<title>Recent Tango Pictures</title>
 			<description><?= generatePicturesCData( $pictures ) ?></description>
 			<link>http://www.milonga.be/tango-photos/</link>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>
-		</item>
+		</item-->
 		<item>
-			<title>Milongas and workshops this week in Belgium</title>
+			<title></title>
 			<link>http://www.milonga.be/dancing/</link>
 			<description><?= generateEventsCData( $milongas ) ?></description>
 			<pubDate><?= (new \Datetime())->format(\Datetime::RSS) ?></pubDate>

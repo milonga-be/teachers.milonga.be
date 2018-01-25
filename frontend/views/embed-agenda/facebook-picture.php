@@ -39,7 +39,11 @@ foreach ($events as $event) {
 			</div>
 			<?php if( isset($event['location']) ){ ?>
 			<?= $event['location']?>
-			<?php } ?>
+			<?php } ?><br>
+			<?php
+				if(isset($_GET['filter']) && $_GET['filter'] == 'workshop:' && isset($event['email']) && $event['email'] != 'milonga@milonga.be' && $event['email'] != 'bverdeye@gmail.com'){
+				echo "<div style=\"color: #777;margin-top:4px\">More info : ".$event['email']."</div>";
+			} ?>
 		</div>
 	</div>
 	<?php

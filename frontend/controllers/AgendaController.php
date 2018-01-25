@@ -272,6 +272,7 @@ class AgendaController extends Controller{
 				if($school){
 					$event['school'] = array();
 					$event['school']['picture'] = $school->getPictureUrl();
+					$event['school']['thumb'] = $school->getThumbUrl();
 					$event['school']['name'] = $school->name;
 				}
 			}
@@ -422,5 +423,12 @@ class AgendaController extends Controller{
 		}
 
 		return $this->render('facebook-workshops', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
+	}
+
+	public function actionSpecialEvents(){
+		$startDate = new \Datetime();
+		$events = $this->getEvents( 4*7*7 , 'festival:,holidays:,marathon:', $startDate );
+
+		return $this->render('special-events', [ 'events' => $events ]);
 	}
 }

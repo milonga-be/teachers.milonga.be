@@ -28,6 +28,8 @@ class Event extends Model{
 	const TYPE_CONCERT = 'CONCERT';
 	const TYPE_SHOW = 'SHOW';
 	const TYPE_FESTIVAL = 'FESTIVAL';
+	const TYPE_HOLIDAYS = 'HOLIDAYS';
+	const TYPE_MARATHON = 'MARATHON';
 
 	const EVERY = 'weekly';
 	const EVERY_FIRST_MONDAY = '1MO';
@@ -374,6 +376,8 @@ class Event extends Model{
 			self::TYPE_CONCERT => self::TYPE_CONCERT,
 			self::TYPE_SHOW => self::TYPE_SHOW,
 			self::TYPE_FESTIVAL => self::TYPE_FESTIVAL,
+			self::TYPE_MARATHON => self::TYPE_MARATHON,
+			self::TYPE_HOLIDAYS => self::TYPE_HOLIDAYS,
 		);
 	}
 
