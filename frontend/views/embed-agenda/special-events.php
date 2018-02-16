@@ -14,8 +14,8 @@ foreach ($events as $event) { ?>
 			?>
 			<div class="summary">
 				<h3><?= $event['summary']?></h3>
-				<h5>
-					<i><?php if(isset($event['start']['dateTime'])){ ?>
+				<h4 style="margin-top:0px;margin-bottom:5px;"><?= $event['category']?><br/> 
+					<?php if(isset($event['start']['dateTime'])){ ?>
 						<?= (new Datetime($event['start']['dateTime']))->format('F j') ?>
 						<?php if(isset($event['end']['dateTime'])){ ?>
 						  - 
@@ -24,8 +24,8 @@ foreach ($events as $event) { ?>
 						 <br/>
 					<?php }else if(isset($event['start']['date'])){ ?>
 					<?= (new Datetime($event['start']['date']))->format('F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format('F j'); 
-				} ?></i>
-				</h5><br/>
+				} ?>
+				</h4><br/>
 				<?= Htmlizer::execute($event) ?>
 			</div>
 		</div>

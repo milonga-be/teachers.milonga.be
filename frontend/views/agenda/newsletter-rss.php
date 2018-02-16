@@ -2,19 +2,18 @@
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 function generateEventsCData( $events ){
-	$i = 0;
+	// $i = 0;
 	$events_cdata = '<![CDATA[';
 	foreach($events as $event){
 		$new_day = false;
-		if(!isset($events[$i]['start']['dateTime'])){
-			$events[$i]['start']['dateTime'] = $events[$i]['start']['date'];
-			$event = $events[$i];
+		if(!isset($event['start']['dateTime'])){
+			$event['start']['dateTime'] = $event['start']['date'];
 		}
-		if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ 
-			if( isset($events[$i-1]) ){
+		if( !isset($previous_event) || (new Datetime($previous_event['start']['dateTime']))->format('Ymd') != (new Datetime($event['start']['dateTime']))->format('Ymd') ){
+			if( isset($previous_event) ){
 				$events_cdata.='</table>';
 			}
-			$events_cdata.='<h5 style="font-family:sans-serif;">' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><table>';
+			$events_cdata.='<h5 style="font-family:sans-serif;color: #F66062;text-transform: uppercase;margin-bottom:15px;font-size:1.1em;font-weight:normal;margin-top:5px;">' . (new Datetime($event['start']['dateTime']))->format('l, F j') . '</h5><table>';
 		}
 		$events_cdata.='<tr>';
 		if(isset($event['school']) && isset($event['school']['thumb']) && !empty($event['school']['thumb'])){
@@ -32,7 +31,7 @@ function generateEventsCData( $events ){
 		if(!isset($event['start']['date']))
 			$events_cdata.='<span style="font-size:0.8em;color:#777;">' . (new Datetime($event['start']['dateTime']))->format('H:i').' - '.(new Datetime($event['end']['dateTime']))->format('H:i').'</span><br/>';
 		$events_cdata.='<span style="font-size:0.8em;color:#777;">' . (( isset($event['location']) )?'' . htmlspecialchars($event['location']) : '') . '</span></td></tr>';
-		$i++;
+		$previous_event = $event;
 
 	}
 	$events_cdata.='</table>]]>';

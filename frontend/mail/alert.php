@@ -19,9 +19,9 @@ milonga@milonga.be<br>
 <h4>MILONGAS &amp; WORKSHOPS : </h4>
 
 <?php 
-$i = 0;
+// $i = 0;
 foreach ($events as $event) { ?>
-	<?php if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ ?>
+	<?php if( !isset($previous_event) || (new Datetime($previous_event['start']['dateTime']))->format('Ymd') != (new Datetime($event['start']['dateTime']))->format('Ymd') ){ ?>
 	<h4 style="color:#F66062;"><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h4>
 	<?php } ?>
 	<p>
@@ -35,6 +35,6 @@ foreach ($events as $event) { ?>
 		<?php } ?>
 	</p>
 <?php
-	$i++;
+	$previous_event = $event;
 }
 ?>

@@ -23,6 +23,7 @@ class AgendaController extends Controller{
 	public function actionList( $weeks = 4 , $filter = null){
 
 		$events = $this->getEvents( $weeks * 7 , $filter );
+		$events = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,film:,practilonga:', $events);
 		$start = new \Datetime();
 		if($start->format('w') != 1){
 			$start->modify('previous monday');
@@ -39,7 +40,7 @@ class AgendaController extends Controller{
 	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
 	 * @return string
 	 */
-	public function actionCalendar( $month = null, $year = null, $selected = null){
+	public function actionCalendar( $month = null, $year = null, $selected = null, $filter = null){
 		if(!$month){
 			$month = date('m');
 			$year = date('Y');
@@ -60,7 +61,7 @@ class AgendaController extends Controller{
 		$end->modify('4 weeks');
 		$weeks = 5;
 		$events_sets = array();
-		$events = $this->getEvents( $weeks * 7, null, $start);
+		$events = $this->getEvents( $weeks * 7, $filter, $start);
 		$events_by_date = array();
 		foreach ($events as $event) {
 			if(isset($event['start']['date'])){
@@ -72,7 +73,7 @@ class AgendaController extends Controller{
 		}
 		foreach ($events_by_date as $date => $events) {
 			$events_by_date[$date] = array();
-			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,festival:,film:', $events);
+			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,film:,practilonga:', $events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);
@@ -103,7 +104,7 @@ class AgendaController extends Controller{
     		$startDate->modify('next friday');
     	}
 
-    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:' , $startDate );
+    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:' , $startDate );
     	$pictures = $this->getPictures( 9 );
     	// $posts = $this->getLatestPosts();
     	$posts = array();
@@ -184,7 +185,7 @@ class AgendaController extends Controller{
 		$format = 'Y-m-d';
 		do{
 
-			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($google_calendar_id) . '/events?key=' . urlencode($google_api_key) . '&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
+			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($google_calendar_id) . '/events?key=' . urlencode($google_api_key) . '&maxResults=2500&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
 			$json_array = $this->getFromApi( $google_url );
 
 			$collected_events = $json_array['items'];
@@ -259,7 +260,7 @@ class AgendaController extends Controller{
 			}else{
 				$school_email = $creator_email;
 			}
-			if($school_email){
+			if($school_email && !isset($event['school'])){
 				$event['email'] = $school_email;
 				$school = School::findOne(['email' => $school_email]);
 				if(!$school){
@@ -278,7 +279,7 @@ class AgendaController extends Controller{
 			}
 
 			if( $fits == TRUE ){
-				$events_filtered[] = $event;
+				$events_filtered[$event['id']] = $event;
 			}
 
 
@@ -320,7 +321,7 @@ class AgendaController extends Controller{
 		$startDate->modify('next friday');
 
 		
-		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:' , $startDate );
+		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:' , $startDate );
 
     	foreach ($events as $event) {
     		// var_dump($event);
@@ -376,7 +377,7 @@ class AgendaController extends Controller{
 		$startDate = new \Datetime();
 		$endDate = clone $startDate;
 		$endDate->modify('next sunday');
-		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:' , $startDate );
+		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
 
 		$events_by_days = array();
 
@@ -428,6 +429,8 @@ class AgendaController extends Controller{
 	public function actionSpecialEvents(){
 		$startDate = new \Datetime();
 		$events = $this->getEvents( 4*7*7 , 'festival:,holidays:,marathon:', $startDate );
+		// var_dump($events);
+		// die();
 
 		return $this->render('special-events', [ 'events' => $events ]);
 	}

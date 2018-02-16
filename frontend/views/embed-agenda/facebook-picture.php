@@ -3,13 +3,13 @@
 use yii\web\View;
 use common\components\Htmlizer;
 
-$i = 0;
+$previous_event = null;
 ?>
 <div class="events" data-nb="<?= sizeof($events) ?>">
 <?php
 foreach ($events as $event) {
 	?>
-	<?php if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ ?>
+	<?php if( !isset($previous_event) || (new Datetime($previous_event['start']['dateTime']))->format('Ymd') != (new Datetime($event['start']['dateTime']))->format('Ymd') ){ ?>
 	<h3 class="V12"><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h3>
 	<?php } ?>
 	<div class="V13">
@@ -47,7 +47,7 @@ foreach ($events as $event) {
 		</div>
 	</div>
 	<?php
-	$i++;
+	$previous_event = $event;
 }
 ?>
 </div>

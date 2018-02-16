@@ -1,21 +1,28 @@
 <?php
 use yii\web\View;
 use common\components\Htmlizer;
-$i = 0;
+$previous_event = null;
 ?>
 <div class="events" data-nb="<?= sizeof($events) ?>">
 	<?php
 	foreach ($events as $event) {
 	?>
-	<?php if( !isset($events[$i-1]) || (new Datetime($events[$i-1]['start']['dateTime']))->format('Ymd') != (new Datetime($events[$i]['start']['dateTime']))->format('Ymd') ){ ?>
+	<?php if( !isset($previous_event) || (new Datetime($previous_event['start']['dateTime']))->format('Ymd') != (new Datetime($event['start']['dateTime']))->format('Ymd') ){ ?>
 	<h3 class="V12"><?= (new Datetime($event['start']['dateTime']))->format('l, F j')?></h3>
 	<?php } ?>
 	<div class="V13">
-		<?php if(isset($event['category'])){ ?>
-		<h6><?= strtoupper($event['category'])?></h6>
-		<?php } ?>
+		<?php 
+		if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
+			echo '<a class="swipebox" title="'.$event['school']['name'].'" href="'.$event['school']['picture'].'"><img class="event_icon" src="'.$event['school']['picture'].'"></a>';
+		}else{
+			echo '<div class="event_icon">&nbsp;</div>';
+		}
+		?>
 		<h4><?= $event['summary'] ?></h4>
 		<div class="milonga-data">
+			<?php if(isset($event['category'])){ ?>
+			<?= strtoupper($event['category'])?>
+			<?php } ?>
 			<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?> - <?= (new Datetime($event['end']['dateTime']))->format('H:i')?><br/>
 			
 			<?php if( isset($event['location']) ){ ?>
@@ -33,7 +40,7 @@ $i = 0;
 		</div>
 	</div>
 	<?php
-	$i++;
+	$previous_event = $event;
 	}
 	?>
 </div>
