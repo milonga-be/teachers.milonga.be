@@ -140,6 +140,9 @@ td.levelname{
     background-color:#F66062; 
 }
 td.other_month a{
+    color:darkgrey;
+}
+#agenda-calendar td a.text-muted{
     opacity: 0.5;
 }
 #agenda-calendar td,#agenda-calendar th{

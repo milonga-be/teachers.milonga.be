@@ -88,11 +88,11 @@ if($this->context->embedded == true){
 						$selected = ($selected_day->format('Ymd') == $start->format('Ymd'));
 						$other_month = ($start->format('m') != $month_first_day->format('m'));
 						echo '<td class="agenda-day-' . $start->format('D') . (($selected)?' selected':'').(($other_month)?' other_month':'').'">';
-							if($yesterday > $start){
-								echo '<span class="text-muted">' . $start->format('d') . '</span>';
-							}else{
-								echo '<a href="#" data-day="' .$start->format('Ymd'). '">' . $start->format('d') . '</a>';
-							}
+							// if($yesterday > $start){
+							// 	echo '<span class="text-muted">' . $start->format('d') . '</span>';
+							// }else{
+								echo '<a class="'.(($yesterday > $start)?"text-muted":"").'" href="#" data-day="' .$start->format('Ymd'). '">' . $start->format('d') . '</a>';
+							// }
 							
 						echo '</td>';
 						$start->modify('1 day');
