@@ -11,6 +11,7 @@ class Event extends Model{
 	var $summary;
 	var $location;
 	var $description;
+	var $weekday;
 	var $start;
 	var $end;
 	var $picture;
@@ -18,7 +19,10 @@ class Event extends Model{
 	var $pictureRemove;
 	var $raw_recurrence;
 	var $recurrence_every;
-	var $recurrence_weekday;
+	var $first_occurence;
+	var $start_hour;
+	var $end_hour;
+	var $masterId;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -31,7 +35,14 @@ class Event extends Model{
 	const TYPE_HOLIDAYS = 'HOLIDAYS';
 	const TYPE_MARATHON = 'MARATHON';
 
-	const EVERY = 'weekly';
+	const EVERY = 'WEEKLY';
+	const EVERY_MONDAY = 'MO';
+	const EVERY_TUESDAY = 'TU';
+	const EVERY_WEDNESDAY = 'WE';
+	const EVERY_THURSDAY = 'TH';
+	const EVERY_FRIDAY = 'FR';
+	const EVERY_SATURDAY = 'SA';
+	const EVERY_SUNDAY = 'SU';
 	const EVERY_FIRST_MONDAY = '1MO';
 	const EVERY_FIRST_TUESDAY = '1TU';
 	const EVERY_FIRST_WEDNESDAY = '1WE';
@@ -72,7 +83,7 @@ class Event extends Model{
 	/** Which attributes can be modified and how **/
 	public function rules(){
 		return [
-			[['type', 'summary', 'description', 'location', 'start','end', 'recurrence_every', 'recurrence_weekday'], 'safe'],
+			[['type', 'summary', 'description', 'location', 'start','end', 'recurrence_every', 'weekday'], 'safe'],
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
@@ -84,7 +95,7 @@ class Event extends Model{
 		return [
 			'summary' => "Title",
 			'recurrence_every' => "Recurrence",
-			'recurrence_weekday' => "Weekday",
+			'weekday' => "Weekday",
 		];
 	}
 
@@ -205,19 +216,24 @@ class Event extends Model{
 		// Dates
 		$startDateTime = new \DateTime($result->start->dateTime);
 		$event->start = $startDateTime->format('d-m-Y H:i');
+		// for recurring event
+		$event->start_hour = $startDateTime->format('H:i');
+		$event->first_occurence = $startDateTime->format('d-m-Y');
+		$event->weekday = $startDateTime->format('D');
 
 		$endDateTime = new \DateTime($result->end->dateTime);
 		$event->end = $endDateTime->format('d-m-Y H:i');
+		$event->end_hour = $endDateTime->format('H:i');
 
 		if(isset($result->getExtendedProperties()->shared['picture'])){
 			$event->picture = $result->getExtendedProperties()->shared['picture'];
 		}
-		if($result->getRecurringEventId() && empty($result->getRecurrence())){
-			$master = Event::findOne($result->getRecurringEventId());
-			$event->raw_recurrence = $master->raw_recurrence;
-			$event->parseRawRecurrence();
-		}else if($result->getRecurrence()){
+		if($result->getRecurringEventId()){
+			$event->masterId = $result->getRecurringEventId();
+		}
+		if($result->getRecurrence()){
 			$event->raw_recurrence = $result->getRecurrence();
+			$event->parseRawRecurrence();
 		}
 
 		return $event;
@@ -290,11 +306,42 @@ class Event extends Model{
 							$this->recurrence_every = self::EVERY_FOURTH_SUNDAY;
 						}
 					}else if(strpos($rule, 'FREQ=WEEKLY')){
-						$this->recurrence_every = 'weekly';
+						switch($this->weekday){
+							case 'Mon':
+								$this->recurrence_every = self::EVERY_MONDAY;
+								break;
+							case 'Tue':
+								$this->recurrence_every = self::EVERY_TUESDAY;
+								break;
+							case 'Wed':
+								$this->recurrence_every = self::EVERY_WEDNESDAY;
+								break;
+							case 'Thu':
+								$this->recurrence_every = self::EVERY_THURSDAY;
+								break;
+							case 'Fri':
+								$this->recurrence_every = self::EVERY_FRIDAY;
+								break;
+							case 'Sat':
+								$this->recurrence_every = self::EVERY_SATURDAY;
+								break;
+							case 'Sun':
+								$this->recurrence_every = self::EVERY_SUNDAY;
+								break;
+						}
+						
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Is the event a repeating event
+	 * @return boolean
+	 */
+	public function isRecurrent(){
+		return !empty($this->recurrence_every);
 	}
 
 	/**
@@ -387,8 +434,15 @@ class Event extends Model{
 	 */
 	public static function getRecurrenceEveryList(){
 		return array(
-			'' => '',
-			self::EVERY => 'Every week',
+			'Every week' => [
+				self::EVERY_MONDAY => 'Every Monday',
+				self::EVERY_TUESDAY => 'Every Tuesday',
+				self::EVERY_WEDNESDAY => 'Every Wednesday',
+				self::EVERY_THURSDAY => 'Every Thursday',
+				self::EVERY_FRIDAY => 'Every Friday',
+				self::EVERY_SATURDAY => 'Every Saturday',
+				self::EVERY_SUNDAY => 'Every Sunday'
+			],
 			'Every first' => [
 				self::EVERY_FIRST_MONDAY => 'Every 1st Monday',
 				self::EVERY_FIRST_TUESDAY => 'Every 1st Tuesday',

@@ -28,7 +28,7 @@ class LessonsController extends Controller{
 			$postalcodes = ArrayHelper::getColumn($venues, 'postalcode');
 		}
 
-		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->orderBy('venue.postalcode ASC')->all();
+		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->andWhere(['active' => 1])->orderBy('venue.postalcode ASC')->all();
 
 		foreach ($schools as $school) {
 			$schools_venues[ $school->id ] = $school->getPostalCodeVenues( $postalcodes );
@@ -53,7 +53,7 @@ class LessonsController extends Controller{
 	 * @return string
 	 */
 	public function actionFacebookList(){
-		$schools = School::find()->joinWith('venues')->orderBy('school.name ASC')->all();
+		$schools = School::find()->where(['active' => 1])->joinWith('venues')->orderBy('school.name ASC')->all();
 		$venues = Venue::find()->asArray()->all();
 		$postalcodes = ArrayHelper::getColumn($venues, 'postalcode');
 
@@ -81,7 +81,7 @@ class LessonsController extends Controller{
 	 */
 	public function actionLevel( $level ){
 		session_write_close();
-		$schools = School::find()->joinWith('lessons')->where(['=','lesson.level',$level ])->orderBy('name ASC')->all();
+		$schools = School::find()->joinWith('lessons')->where(['=','lesson.level',$level ])->andWhere(['active' => 1])->orderBy('name ASC')->all();
 
 		foreach ($schools as $school) {
 			$schools_venues[ $school->id ] = $school->getLevelVenues( $level );
@@ -106,7 +106,7 @@ class LessonsController extends Controller{
 	 */
 	public function actionDay( $day ){
 		session_write_close();
-		$schools = School::find()->joinWith('lessons')->where(['=','lesson.day',$day ])->orderBy('name ASC')->all();
+		$schools = School::find()->joinWith('lessons')->where(['=','lesson.day',$day ])->andWhere(['active' => 1])->orderBy('name ASC')->all();
 
 		foreach ($schools as $school) {
 			$schools_venues[ $school->id ] = $school->getDayVenues( $day );
@@ -135,7 +135,7 @@ class LessonsController extends Controller{
 			$postalcodes = ArrayHelper::getColumn($venues, 'postalcode');
 		}
 
-		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->orderBy('venue.postalcode ASC')->all();
+		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->andWhere(['active' => 1])->orderBy('venue.postalcode ASC')->all();
 
 		foreach ($schools as $school) {
 			$schools_venues[ $school->id ] = $school->getPostalCodeVenues( $postalcodes );

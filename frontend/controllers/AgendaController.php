@@ -34,6 +34,23 @@ class AgendaController extends Controller{
 		return $this->render('list', [ 'events' => $events , 'start' => $start, 'weeks' => $weeks ]);
 	}
 
+	private function weeks_in_month($month, $year) {
+		// Start of month
+		$start = mktime(0, 0, 0, $month, 1, $year);
+		// End of month
+		$end = mktime(0, 0, 0, $month, date('t', $start), $year);
+		// Start week
+		$start_week = date('W', $start);
+		// End week
+		$end_week = date('W', $end);
+		
+		if ($end_week < $start_week) { // Month wraps
+		  return ((52 + $end_week) - $start_week) + 1;
+		}
+		
+		return ($end_week - $start_week) + 1;
+	}
+
 	/**
 	 * List the events in the agenda with a calendar
 	 * @param  integer $weeks  the number of weeks to display
@@ -59,7 +76,7 @@ class AgendaController extends Controller{
 		}
 		$end = clone $start;
 		$end->modify('4 weeks');
-		$weeks = 5;
+		$weeks = $this->weeks_in_month($month, $year);
 		$events_sets = array();
 		$events = $this->getEvents( $weeks * 7, $filter, $start);
 		$events_by_date = array();

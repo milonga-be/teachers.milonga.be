@@ -207,14 +207,15 @@ class SiteController extends Controller
     public function actionSendAccesses(){
         $users = User::find()->where(['!=','clear_password',''])->all();
         foreach ($users as $user) {
-            Yii::$app->mailer->compose('access', ['user' => $user])
-                ->setFrom('milonga@milonga.be')
-                ->setTo($user->email)
-                ->setCc('milonga@milonga.be')
-                ->setSubject('Update your regular classes for January')
-                ->send();
-            echo 'Sent access to '. $user->email.'<br>';
+            if($user->school && $user->school->venues){
+                Yii::$app->mailer->compose('access', ['user' => $user])
+                    ->setFrom('milonga@milonga.be')
+                    ->setTo($user->email)
+                    ->setCc('milonga@milonga.be')
+                    ->setSubject('Update your regular classes')
+                    ->send();
+                echo 'Sent access to '. $user->email.'<br>';
+            }
         }
-        
     }
 }

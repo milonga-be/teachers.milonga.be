@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c367a6651d7931e49d7a34195b6c5e5",
+    "content-hash": "3575f643bcb38da9346e7570681078d4",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -165,6 +165,49 @@
                 "jquery",
                 "mask",
                 "plugins"
+            ]
+        },
+        {
+            "name": "bower-asset/moment",
+            "version": "2.20.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moment/moment.git",
+                "reference": "03073778ec18ee38e179208cd1af899e8d1848dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moment/moment/zipball/03073778ec18ee38e179208cd1af899e8d1848dc",
+                "reference": "03073778ec18ee38e179208cd1af899e8d1848dc",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "moment.js",
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "benchmarks",
+                    "bower_components",
+                    "meteor",
+                    "node_modules",
+                    "scripts",
+                    "tasks",
+                    "test",
+                    "component.json",
+                    "composer.json",
+                    "CONTRIBUTING.md",
+                    "ender.js",
+                    "Gruntfile.js",
+                    "Moment.js.nuspec",
+                    "package.js",
+                    "package.json",
+                    "ISSUE_TEMPLATE.md",
+                    "typing-tests",
+                    "min/tests.js"
+                ]
+            },
+            "license": [
+                "MIT"
             ]
         },
         {
@@ -2190,6 +2233,46 @@
                 "psr-3"
             ],
             "time": "2017-06-19T01:22:40+00:00"
+        },
+        {
+            "name": "omnilight/yii2-momentjs",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/omnilight/yii2-momentjs.git",
+                "reference": "69b7ffd991a1bf359a59b461d87cd18329558ba7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/omnilight/yii2-momentjs/zipball/69b7ffd991a1bf359a59b461d87cd18329558ba7",
+                "reference": "69b7ffd991a1bf359a59b461d87cd18329558ba7",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/moment": "*",
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "omnilight\\assets\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Pavel Agalecky",
+                    "email": "pavel.agalecky@gmail.com"
+                }
+            ],
+            "description": "Moment.js asset for Yii2 framework",
+            "keywords": [
+                "moment",
+                "momentjs",
+                "yii2"
+            ],
+            "time": "2016-02-25T08:09:40+00:00"
         },
         {
             "name": "phpseclib/phpseclib",

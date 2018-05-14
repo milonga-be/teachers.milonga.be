@@ -5,6 +5,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\file\FileInput;
 use kartik\datetime\DateTimePicker;
+ use kartik\time\TimePicker;
 use rmrevin\yii\fontawesome\FA;
 use marqu3s\summernote\Summernote;
 ?>
@@ -13,6 +14,11 @@ use marqu3s\summernote\Summernote;
 		<div class="col-md-6 text-left">
 			<a href="<?= Url::to(['agenda/index']) ?>" class=""><?= FA::icon('angle-left')?> Back to the events</a>
 		</div>
+		<?php if($event->masterId){ ?>
+		<div class="col-md-6 text-right">
+			<a href="<?= Url::to(['agenda/update', 'id' => $event->masterId]) ?>" class="btn btn-primary">Edit the model</a>
+		</div>
+		<?php } ?>
 	</div>
 </p>
 <?php
@@ -30,7 +36,15 @@ $datepicker_options = [
         'format' => 'dd-mm-yyyy hh:ii'
     ]
 ];
+
+$timepicker_options = 
+    [
+        'addon' => '',
+        'addonOptions' => [ 'asButton' => FALSE ],
+        'pluginOptions' => [ 'showMeridian' => FALSE, 'template' => FALSE ]
+    ];
 ?>
+<?php if(!$event->isRecurrent()){ ?>
 <div class="row">
 	<div class="col-md-6">
 		<?= $form->field($event, 'start')->widget(DateTimePicker::classname(), $datepicker_options) ?>
@@ -39,16 +53,31 @@ $datepicker_options = [
 		<?= $form->field($event, 'end')->widget(DateTimePicker::classname(), $datepicker_options) ?>
 	</div>
 </div>
+<?php }else{ ?>
 <!-- 
 <?php
 var_dump($event->raw_recurrence);
 ?>
 -->
-<!--div class="row">
+<div class="row">
 	<div class="col-md-12">
-		<?= $form->field($event, 'recurrence_every')->dropDownList(Event::getRecurrenceEveryList(), ['prompt' => 'Not recurrent']) ?>
+		<?= $form->field($event, 'recurrence_every')->dropDownList(Event::getRecurrenceEveryList()) ?>
 	</div>
-</div-->
+	<div class="col-md-6">
+		<?= $form->field($event, 'start_hour')->widget(TimePicker::classname(), $timepicker_options); ?>
+	</div>
+	<div class="col-md-6">
+		<?= $form->field($event, 'end_hour')->widget(TimePicker::classname(), $timepicker_options); ?>
+	</div>
+	<div class="col-md-12">
+		<?= $form->field($event, 'first_occurence')->widget(DateTimePicker::classname(), [
+		'pluginOptions' => [
+	        'autoclose'=>true,
+	        'format' => 'dd-mm-yyyy'
+	    ]]); ?>
+	</div>
+</div>
+<?php } ?>
 <?php
 echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 
 echo $form->field($event, 'summary'); 
@@ -78,6 +107,9 @@ $this->registerJs(
 		e.preventDefault();
 		$("#picture-preview").hide();
 		$("#picture-remove").val(1);
+	});
+	$("#event-recurrence_every").on("change", function(e){
+		
 	});
 	'
 );

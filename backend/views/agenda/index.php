@@ -26,7 +26,7 @@ echo '<h1>' . $this->title . '</h1>';
 			 		'format' => 'raw',
 			 		'value' => function($data){
 			 			$dateTime = new \Datetime($data['start']['dateTime']);
-			 			return $dateTime->format('d M Y');
+			 			return $dateTime->format('D d M');
 			 		}
 			 	],
 			 	[

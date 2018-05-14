@@ -56,6 +56,8 @@ if($this->context->embedded == true){
 ?>
 <div class="agenda-set">
 	<h2>
+		<a id="search-icon" href="#" class="glyphicon glyphicon-search pull-right"></a>
+
 		<a class="prev-month glyphicon glyphicon-chevron-left" href="<?= $url_prev ?>"></a>
 		<span><?= $month_first_day->format('F') ?></span>
 		<a class="next-month glyphicon glyphicon-chevron-right" href="<?= $url_next ?>"></a>

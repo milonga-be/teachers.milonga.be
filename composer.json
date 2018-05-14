@@ -24,7 +24,8 @@
         "simplepie/simplepie": "^1.4",
         "yiisoft/yii2-imagine": "^2.1",
         "google/apiclient": "^2.2",
-        "marqu3s/yii2-summernote": "dev-master"
+        "marqu3s/yii2-summernote": "dev-master",
+        "omnilight/yii2-momentjs": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

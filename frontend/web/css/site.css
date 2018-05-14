@@ -140,7 +140,7 @@ td.levelname{
     background-color:#F66062; 
 }
 td.other_month a{
-    color:darkgrey;
+    color:#666;
 }
 #agenda-calendar td a.text-muted{
     opacity: 0.5;
@@ -207,4 +207,9 @@ td.other_month a{
 }*/
 .schedules{
     display:none;
+}
+#search-icon{
+    font-size: 0.5em;
+    line-height: 1.8em;
+    padding-right:2em;
 }
