@@ -20,7 +20,7 @@ class AgendaController extends Controller{
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create' , 'delete' , 'update' ],
+                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate' ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -63,12 +63,40 @@ class AgendaController extends Controller{
     }
 
     /**
+     * Update an event
+     * @param  string $id Id of the event on the Google Agenda
+     * @return mixed
+     */
+    public function actionDuplicate($id){
+        $tocopy = Event::findOne($id);
+        $event = new Event();
+        $event->setAttributes($tocopy->attributes);
+        $event->pictureFile = $tocopy->pictureFile;
+
+        if ($event->load(Yii::$app->request->post())) {
+            $event->pictureFile = UploadedFile::getInstance($event, 'pictureFile');
+            $event->uploadFiles();
+            if($event->save()){
+                Yii::$app->getSession()->setFlash('success', ['title' => 'Event created']);
+            }
+        }
+
+        return $this->render('update', ['event' => $event]);
+    }
+
+    /**
      * Create an event
      * @return mixed
      */
-    public function actionCreate(){
+    public function actionCreate($recurring = 0){
         $event = new Event();
         $event->type = 'MILONGA';
+        if($recurring){
+            $event->recurrence_every = Event::EVERY_MONDAY;
+            $event->start_hour = '20:00';
+            $event->end_hour = '23:00';
+            $event->scenario = Event::SCENARIO_RECURRING;
+        }
 
         if ($event->load(Yii::$app->request->post())) {
             $event->pictureFile = UploadedFile::getInstance($event, 'pictureFile');

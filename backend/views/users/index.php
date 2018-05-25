@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\models\Lesson;
 
-$this->title = 'Schools';
+$this->title = 'Users';
 echo '<h1>' . $this->title . '</h1>';
 ?>
 <p>
@@ -15,7 +15,7 @@ echo '<h1>' . $this->title . '</h1>';
 			
 		</div>
 		<div class="col-md-6 text-right">
-			<a href="<?= Url::to(['schools/create']) ?>" class="btn btn-primary">New school</a>
+			<a href="<?= Url::to(['users/create']) ?>" class="btn btn-primary">New user</a>
 		</div>
 	</div>
 </p>
@@ -27,13 +27,13 @@ echo '<h1>' . $this->title . '</h1>';
 			 // 'filterModel' => $searchModel,
 			 'columns' => [
 				 [
-				 	'attribute' => 'name',
+				 	'attribute' => 'username',
 				 	'format' => 'raw',
 				 	'value' => function($data){
-				 		return Html::a($data->name,['schools/update','id' => $data->id]);
+				 		return Html::a($data->username,['users/update','id' => $data->id]);
 				 	}
 				 ],
-				 // 'city',
+				 'school.name',
 				 // [
     	// 			'class' => 'yii\grid\ActionColumn',
     	// 			'template' => '{update} {delete}',

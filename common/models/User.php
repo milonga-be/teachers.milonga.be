@@ -53,6 +53,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['username', 'email', 'clear_password'], 'string']
         ];
     }
 
@@ -203,5 +204,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function getSchools(){
         return $this->hasMany(School::className(), ['id' => 'school_id'])
                         ->viaTable('user_school', ['user_id' => 'id']);
+    }
+
+    public function isAdmin(){
+        return $this->username == 'bopazmino';
     }
 }

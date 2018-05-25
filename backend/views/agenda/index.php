@@ -13,6 +13,7 @@ echo '<h1>' . $this->title . '</h1>';
 			
 		</div>
 		<div class="col-md-6 text-right">
+			<a href="<?= Url::to(['agenda/create', 'recurring' => 1]) ?>" class="btn btn-primary">New recurring event</a> 
 			<a href="<?= Url::to(['agenda/create']) ?>" class="btn btn-primary">New event</a>
 		</div>
 	</div>

@@ -22,7 +22,7 @@ class SchoolsController extends Controller{
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'update' ],
+                        'actions' => ['index', 'create', 'update' ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -39,8 +39,7 @@ class SchoolsController extends Controller{
     public function actionIndex()
     {
         $user = Yii::$app->user->identity;
-        $query = $user->getSchools();
-
+        $query = School::find()->orderBy('name');
         $provider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -49,14 +48,19 @@ class SchoolsController extends Controller{
     }
 
     /**
-     * Displays own school for user
+     * Displays one school
      *
      * @return string
      */
-    public function actionUpdate()
+    public function actionUpdate($id = null)
     {
         $user = Yii::$app->user->identity;
-        $school = $user->school;
+        if($user->isAdmin()){
+            $school = School::findOne($id);
+        }else{
+            $school = $user->school;
+        }
+        
 
         if ($school->load(Yii::$app->request->post())) {
             $school->pictureFile = UploadedFile::getInstance($school, 'pictureFile');
@@ -68,5 +72,29 @@ class SchoolsController extends Controller{
         }
 
         return $this->render('update',[ 'school' => $school ]);
+    }
+
+    /**
+     * Create a new school
+     *
+     * @return string
+     */
+    public function actionCreate()
+    {
+        $school = new School();
+
+        if ($school->load(Yii::$app->request->post())) {
+            if($school->save()){
+                $school->pictureFile = UploadedFile::getInstance($school, 'pictureFile');
+                $school->flyerFile = UploadedFile::getInstance($school, 'flyerFile');
+                $school->uploadFiles();
+                $school->save();
+                Yii::$app->getSession()->setFlash('success', ['title' => 'School created']);
+
+                return $this->redirect(['schools/update', 'id' => $school->id ]);
+            }
+        }
+
+        return $this->render('create',[ 'school' => $school ]);
     }
 }

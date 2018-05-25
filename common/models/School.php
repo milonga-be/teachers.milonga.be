@@ -20,7 +20,8 @@ class School extends ActiveRecord{
 		return [
 			[['name','address','email','facebook','phone','website'],'safe'],
             [['pictureFile', 'flyerFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
-            [['description'],'string','max' => 250]
+            [['description'],'string','max' => 250],
+            [['active'], 'boolean']
 		];
 	}
 

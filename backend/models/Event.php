@@ -19,7 +19,8 @@ class Event extends Model{
 	var $pictureRemove;
 	var $raw_recurrence;
 	var $recurrence_every;
-	var $first_occurence;
+	var $from;
+	var $until;
 	var $start_hour;
 	var $end_hour;
 	var $masterId;
@@ -80,15 +81,27 @@ class Event extends Model{
 	const SATURDAY = 'SA';
 	const SUNDAY = 'SU';
 
+	const FREQ_WEEKLY = 'FREQ=WEEKLY';
+	const FREQ_MONTHLY = 'FREQ=MONTHLY';
+
+	const SCENARIO_RECURRING = 'recurring';
+
 	/** Which attributes can be modified and how **/
 	public function rules(){
 		return [
-			[['type', 'summary', 'description', 'location', 'start','end', 'recurrence_every', 'weekday'], 'safe'],
+			[['type', 'summary', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday'], 'safe'],
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
+			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
 			[['pictureRemove'], 'boolean'],
 		];
+	}
+
+	public function scenarios(){
+		$scenarios = parent::scenarios();
+		$scenarios[self::SCENARIO_RECURRING] = ['start_hour', 'end_hour', 'summary', 'location', 'description', 'from', 'until', 'pictureFile', 'pictureRemove','recurrence_every', 'weekday', 'type'];
+		return $scenarios;
 	}
 
 	public function attributeLabels(){
@@ -122,18 +135,40 @@ class Event extends Model{
 			$datas['picture'] = $this->picture;
 			$datas['description'] = $this->description;
 			$startDateTime = new \DateTime($this->start);
+			if($this->from){
+				$startDateTime = new \DateTime($this->from);
+			}
+			if($this->start_hour){
+				$time = explode(':', $this->start_hour);
+				$startDateTime->setTime($time[0], $time[1]);
+			}
 			$datas['start']['dateTime'] = $startDateTime->format(\DateTime::RFC3339);
 			$endDateTime = new \DateTime($this->end);
+			if($this->from){
+				$endDateTime = new \DateTime($this->from);
+			}
+			if($this->end_hour){
+				$time = explode(':', $this->end_hour);
+				$endDateTime->setTime($time[0], $time[1]);
+				if($this->end_hour < $this->start_hour){
+					$endDateTime->modify('+1 day');
+				}
+			}
 			$datas['end']['dateTime'] = $endDateTime->format(\DateTime::RFC3339);
+
+			// var_dump($datas);
+			// die();
 
 			$event = new \Google_Service_Calendar_Event();
 			$event->setSummary($datas['summary']);
 			$event->setLocation($datas['location']);
 			$event->setDescription($datas['description']);
 			$gsdt = new \Google_Service_Calendar_EventDateTime();
+			$gsdt->setTimezone("Europe/Paris");
 			$gsdt->setDatetime($datas['start']['dateTime']);
 			$gedt = new \Google_Service_Calendar_EventDateTime();
 			$gedt->setDatetime($datas['end']['dateTime']);
+			$gedt->setTimezone("Europe/Paris");
 			$event->setStart($gsdt);
 			$event->setEnd($gedt);
 			$extentedProperties = new \Google_Service_Calendar_EventExtendedProperties();
@@ -144,6 +179,13 @@ class Event extends Model{
 
 			$extentedProperties->setShared($sharedProperties);
 			$event->setExtendedProperties($extentedProperties);
+
+			$raw_recurrence = $this->formatNewRecurrence();
+			if($raw_recurrence){
+				// var_dump($raw_recurrence);
+				// die();
+				$event->setRecurrence(array($raw_recurrence));
+			}
 
 			if($id)
 				$result = $service->events->patch($google_calendar_id, $id, $event);
@@ -218,7 +260,7 @@ class Event extends Model{
 		$event->start = $startDateTime->format('d-m-Y H:i');
 		// for recurring event
 		$event->start_hour = $startDateTime->format('H:i');
-		$event->first_occurence = $startDateTime->format('d-m-Y');
+		$event->from = $startDateTime->format('d-m-Y');
 		$event->weekday = $startDateTime->format('D');
 
 		$endDateTime = new \DateTime($result->end->dateTime);
@@ -238,6 +280,63 @@ class Event extends Model{
 
 		return $event;
 	}
+
+
+	private function formatNewRecurrence(){
+		$rule = '';
+		$freq = '';
+		$byday = '';
+		switch($this->recurrence_every){
+			case self::EVERY_MONDAY:
+				$byday = self::MONDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_TUESDAY:
+				$byday = self::TUESDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_WEDNESDAY:
+				$byday = self::WEDNESDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_THURSDAY:
+				$byday = self::THURSDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_FRIDAY:
+				$byday = self::FRIDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_SATURDAY:
+				$byday = self::SATURDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			case self::EVERY_SUNDAY:
+				$byday = self::SUNDAY;
+				$freq = self::FREQ_WEEKLY;
+				break;
+			default:
+				if($this->recurrence_every){
+					$freq = self::FREQ_MONTHLY;
+					$byday = $this->recurrence_every;
+				}
+		}
+		if($freq){
+			$rule = 'RRULE:';
+			$rule.=$freq.';';
+			if($this->until){
+				$untilDatetime = new \DateTime($this->until);
+				$untilDatetime->setTime(23, 59);
+				$rule.='UNTIL='.$untilDatetime->format('Ymd\THis\Z').';';
+			}
+			$rule.='BYDAY='.$byday;
+			// var_dump($rule);
+			// die();
+			return $rule;
+		}
+		return false;
+	}
+
 
 	/**
 	 * Parses the raw recurrence and fill the recurrence modifiable fields
@@ -305,7 +404,7 @@ class Event extends Model{
 						}else if(strpos($rule, 'BYDAY=4SU')){
 							$this->recurrence_every = self::EVERY_FOURTH_SUNDAY;
 						}
-					}else if(strpos($rule, 'FREQ=WEEKLY')){
+					}else if(strpos($rule, self::FREQ_WEEKLY)){
 						switch($this->weekday){
 							case 'Mon':
 								$this->recurrence_every = self::EVERY_MONDAY;
@@ -330,6 +429,11 @@ class Event extends Model{
 								break;
 						}
 						
+					}
+					if(strpos($rule, 'UNTIL=')!==false){
+						$untilStr = substr($rule, strpos($rule, 'UNTIL=') + 6, 16);
+						$untilDatetime = new \DateTime($untilStr);
+						$this->until = $untilDatetime->format('d-m-Y');
 					}
 				}
 			}
