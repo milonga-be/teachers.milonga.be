@@ -1,13 +1,15 @@
 <p>Dear tango organizers,</p>
 
-<p>These are the events listed on the milonga.be agenda, and among them there is one you created.<br/>
-Please check that all the information is correct before we send our newsletter tomorrow at noon.</p>
+<p>These are the events listed on the milonga.be agenda,<br/>
+Please check that all the information is correct before we send our newsletter on Friday.</p>
 
 <p>
 How to add information to the milonga.be calendar:<br/>
-* Put the event into the Google Calendar and it will show up minutes later on http://www.milonga.be. <br>
-* Just respect these minimal instructions: a correct event title (with MILONGA: or WORKSHOP: ), always a full street address, and at least an email address where you can be contacted. 
+* Encode the event in our tool at http://teachers.milonga.be/backend/ <br>
+* Just respect these minimal instructions: a correct title, always a full street address, and at least an email address where you can be contacted. 
 </p>
+
+<p>If an event doesn't take place excpetionnaly (beware with the holidays !) please remove it</p>
 
 <p>Thanks for your collaboration,</p>
 <p>

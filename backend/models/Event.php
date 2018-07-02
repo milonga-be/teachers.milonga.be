@@ -156,6 +156,7 @@ class Event extends Model{
 			}
 			$datas['end']['dateTime'] = $endDateTime->format(\DateTime::RFC3339);
 
+			// var_dump($this);
 			// var_dump($datas);
 			// die();
 
@@ -258,14 +259,9 @@ class Event extends Model{
 		// Dates
 		$startDateTime = new \DateTime($result->start->dateTime);
 		$event->start = $startDateTime->format('d-m-Y H:i');
-		// for recurring event
-		$event->start_hour = $startDateTime->format('H:i');
-		$event->from = $startDateTime->format('d-m-Y');
-		$event->weekday = $startDateTime->format('D');
 
 		$endDateTime = new \DateTime($result->end->dateTime);
 		$event->end = $endDateTime->format('d-m-Y H:i');
-		$event->end_hour = $endDateTime->format('H:i');
 
 		if(isset($result->getExtendedProperties()->shared['picture'])){
 			$event->picture = $result->getExtendedProperties()->shared['picture'];
@@ -274,6 +270,12 @@ class Event extends Model{
 			$event->masterId = $result->getRecurringEventId();
 		}
 		if($result->getRecurrence()){
+			// for recurring event
+			$event->start_hour = $startDateTime->format('H:i');
+			$event->from = $startDateTime->format('d-m-Y');
+			$event->weekday = $startDateTime->format('D');
+			$event->end_hour = $endDateTime->format('H:i');
+
 			$event->raw_recurrence = $result->getRecurrence();
 			$event->parseRawRecurrence();
 		}

@@ -49,7 +49,14 @@ $timepicker_options =
 <?php if(!$event->isRecurrent()){ ?>
 <div class="row">
 	<div class="col-md-6">
-		<?= $form->field($event, 'start')->widget(DateTimePicker::classname(), $datepicker_options) ?>
+		<?= $form->field($event, 'start')->widget(DateTimePicker::classname(), 
+			array_merge($datepicker_options, [
+				'pluginEvents' => [
+					'changeDate' => 'function(e) {  
+						if(!$("#event-end").val()){ $("#event-end").val($("#event-start").val()); } 
+					}'
+				]
+			])) ?>
 	</div>
 	<div class="col-md-6">
 		<?= $form->field($event, 'end')->widget(DateTimePicker::classname(), $datepicker_options) ?>
