@@ -1,5 +1,6 @@
 <?php
 use backend\models\Event;
+use common\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -9,11 +10,12 @@ use kartik\widgets\DatePicker;
  use kartik\time\TimePicker;
 use rmrevin\yii\fontawesome\FA;
 use marqu3s\summernote\Summernote;
+use yii\helpers\ArrayHelper;
 ?>
 <p>
 	<div class="row">
 		<div class="col-md-6 text-left">
-			<a href="<?= Url::to(['agenda/index']) ?>" class=""><?= FA::icon('angle-left')?> Back to the events</a>
+			<a href="<?= Url::to(['agenda/index', 'page' => isset(Yii::$app->request->queryParams['page'])?Yii::$app->request->queryParams['page']:1]) ?>" class=""><?= FA::icon('angle-left')?> Back to the events</a>
 		</div>
 		<?php if($event->masterId){ ?>
 		<div class="col-md-6 text-right">
@@ -46,6 +48,13 @@ $timepicker_options =
         'pluginOptions' => [ 'showMeridian' => FALSE, 'template' => FALSE ]
     ];
 ?>
+<?php if(\Yii::$app->user->identity->isAdmin()){ ?>
+<div class="row">
+	<div class="col-md-12">
+		<?= $form->field($event, 'organizer')->dropDownList(ArrayHelper::map(User::find()->orderBy('email')->all(), 'email', 'email'), ['prompt' => 'Select the organizer']) ?>
+	</div>
+</div>
+<?php } ?>
 <?php if(!$event->isRecurrent()){ ?>
 <div class="row">
 	<div class="col-md-6">
@@ -104,7 +113,8 @@ var_dump($event->raw_recurrence);
 <?php } ?>
 <?php
 echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 
-echo $form->field($event, 'summary'); 
+echo $form->field($event, 'summary');
+echo $form->field($event, 'city')->dropDownList(Event::getCities()); 
 echo $form->field($event, 'location'); 
 echo $form->field($event, 'pictureFile')->fileInput();
 echo '<input id="picture-remove" type="hidden" name="Event[pictureRemove]" value="0">';

@@ -62,7 +62,7 @@ class EventSearch extends Event
 		}
 
 		foreach ($events as $event) {
-			if(in_array($event->creator->email, $authorized_emails) || (isset($event->getExtendedProperties()->shared['organizer']) && in_array($event->getExtendedProperties()->shared['organizer'], $authorized_emails))){
+			if(in_array($event->creator->email, $authorized_emails) || (isset($event->getExtendedProperties()->shared['organizer']) && in_array($event->getExtendedProperties()->shared['organizer'], $authorized_emails)) || $user->isAdmin()){
 				$filtered_events[] = $event;
 			}
 		}

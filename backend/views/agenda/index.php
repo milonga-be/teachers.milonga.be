@@ -38,8 +38,22 @@ echo '<h1>' . $this->title . '</h1>';
 			 			if(strlen($summary) > 75){
 			 				$summary = substr($summary, 0, 75).'...';
 			 			}
-			 			return Html::a($summary, ['agenda/update', 'id' => $data['id']]);
+			 			return Html::a($summary, ['agenda/update', 'id' => $data['id'], 'page' => isset(Yii::$app->request->queryParams['page'])?Yii::$app->request->queryParams['page']:1]);
 			 		}
+			 	],
+			 	[
+			 		'attribute' =>	'organizer',
+			 		'format' => 'raw',
+			 		'value' => function($data){
+			 			if(isset($data->getExtendedProperties()->shared['organizer'])){
+			 				return $data->getExtendedProperties()->shared['organizer'];
+			 			}
+			 			if(isset($data->creator->email)){
+			 				return $data->creator->email;
+			 			}
+			 			return null;
+			 		},
+			 		'visible' => Yii::$app->user->identity->isAdmin()
 			 	],
 			 	[
 			 		'format' => 'raw',

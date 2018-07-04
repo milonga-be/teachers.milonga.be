@@ -254,6 +254,10 @@ class AgendaController extends Controller{
 					$event['summary'] = $event_text;
 					$fits = TRUE;
 				}
+				// Also checking the locations but only with pure filter not manipulated
+				// if(isset($event['location']) && stristr($event['location'],$filter)){
+				// 	$fits = TRUE;
+				// }
 			}
 			if(isset($event['description'])){
 				$event['description'] = str_replace('</p>', '<br />', $event['description']);

@@ -8,6 +8,8 @@ class Event extends Model{
 
 	var $id;
 	var $type;
+	var $city;
+	var $organizer;
 	var $summary;
 	var $location;
 	var $description;
@@ -35,6 +37,13 @@ class Event extends Model{
 	const TYPE_FESTIVAL = 'FESTIVAL';
 	const TYPE_HOLIDAYS = 'HOLIDAYS';
 	const TYPE_MARATHON = 'MARATHON';
+
+	const CITY_BRUSSELS = 'Brussels';
+	const CITY_ANTWERPEN = 'Antwerpen';
+	const CITY_BRUGGE = 'Brugge';
+	const CITY_GENT = 'Gent';
+	const CITY_LIEGE = 'Liège';
+	const CITY_NAMUR = 'Namur';
 
 	const EVERY = 'WEEKLY';
 	const EVERY_MONDAY = 'MO';
@@ -89,7 +98,7 @@ class Event extends Model{
 	/** Which attributes can be modified and how **/
 	public function rules(){
 		return [
-			[['type', 'summary', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday'], 'safe'],
+			[['type', 'summary', 'city', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday', 'organizer'], 'safe'],
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
@@ -100,7 +109,7 @@ class Event extends Model{
 
 	public function scenarios(){
 		$scenarios = parent::scenarios();
-		$scenarios[self::SCENARIO_RECURRING] = ['start_hour', 'end_hour', 'summary', 'location', 'description', 'from', 'until', 'pictureFile', 'pictureRemove','recurrence_every', 'weekday', 'type'];
+		$scenarios[self::SCENARIO_RECURRING] = ['start_hour', 'end_hour', 'summary', 'location', 'description', 'from', 'until', 'pictureFile', 'pictureRemove','recurrence_every', 'weekday', 'type', 'city', 'organizer'];
 		return $scenarios;
 	}
 
@@ -130,7 +139,7 @@ class Event extends Model{
 
 			// Composing the datas
 			$datas = array();
-			$datas['summary'] = (($this->type)? $this->type.': ':'').$this->summary;
+			$datas['summary'] = (($this->type)? $this->type.': ':'').$this->summary.(($this->city)? ' @ '.$this->city:'');
 			$datas['location'] = $this->location;
 			$datas['picture'] = $this->picture;
 			$datas['description'] = $this->description;
@@ -174,6 +183,9 @@ class Event extends Model{
 			$event->setEnd($gedt);
 			$extentedProperties = new \Google_Service_Calendar_EventExtendedProperties();
 			$sharedProperties = array('organizer' => $user->email);
+			if(isset($this->organizer) && $this->organizer != $user->email){
+				$sharedProperties['organizer'] = $this->organizer;
+			}
 			if($datas['picture'] || $this->pictureRemove){
 				$sharedProperties['picture'] = $datas['picture'];
 			}
@@ -252,6 +264,7 @@ class Event extends Model{
 		$event->summary = $analyse_summary['summary'];
 		$event->location = $result->location;
 		$event->type = $analyse_summary['type'];
+		$event->city = $analyse_summary['city'];
 		$event->description = $result->description;
 		if(!strpos($event->description, '<a ') && !strpos($event->description, '<b')){
 			$event->description = nl2br($event->description);
@@ -265,6 +278,12 @@ class Event extends Model{
 
 		if(isset($result->getExtendedProperties()->shared['picture'])){
 			$event->picture = $result->getExtendedProperties()->shared['picture'];
+		}
+		if(isset($result->getExtendedProperties()->shared['organizer'])){
+			$event->organizer = $result->getExtendedProperties()->shared['organizer'];
+		}
+		if(!isset($event->organizer) && isset($result->creator->email)){
+			$event->organizer = $result->creator->email;
 		}
 		if($result->getRecurringEventId()){
 			$event->masterId = $result->getRecurringEventId();
@@ -456,8 +475,10 @@ class Event extends Model{
 	 * @return array
 	 */
 	public static function filterType($summary){
+		$summary = trim($summary);
 		$type = '';
 		$found_type = null;
+		$found_city = null;
 		$types = self::getTypes();
 		foreach ($types as $key => $type) {
 			if(substr($summary, 0, strlen($type) + 1) == $type.':'){
@@ -470,8 +491,20 @@ class Event extends Model{
 				break;
 			}
 		}
+		$cities = self::getCities();
+		foreach ($cities as $city => $city_label) {
+			if(strtolower(substr($summary,  - strlen($city) - 1 )) == '@'.strtolower($city)){
+				$found_city = $city;
+				$summary = trim(substr($summary, 0, - strlen($city) - 1));
+				break;
+			}else if(strtolower(substr($summary,  - strlen($city) - 2)) == '@ '.strtolower($city)){
+				$found_city = $city;
+				$summary = trim(substr($summary, 0, - strlen($city) - 2));
+				break;
+			}
+		}
 
-		return array('summary' => $summary, 'type' => $found_type);
+		return array('summary' => $summary, 'type' => $found_type, 'city' => $found_city);
 	}
 
 	/**
@@ -531,6 +564,22 @@ class Event extends Model{
 			self::TYPE_FESTIVAL => self::TYPE_FESTIVAL,
 			self::TYPE_MARATHON => self::TYPE_MARATHON,
 			self::TYPE_HOLIDAYS => self::TYPE_HOLIDAYS,
+		);
+	}
+
+	/**
+	 * Get the list of cities
+	 * @return array
+	 */
+	public static function getCities(){
+		return array(
+			'' => '',
+			self::CITY_BRUSSELS => self::CITY_BRUSSELS,
+			self::CITY_ANTWERPEN => self::CITY_ANTWERPEN,
+			self::CITY_BRUGGE => self::CITY_BRUGGE,
+			self::CITY_GENT => self::CITY_GENT,
+			self::CITY_LIEGE => self::CITY_LIEGE,
+			self::CITY_NAMUR => self::CITY_NAMUR,
 		);
 	}
 
