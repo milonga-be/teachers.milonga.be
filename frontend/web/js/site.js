@@ -37,3 +37,4 @@ jQuery(".milonga-description .less-link").on("click",function(e){
 		{ queue: false, duration: "normal" }
 		);
 });
+jQuery('[data-toggle="popover"]').popover();

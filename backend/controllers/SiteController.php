@@ -205,14 +205,14 @@ class SiteController extends Controller
      * Send the accesses to the backend
      */
     public function actionSendAccesses(){
-        $users = User::find()->where(['!=','clear_password',''])->all();
+        $users = User::find()->where(['!=','clear_password',''])->andWhere(['status' => User::STATUS_ACTIVE])->all();
         foreach ($users as $user) {
             if($user->school && $user->school->venues){
                 Yii::$app->mailer->compose('access', ['user' => $user])
                     ->setFrom('milonga@milonga.be')
                     ->setTo($user->email)
                     ->setCc('milonga@milonga.be')
-                    ->setSubject('Update your regular classes')
+                    ->setSubject('Update your regular classes for September')
                     ->send();
                 echo 'Sent access to '. $user->email.'<br>';
             }

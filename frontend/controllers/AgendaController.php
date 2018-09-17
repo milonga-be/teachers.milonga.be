@@ -13,6 +13,8 @@ class AgendaController extends Controller{
 
 	// public $layout = 'embed';
 	var $embedded = false;
+	const DEFAULT_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
+	const ALL_FILTER = 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:';
 
 	/**
 	 * List the events in the agenda
@@ -23,7 +25,7 @@ class AgendaController extends Controller{
 	public function actionList( $weeks = 4 , $filter = null){
 
 		$events = $this->getEvents( $weeks * 7 , $filter );
-		$events = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,film:,practilonga:', $events);
+		$events = $this->filterEvents(self::ALL_FILTER, $events);
 		$start = new \Datetime();
 		if($start->format('w') != 1){
 			$start->modify('previous monday');
@@ -49,6 +51,24 @@ class AgendaController extends Controller{
 		}
 		
 		return ($end_week - $start_week) + 1;
+	}
+
+	/**
+	 * Search events in the agenda
+	 * @param  integer $weeks  the number of weeks to display
+	 * @param  string  $q the string to search
+	 * @return string
+	 */
+	public function actionSearch( $weeks = 8 , $q = null){
+		$events = $this->getEvents( $weeks * 7 , self::ALL_FILTER, null, $q);
+		$start = new \Datetime();
+		if($start->format('w') != 1){
+			$start->modify('previous monday');
+		}
+		$end = clone $start;
+		$end->modify('4 weeks');
+
+		return $this->render('search', [ 'events' => $events , 'start' => $start, 'weeks' => $weeks ]);
 	}
 
 	/**
@@ -90,7 +110,7 @@ class AgendaController extends Controller{
 		}
 		foreach ($events_by_date as $date => $events) {
 			$events_by_date[$date] = array();
-			$milongas = $this->filterEvents('milonga:,practica:,millonga:,concert:,show:,film:,practilonga:', $events);
+			$milongas = $this->filterEvents(self::DEFAULT_FILTER, $events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);
@@ -121,7 +141,7 @@ class AgendaController extends Controller{
     		$startDate->modify('next friday');
     	}
 
-    	$milongas = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:' , $startDate );
+    	$milongas = $this->getEvents( 9 , self::ALL_FILTER, $startDate );
     	$pictures = $this->getPictures( 9 );
     	// $posts = $this->getLatestPosts();
     	$posts = array();
@@ -185,7 +205,7 @@ class AgendaController extends Controller{
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $days , $filter = null , $startDate = null ){
+	private function getEvents( $days , $filter = null , $startDate = null, $q = null ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
@@ -203,6 +223,9 @@ class AgendaController extends Controller{
 		do{
 
 			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($google_calendar_id) . '/events?key=' . urlencode($google_api_key) . '&maxResults=2500&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
+			if(isset($q)){
+				$google_url.='&q='.urlencode($q);
+			}
 			$json_array = $this->getFromApi( $google_url );
 
 			$collected_events = $json_array['items'];
@@ -345,7 +368,7 @@ class AgendaController extends Controller{
 		$startDate->modify('next friday');
 
 		
-		$events = $this->getEvents( 9 , 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:' , $startDate );
+		$events = $this->getEvents( 9 , self::ALL_FILTER, $startDate );
 
     	foreach ($events as $event) {
     		// var_dump($event);

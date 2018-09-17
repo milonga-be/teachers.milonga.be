@@ -48,6 +48,11 @@ $postalcodes = array(
 	9040 => 'Gent',
 	1380 => 'Lasne',
 	8800 => 'Roeselare',
+	5380 => 'Namur Fernelmont',
+	8870 => 'Izegem',
+	3470 => 'Kortenaken',
+	1357 => 'Hélécine',
+	7321 => 'Blaton',
 );
 $page_url = 'http://milonga.be/classes/';
 if(isset($_GET['url'])){
@@ -57,23 +62,48 @@ echo '<table><tr>';
 $i = 0;
 $j = 0;
 foreach($schools as $school){
-	$school_url = $page_url.'#'.$school->id;
+	// $school_url = $page_url.'#'.$school->id;
+	if($school->website){
+		$school_url = $school->website;
+	}else if($school->facebook){
+		$school_url = $school->facebook;
+	}else if($school->email){
+		$school_url = 'mailto:'.$school->email;
+	}else{
+		$school_url = '#';
+	}
 	?>
-	<td style="width:33%;text-align: center;vertical-align: top;">
-		<a href="<?= $school_url?>"><img style="height:75px;width:75px;border-radius:8px;margin-bottom:15px;" src="<?= $school->thumbUrl?>"/></a><br/>
-		<a style="font-weight:bold;color: #F66062;text-decoration: none;font-size:0.95em;" href="<?= $school_url?>"><?= $school->name ?></a>
-		<div style="font-size:0.8em">
-		<?php
-		$school_postalcodes = array();
-		foreach ($schools_venues[ $school->id ] as $venue) {
-			$school_postalcodes[$venue->postalcode] = $venue->postalcode;
-		}
-		foreach ($school_postalcodes as $postalcode) {
-			echo $postalcode.' - '.$postalcodes[$postalcode].'<br>';
-		}
-		?>
+	<td style="width:33%;vertical-align: top;">
+		<a class="swipebox" title="<?= $school->name ?>"  href="<?= $school_url ?>" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url(<?= $school->pictureUrl ?>);">
+    	</a>
+		<div style="font-size:11px;padding:10px;">
+			<a style="font-weight:normal;font-family: Roboto;text-transform:uppercase;font-size: 19.5px;color: rgb(102, 102, 102);" href="<?= $school_url?>"><?= $school->name ?></a>
+			<p style="color: rgb(246, 96, 98);margin-bottom: 5px;">
+			<?php
+			$school_postalcodes = array();
+			foreach ($schools_venues[ $school->id ] as $venue) {
+				$school_postalcodes[$venue->postalcode] = $venue->postalcode;
+			}
+			$first = true;
+			foreach ($school_postalcodes as $postalcode) {
+				if(!$first){
+					echo ' / ';
+				}
+				if(isset($postalcodes[$postalcode]))
+					echo $postalcode.' - '.$postalcodes[$postalcode];
+				else
+					echo $postalcode;
+				$first = false;
+			}
+			?>
+			</p>
+			<p style="line-height:1.2;">
+				<?= $school->description ?>
+			</p>
+			<p style="margin-bottom:35px;">
+				<a href="<?= $school_url?>"><?= $school_url ?></a>
+			</p>
 		</div>
-		<br>
 	</td>
 <?php
 	$i++;

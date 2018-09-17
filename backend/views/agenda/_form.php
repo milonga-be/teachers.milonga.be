@@ -133,6 +133,20 @@ echo $form->field($event, 'description')->widget(Summernote::className(),
 
 echo '<p class="text-right">'.(($event->id)?'<a onclick="return confirm(\'Do you really want to delete this event ?\');" href="'.Url::to(['delete', 'id' => $event->id]).'" class="btn btn-danger">Delete</a> <a href="'.Url::to(['agenda/duplicate', 'id' => $event->id]).'" class="btn btn-primary">Copy</a>':'').'  <button type="submit" class="btn btn-success">'.($event->id?'Save':'Create').'</button></p>';
 
+if(isset($event->id)){
+?>
+<p>
+	<div class="row">
+		<div class="col-md-12 text-right">
+			<?php
+			$start = new \DateTime($event->start);
+			?>
+			<a href="http://www.milonga.be/dancing/?u-year=<?= $start->format('Y') ?>&u-month=<?= $start->format('m') ?>&u-selected=<?= $start->format('Y-m-d') ?>#<?= $event->id ?>" target="_blank" class=""><?= FA::icon('eye')?> Click here to see on milonga.be</a>
+		</div>
+	</div>
+</p>
+<?php
+}
 ActiveForm::end();
 
 $this->registerJs(

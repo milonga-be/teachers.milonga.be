@@ -11,6 +11,8 @@ function cmp($a, $b) {
     return ($a['start']['dateTime'] < $b['start']['dateTime']) ? -1 : 1;
 }
 
+$schools = array();
+
 ?>
 
 A workshop, pleaaase ! <br/>
@@ -23,7 +25,9 @@ foreach ( $events as $weekday => $events ) {
 	uasort($events, 'cmp');
 	foreach ($events as $event) {
 		$datetime = new Datetime($event['start']['dateTime']);
-		echo $datetime->format('H:i').' - _____: ';
+		if(!in_array(strtoupper($event['school']['name']), $schools))
+			$schools[] = strtoupper($event['school']['name']);
+		echo $datetime->format('H:i').' - '.strtoupper($event['school']['name']).': ';
 		echo ucwords(strtolower(str_replace('@', ' @ ', $event['summary'])));
 
 		echo '<br>';
@@ -31,3 +35,6 @@ foreach ( $events as $weekday => $events ) {
 	echo '<br>';
 }
 echo 'Know more :<br>';
+foreach ($schools as $school) {
+	echo $school.' : <br/>';
+}
