@@ -12,7 +12,7 @@ $previous_event = null;
 <div class="events" data-nb="<?= sizeof($events) ?>">
 	<?php
 	if(sizeof($events) == 0){
-		echo '<h3>No events found</h3><hr>';
+		echo '<h3>No events found</h3><br>';
 	}
 	foreach ($events as $event) {
 		echo $this->render('_date', ['event' => $event, 'previous_event' => $previous_event]);

@@ -45,6 +45,12 @@ td.levelname{
     color: #777;
     font-size:0.9em;
 }
+.events h5{
+    color: #555;
+    text-transform: uppercase;
+    clear:none;
+    font-size:0.8em;
+}
 .events h4{
     margin-bottom: 2px;
     margin-top:4px;

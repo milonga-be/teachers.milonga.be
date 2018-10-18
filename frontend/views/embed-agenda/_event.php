@@ -11,6 +11,7 @@ use common\components\Htmlizer;
 	}
 	if(isset($event['summary'])){ ?>
 	<a name="<?= $event['id']?>"></a>
+	<?php if(isset($event['school']['name'])){ ?><h5><?= $event['school']['name'] ?></h5><?php } ?>
 	<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= $event['email']?>" data-id="<?= $event['id']?>">
 		
 		<?= $event['summary'] ?>
