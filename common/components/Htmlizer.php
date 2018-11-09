@@ -30,6 +30,8 @@ class Htmlizer
 			$html.="\nMore info : <a href=\"mailto:".$event['email']."\">".$event['email']."</a>";
 		}
 
-		return nl2br($html);
+		$html = nl2br($html);
+        $html = preg_replace('#^(( ){0,}<br( {0,})(/{0,1})>){1,}#i', '', $html);
+        return $html;
     }
 }

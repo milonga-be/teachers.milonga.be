@@ -39,20 +39,29 @@ use common\components\Htmlizer;
 	</div>
 	<div class="milonga-description">
 		<?php
-		if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
-
-			$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
-			echo '<a href="'.$pictureUrl.'" class="swipebox img_mask" style="background-image:url('.$pictureUrl.');"></a><br/>';
-		}
 		$html = Htmlizer::execute($event);
-		$html_lines = explode('<br />', $html);
-		if(sizeof($html_lines) > 5){
-			echo implode('<br />', array_slice($html_lines, 0, 5));
-			echo '<a class="more-link" href="#">... READ MORE ...</a>';
-			echo '<p class="more-content">'.implode('<br />', array_slice($html_lines, 5)).'</p>';
-			echo '<a class="less-link" href="#"> -- LESS -- </a>';
-		}else{
-			echo $html;
+		// $html_lines = explode('<br />', $html);
+		// if(sizeof($html_lines) > 5){
+		// 	echo implode('<br />', array_slice($html_lines, 0, 5));
+		// 	echo '<a class="more-link" href="#">... READ MORE ...</a>';
+		// 	echo '<p class="more-content">'.implode('<br />', array_slice($html_lines, 5)).'</p>';
+		// 	echo '<a class="less-link" href="#"> -- LESS -- </a>';
+		// }else{
+			echo '<p class="more-link">'.$html.'</p>';
+			echo '<p class="more-content less-link" style="display:none;">'.$html.'</p>';
+		// }
+		if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
+			$otherClass = '';
+			$ratio = '';
+			$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
+			$sizes = @getimagesize(Yii::getAlias('@webroot').'/../../uploads/events/'.$event['extendedProperties']['shared']['picture']);
+			if(is_array($sizes)){
+				$ratio = $sizes[0]/$sizes[1];
+				if($ratio > 1.8){
+					$otherClass = 'horiz_img_mask';
+				}
+			}
+			echo '<a data-ratio="'.$ratio.'" href="'.$pictureUrl.'" class="swipebox img_mask '.$otherClass.'" style="background-image:url('.$pictureUrl.');"></a><br/>';
 		}
 		?>
 	</div>
