@@ -80,6 +80,7 @@ td.levelname{
 .agenda-set h2.date{
     text-align: left;
     font-size:1.6em;
+    display: none;
 }
 .agenda-set h2{
     margin-bottom: 10px;
@@ -258,4 +259,57 @@ td.other_month a{
     font-size: 0.5em;
     line-height: 1.8em;
     padding-right:2em;
+}
+#navbar-agenda{
+    background-color:#F9F9F9;
+    width:100%;
+    margin-bottom: 15px;
+}
+#navbar-agenda li{
+    width:50%;
+    /*text-align: center;*/
+    position: relative;
+}
+
+#navbar-agenda li a{
+    text-transform: uppercase;
+}
+#navbar-agenda li em{
+    position: absolute;
+    right:10px;
+    top:10px;
+    background-color:white;
+    font-style: normal;
+    border-radius: 15px;
+    height:30px;
+    width:30px;
+    line-height: 30px;
+    text-align: center;
+    color:#F66062;
+    font-weight: bold;
+}
+@media screen and (max-width: 480px) {
+    #navbar-agenda{
+        margin:0;
+    }
+    #navbar-agenda li{
+        float:left;
+    }
+    #navbar-agenda li em{
+        top:5px;
+    }
+}
+@media screen and (max-width: 320px) {
+    #navbar-agenda li em{
+        display: none;
+    }
+    #search-icon{
+        display: none;
+    }
+}
+#navbar-agenda li.active{
+    background-color: #F66062;
+}
+#navbar-agenda li.active a{
+    color:white;
 }

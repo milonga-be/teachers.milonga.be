@@ -28,4 +28,13 @@ jQuery(".milonga-description .less-link").on("click",function(e){
 		{ queue: false, duration: "normal", complete: function(){ desc_elt.find(".more-link").show();$(this).hide();} }
 	);
 });
+jQuery('#navbar-agenda li a').on('click',function(e){
+	e.preventDefault();
+	// console.log(jQuery(this).data('set'));
+	var dayContainer = jQuery(this).parents('.agenda-day');
+	dayContainer.find('.set').hide();
+	dayContainer.find('.set[id="'+jQuery(this).data('set')+'"]').show();
+	jQuery(this).parents('.navbar-nav').find('li').removeClass('active');
+	jQuery(this).parent().addClass('active');
+});
 jQuery('[data-toggle="popover"]').popover();

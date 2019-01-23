@@ -106,16 +106,26 @@ if($this->context->embedded == true){
 		</table>
 		<div class="events">
 		<?php
-		$set_index = 0;
+		
 		foreach ($events_by_date as $date => $events_sets) {
 			$eventDate = new \Datetime($date);
 			?>
 			<div class="agenda-day <?= ($eventDate->format('Ymd') == $selected_day->format('Ymd'))?"":"hidden" ?>" data-day="<?= $eventDate->format('Ymd') ?>">
 				<h2 class="date"><?= $eventDate->format('l, F j')?></h2>
+				<ul class="nav navbar-nav" id="navbar-agenda">
 				<?php
+				$set_index = 0;
+				foreach ($events_sets as $set_name => $events) {
+					echo '<li class="menu-item '.(($set_index==0)?'active':'').'"><a href="#" data-set="set-'.$eventDate->format('Ymd').'-'.$set_name.'">'.$set_name.'</a><em>'.sizeof($events).'</em></li>';
+					$set_index++;
+				}
+				?>
+				</ul>
+				<?php
+				$set_index = 0;
 				foreach ($events_sets as $set_name => $events) {
 					?>
-					<div class="set">
+					<div <?= $set_index>0?'style="display:none;"':'' ?>class="set" id="set-<?= $eventDate->format('Ymd') ?>-<?= $set_name?>">
 					<h3><?= $set_name ?></h3>
 					<?php
 					foreach ($events as $event) {
@@ -124,6 +134,7 @@ if($this->context->embedded == true){
 					?>
 					</div>
 					<?php
+					$set_index++;
 				}
 				?>
 		<!-- </div> -->
