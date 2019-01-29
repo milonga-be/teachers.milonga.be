@@ -24,8 +24,8 @@ jQuery(".milonga-description .less-link").on("click",function(e){
 	// e.preventDefault();
 	var desc_elt = jQuery(this).parent();
 	desc_elt.find(".more-content").animate(
-		{ opacity: 0, height: "4.2em" },
-		{ queue: false, duration: "normal", complete: function(){ desc_elt.find(".more-link").show();$(this).hide();} }
+		{ opacity: 0, height: "5.1em" },
+		{ queue: false, duration: "normal", complete: function(){ desc_elt.find(".more-link").show();jQuery(this).hide();} }
 	);
 });
 jQuery('#navbar-agenda li a').on('click',function(e){

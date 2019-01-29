@@ -8,6 +8,16 @@ class Htmlizer
     	}else{
     		$html = '';
     	}
+        // $html = str_replace('</p>', '<br />', $html);
+        // Only for old non modified texts
+        if(strpos($html, '<br') === false && strpos($html, '<p') === false && strpos($html, '<a') === false){
+            $html = nl2br($html);
+        }
+        $html = str_replace("\n", "", $html);
+        $html = preg_replace('/ style=("|\')(.*?)("|\')/','',$html);
+        $html = preg_replace('/ class=("|\')(.*?)("|\')/','',$html);
+        $html = strip_tags($html, '<br><a><b><i><p><strong><em>');
+        $html = str_replace('<br>', '<br />', $html);
 
     	$encode_url = true;
     	if(strpos($html, '<a ')){
@@ -26,12 +36,15 @@ class Htmlizer
         $html=str_replace("httpx://", "http://", $html);
 		$html=str_replace("httpsx://", "https://", $html);
 
-		if(!strpos($html, 'mailto:') && isset($event['email']) && $event['email'] != 'milonga@milonga.be' && $event['email'] != 'bverdeye@gmail.com'){
-			$html.="\nMore info : <a href=\"mailto:".$event['email']."\">".$event['email']."</a>";
-		}
-
-		$html = nl2br($html);
+		// $html = nl2br($html);
+        $html = preg_replace('#<br />(\s*<br />)+#', '<br /><br />', $html);
+        $html = preg_replace('#(( ){0,}<br( {0,})(/{0,1})>){1,}$#i', '', $html);
         $html = preg_replace('#^(( ){0,}<br( {0,})(/{0,1})>){1,}#i', '', $html);
+
+
+        if(!strpos($html, 'mailto:') && isset($event['email']) && $event['email'] != 'milonga@milonga.be' && $event['email'] != 'bverdeye@gmail.com'){
+            $html.="<br>More info : <a href=\"mailto:".$event['email']."\">".$event['email']."</a>";
+        }
         return $html;
     }
 }

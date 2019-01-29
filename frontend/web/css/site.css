@@ -127,21 +127,21 @@ td.levelname{
     -webkit-hyphens: auto;
     hyphens: auto;
 }
-.milonga-description p.more-link{
+.milonga-description .more-link{
     position: relative;
-    height: 4.2em;
+    height: 5.1em;
     overflow: hidden;
     cursor:pointer;
-    margin-bottom: 0em;
+    line-height: 1.3em;
 }
-.milonga-description p.more-link:after{
+.milonga-description .more-link:after{
     content: "";
     text-align: right;
     position: absolute;
     bottom: 0;
     right: 0;
     width: 100%;
-    height: 4.2em;
+    height: 5.1em;
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
 }
 /*.events a.more-link,
@@ -159,9 +159,15 @@ td.levelname{
 .milonga-description .more-content{
     display: none;
     position: relative;
-    top:-4.2em;
-    margin-bottom: -4.2em;
+    top:-5.1em;
+    margin-bottom: -5.1em;
+    /*min-height:5.2em;*/
     cursor: pointer;
+    line-height: 1.3em;
+}
+div.single-post .milonga-description p{
+    margin-bottom:0em;
+    line-height: 1.3em;
 }
 /*@media screen and (max-width: 480px) {
     .milonga-description p.more-link,.milonga-description p.more-content{
@@ -312,4 +318,7 @@ td.other_month a{
 }
 #navbar-agenda li.active a{
     color:white;
+}
+.special-event .description p{
+    margin-bottom:0;
 }

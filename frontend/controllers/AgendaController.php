@@ -60,10 +60,17 @@ class AgendaController extends Controller{
 	 * @return string
 	 */
 	public function actionSearch( $weeks = 8 , $q = null){
-		$search = explode(",","ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,e,i,ø,u");
-		$replace = explode(",","c,ae,oe,a,e,i,o,u,a,e,i,o,u,a,e,i,o,u,y,a,e,i,o,u,a,e,i,o,u");
-		$q = str_replace($search, $replace, $q);
+		// $search = explode(",","ç,æ,œ,á,é,í,ó,ú,à,è,ì,ò,ù,ä,ë,ï,ö,ü,ÿ,â,ê,î,ô,û,å,e,i,ø,u");
+		// $replace = explode(",","c,ae,oe,a,e,i,o,u,a,e,i,o,u,a,e,i,o,u,y,a,e,i,o,u,a,e,i,o,u");
+		// $q = str_replace($search, $replace, $q);
 		$events = $this->getEvents( $weeks * 7 , self::ALL_FILTER, null, $q);
+		// $q_without_accents = str_replace($search, $replace, $q);
+		// if($q != $q_without_accents){
+		// 	$events_without_accents = $this->getEvents( $weeks * 7 , self::ALL_FILTER, null, $q_without_accents);
+		// 	$events = array_replace($events, $events_without_accents);
+		// 	// var_dump($events);
+		// 	// die();
+		// }
 		$start = new \Datetime();
 		if($start->format('w') != 1){
 			$start->modify('previous monday');
@@ -285,12 +292,12 @@ class AgendaController extends Controller{
 				// 	$fits = TRUE;
 				// }
 			}
-			if(isset($event['description'])){
-				$event['description'] = str_replace('</p>', '<br />', $event['description']);
-				$event['description'] = strip_tags($event['description'], '<br><a><b><i>');
-				$event['description'] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $event['description']);
-				$event['description'] = str_replace('<br>', '<br />', $event['description']);
-			}
+			// if(isset($event['description'])){
+			// 	$event['description'] = str_replace('</p>', '<br />', $event['description']);
+			// 	$event['description'] = strip_tags($event['description'], '<br><a><b><i>');
+			// 	$event['description'] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $event['description']);
+			// 	$event['description'] = str_replace('<br>', '<br />', $event['description']);
+			// }
 
 			// Adding some info to help
 			if(!isset($event['start']['dateTime']) && isset($event['start']['date'])){

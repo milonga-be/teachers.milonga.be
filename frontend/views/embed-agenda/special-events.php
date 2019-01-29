@@ -12,7 +12,7 @@ foreach ($events as $event) { ?>
 					echo '<a href="'.$pictureUrl.'" class="swipebox" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
 				}
 			?>
-			<div class="summary">
+			<div class="summary special-event">
 				<h3><?= $event['summary']?></h3>
 				<h4 style="margin-top:0px;margin-bottom:5px;"><?= $event['category']?><br/> 
 					<?php if(isset($event['start']['dateTime'])){ ?>
@@ -26,7 +26,9 @@ foreach ($events as $event) { ?>
 					<?= (new Datetime($event['start']['date']))->format('F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format('F j'); 
 				} ?>
 				</h4><br/>
-				<?= Htmlizer::execute($event) ?>
+				<div class="description">
+					<?= Htmlizer::execute($event) ?>
+				</div>
 			</div>
 		</div>
 	</div>

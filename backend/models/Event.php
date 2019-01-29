@@ -266,7 +266,9 @@ class Event extends Model{
 		$event->type = $analyse_summary['type'];
 		$event->city = $analyse_summary['city'];
 		$event->description = $result->description;
-		if(!strpos($event->description, '<a ') && !strpos($event->description, '<b')){
+		// var_dump($event->description);
+		// exit();
+		if(strpos($event->description, '<a ') === false && strpos($event->description, '<b') === false && strpos($event->description, '<div') === false && strpos($event->description, '<p') === false){
 			$event->description = nl2br($event->description);
 		}
 		// Dates

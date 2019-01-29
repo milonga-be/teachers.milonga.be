@@ -1,6 +1,7 @@
 <?php
 use backend\models\Event;
 use common\models\User;
+use yii\web\JsExpression;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -9,7 +10,8 @@ use kartik\datetime\DateTimePicker;
 use kartik\widgets\DatePicker;
  use kartik\time\TimePicker;
 use rmrevin\yii\fontawesome\FA;
-use marqu3s\summernote\Summernote;
+// use marqu3s\summernote\Summernote;
+use dosamigos\tinymce\TinyMce;
 use yii\helpers\ArrayHelper;
 ?>
 <p>
@@ -122,15 +124,37 @@ if($event->picture){
 	echo '<p id="picture-preview"><a class="swipebox img_mask" target="_blank" href="'.$event->pictureUrl.'" style="background-image:url('.$event->pictureUrl.');"></a>'.FA::icon('close').'</p>';
 }
 // echo $form->field($event, 'description')->textarea(['rows' => 10]);
-echo $form->field($event, 'description')->widget(Summernote::className(), 
+// echo $form->field($event, 'description')->widget(Summernote::className(), 
+// 	[
+// 		'clientOptions' => [
+// 			'toolbar' => [
+// 				['style', ['bold', 'italic', 'underline', 'link', 'clear']]
+// 			],
+// 		]
+// 	]);
+echo $form->field($event, 'description')->widget(TinyMce::className(), 
 	[
-		'clientOptions' => [
-			'toolbar' => [
-				['style', ['bold', 'italic', 'underline', 'link', 'clear']]
-			],
-		]
-	]);
-
+      'options' => [
+         'rows' => 15,
+      ],
+      'clientOptions' => [
+      	'plugins' => [
+            "autolink link autoresize paste"
+        ],
+        'toolbar' => 'bold italic underline link | removeformat ',
+        'menubar' => false,
+        'branding' => false,
+        'statusbar' => false,
+    	// 'forced_root_blocks' => "",
+    // 	'paste_preprocess' => new JsExpression('function(plugin, args) {
+		  //   console.log(args.content);
+		  //   args.content += " preprocess";
+		  // }'),
+		'paste_data_images' => false,
+		'paste_as_text' => true,
+    	'content_css' => '/backend/web/css/tinymce.css'
+      ],
+    ]);
 echo '<p class="text-right">'.(($event->id)?'<a onclick="return confirm(\'Do you really want to delete this event ?\');" href="'.Url::to(['delete', 'id' => $event->id]).'" class="btn btn-danger">Delete</a> <a href="'.Url::to(['agenda/duplicate', 'id' => $event->id]).'" class="btn btn-primary">Copy</a>':'').'  <button type="submit" class="btn btn-success">'.($event->id?'Save':'Create').'</button></p>';
 
 if(isset($event->id)){

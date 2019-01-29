@@ -25,16 +25,16 @@ foreach ( $events as $weekday => $events ) {
 	uasort($events, 'cmp');
 	foreach ($events as $event) {
 		$datetime = new Datetime($event['start']['dateTime']);
-		if(!in_array(strtoupper($event['school']['name']), $schools))
-			$schools[] = strtoupper($event['school']['name']);
-		echo $datetime->format('H:i').' - '.strtoupper($event['school']['name']).': ';
+		if(!in_array(ucfirst($event['school']['name']), $schools))
+			$schools[] = ucfirst($event['school']['name']);
+		echo $datetime->format('H:i').' - '/*.strtoupper($event['school']['name']).': '*/;
 		echo ucwords(strtolower(str_replace('@', ' @ ', $event['summary'])));
-
+		echo ' ('.ucfirst($event['school']['name']).')';
 		echo '<br>';
 	}
 	echo '<br>';
 }
-echo 'Know more :<br>';
+echo 'KNOW MORE<br>';
 foreach ($schools as $school) {
 	echo $school.' : <br/>';
 }

@@ -47,8 +47,8 @@ use common\components\Htmlizer;
 		// 	echo '<p class="more-content">'.implode('<br />', array_slice($html_lines, 5)).'</p>';
 		// 	echo '<a class="less-link" href="#"> -- LESS -- </a>';
 		// }else{
-			echo '<p class="more-link">'.$html.'</p>';
-			echo '<p class="more-content less-link" style="display:none;">'.$html.'</p>';
+			echo '<div class="more-link">'.$html.'</div>';
+			echo '<div class="more-content less-link" style="display:none;">'.$html.'</div>';
 		// }
 		if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 			$otherClass = '';
