@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\Lesson;
 use common\models\School;
+use backend\models\SchoolSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
 
@@ -38,13 +39,10 @@ class SchoolsController extends Controller{
      */
     public function actionIndex()
     {
-        $user = Yii::$app->user->identity;
-        $query = School::find()->orderBy('name');
-        $provider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $searchModel = new SchoolSearch();
+        $provider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index',['dataProvider' => $provider]);
+        return $this->render('index',['dataProvider' => $provider, 'searchModel' => $searchModel]);
     }
 
     /**

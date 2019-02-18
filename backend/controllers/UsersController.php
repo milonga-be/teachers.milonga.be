@@ -6,6 +6,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\User;
+use backend\models\UserSearch;
 use common\models\School;
 use yii\data\ActiveDataProvider;
 
@@ -37,12 +38,10 @@ class UsersController extends Controller{
      */
     public function actionIndex()
     {
-        $query = User::find()->orderBy('username');
-        $provider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        $searchModel = new UserSearch();
+        $provider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index',['dataProvider' => $provider]);
+        return $this->render('index',['dataProvider' => $provider, 'searchModel' => $searchModel]);
     }
 
     /**

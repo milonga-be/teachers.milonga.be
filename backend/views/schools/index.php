@@ -24,7 +24,7 @@ echo '<h1>' . $this->title . '</h1>';
 	<?=
 		 GridView::widget([
 			 'dataProvider' => $dataProvider,
-			 // 'filterModel' => $searchModel,
+			 'filterModel' => $searchModel,
 			 'columns' => [
 				 [
 				 	'attribute' => 'name',

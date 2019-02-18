@@ -24,7 +24,7 @@ echo '<h1>' . $this->title . '</h1>';
 	<?=
 		 GridView::widget([
 			 'dataProvider' => $dataProvider,
-			 // 'filterModel' => $searchModel,
+			 'filterModel' => $searchModel,
 			 'columns' => [
 				 [
 				 	'attribute' => 'username',
@@ -33,7 +33,10 @@ echo '<h1>' . $this->title . '</h1>';
 				 		return Html::a($data->username,['users/update','id' => $data->id]);
 				 	}
 				 ],
-				 'school.name',
+				 [
+				 	'attribute' => 'schoolname',
+				 	'value' => 'school.name'
+				 ]
 				 // [
     	// 			'class' => 'yii\grid\ActionColumn',
     	// 			'template' => '{update} {delete}',
