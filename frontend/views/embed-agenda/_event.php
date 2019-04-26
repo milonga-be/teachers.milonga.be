@@ -11,7 +11,15 @@ use common\components\Htmlizer;
 	}
 	if(isset($event['summary'])){ ?>
 	<a name="<?= $event['id']?>"></a>
-	<?php if(isset($event['school']['name'])){ ?><h5><?= $event['school']['name'] ?></h5><?php } ?>
+	<?php if(isset($event['school']['name'])){ ?>
+		<h5>
+			<?php if(isset($event['school']['url'])){ ?>
+			<a href="<?= $event['school']['url'] ?>" target="_blank"><?= $event['school']['name'] ?></a>
+			<?php }else{ ?>
+				<?= $event['school']['name'] ?>
+			<?php } ?>
+		</h5>
+	<?php } ?>
 	<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= $event['email']?>" data-id="<?= $event['id']?>">
 		
 		<?= $event['summary'] ?>

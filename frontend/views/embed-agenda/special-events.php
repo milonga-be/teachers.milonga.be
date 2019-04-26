@@ -9,7 +9,7 @@ foreach ($events as $event) { ?>
 			<?php if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 
 					$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
-					echo '<a href="'.$pictureUrl.'" class="swipebox" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
+					echo '<a href="'.$pictureUrl.'" class="swipebox" style="display:block;width:100%;height:275px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
 				}
 			?>
 			<div class="summary special-event">

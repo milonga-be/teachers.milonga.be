@@ -329,6 +329,10 @@ class AgendaController extends Controller{
 					$event['school']['picture'] = $school->getPictureUrl();
 					$event['school']['thumb'] = $school->getThumbUrl();
 					$event['school']['name'] = $school->name;
+					if(isset($school->website))
+						$event['school']['url'] = $school->website;
+					else if(isset($school->facebook))
+						$event['school']['url'] = $school->facebook;
 					if($school->email){
 						$event['email'] = $school->email;
 					}

@@ -29,7 +29,7 @@ class LessonsController extends Controller{
 		}
 
 		$schools = School::find()->joinWith('venues')->where(['IN','venue.postalcode',$postalcodes ])->andWhere(['active' => 1])->orderBy('venue.postalcode ASC')->all();
-
+		$schools_venues = array();
 		foreach ($schools as $school) {
 			$schools_venues[ $school->id ] = $school->getPostalCodeVenues( $postalcodes );
 		}
@@ -153,6 +153,14 @@ class LessonsController extends Controller{
             'venues_lessons' => $venues_lessons,
             
         ]);
+	}
+
+	/** 
+	 * Display just one school detail
+	 */
+	public function actionSchool($id){
+		$school = School::findOne($id);
+		return $this->render('school', ['school' => $school]);
 	}
 
 }
