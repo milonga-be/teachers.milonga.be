@@ -26,9 +26,6 @@ use common\components\Htmlizer;
 	</h4>
 	<?php } ?>
 	<div class="milonga-data">
-		<?php if(isset($event['category'])){ ?>
-		<?= strtoupper($event['category'])?>
-		<?php } ?>
 		<div class="hours">
 			<?php if(isset($event['start']['dateTime'])){ ?>
 				<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?>
@@ -42,7 +39,13 @@ use common\components\Htmlizer;
 			<?php } ?>
 		</div>
 		<?php if( isset($event['location']) ){ ?>
-		<?= $event['location']?>
+		<?= $event['location']?><br>
+		<?php } ?>
+		<?php if(isset($event['category'])){ ?>
+		<span class="badge"><?= strtoupper($event['category'])?></span>
+		<?php } ?>
+		<?php if(isset($event['city'])){ ?>
+		<span class="badge"><?= strtoupper($event['city'])?></span>
 		<?php } ?>
 	</div>
 	<div class="milonga-description">

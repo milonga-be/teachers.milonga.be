@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use common\models\User;
 use common\models\School;
+use backend\models\Event;
 
 /**
  * Site controller
@@ -15,6 +16,8 @@ class AgendaController extends Controller{
 	var $embedded = false;
 	const DEFAULT_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
 	const ALL_FILTER = 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:';
+	const MILONGAS_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
+	const WORKSHOPS_FILTER = 'workshop:';
 
 	/**
 	 * List the events in the agenda
@@ -140,28 +143,29 @@ class AgendaController extends Controller{
 	 * XML RSS for the newsletter sent by Mailchimp
 	 * @return string
 	 */
-	public function actionNewsletterRss(){
+	public function actionNewsletterRss($category = '', $debug = false){
 		$response = Yii::$app->getResponse();
     	$headers = $response->getHeaders();
 
-    	$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
+    	if(!$debug)
+    		$headers->set('Content-Type', 'application/rss+xml; charset=utf-8');
 
     	$startDate = new \Datetime();
     	if( $startDate->format('w') != 5 ){
     		$startDate->modify('next friday');
     	}
-
-    	$milongas = $this->getEvents( 9 , self::ALL_FILTER, $startDate );
-    	$pictures = $this->getPictures( 9 );
-    	// $posts = $this->getLatestPosts();
-    	$posts = array();
+    	if($category == 'milongas')
+    		$events = $this->getEvents( 9 , self::MILONGAS_FILTER, $startDate );
+    	else if($category == 'workshops')
+    		$events = $this->getEvents( 9 , self::WORKSHOPS_FILTER, $startDate );
+    	else
+    		$events = $this->getEvents( 9 , self::ALL_FILTER, $startDate );
 
     	return $this->renderPartial(
     		'newsletter-rss',
     		[ 
-    			'milongas' => $milongas , 
-    			'pictures' => $pictures,
-    			'posts' => $posts,
+    			'events' => $events,
+    			'debug' => $debug,
     		]);
 	}
 
@@ -279,25 +283,19 @@ class AgendaController extends Controller{
 					$prefixes = [ $filter , str_replace(':',' :',$filter) ];
 					foreach($prefixes as $prefix){
 						if (substr(strtolower($event_text), 0, strlen($prefix)) == strtolower($prefix)) {
-    						$event_text = substr($event_text, strlen($prefix));
-    						$event['category'] = str_replace(':','',strtolower($prefix));
+    						// $event_text = substr($event_text, strlen($prefix));
+    						// $event['category'] = str_replace(':','',strtolower($prefix));
     						break;
 						}
 					}
-					$event['summary'] = $event_text;
+					// $event['summary'] = $event_text;
 					$fits = TRUE;
+					$analyse_summary = Event::filterType($event_text);
+					$event['summary'] = $analyse_summary['summary'];
+					$event['city'] = isset($analyse_summary['city'])?$analyse_summary['city']:'';
+					$event['category'] = isset($analyse_summary['type'])?$analyse_summary['type']:'';
 				}
-				// Also checking the locations but only with pure filter not manipulated
-				// if(isset($event['location']) && stristr($event['location'],$filter)){
-				// 	$fits = TRUE;
-				// }
 			}
-			// if(isset($event['description'])){
-			// 	$event['description'] = str_replace('</p>', '<br />', $event['description']);
-			// 	$event['description'] = strip_tags($event['description'], '<br><a><b><i>');
-			// 	$event['description'] = preg_replace('/(<[^>]+) style=".*?"/i', '$1', $event['description']);
-			// 	$event['description'] = str_replace('<br>', '<br />', $event['description']);
-			// }
 
 			// Adding some info to help
 			if(!isset($event['start']['dateTime']) && isset($event['start']['date'])){

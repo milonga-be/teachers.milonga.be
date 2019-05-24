@@ -49,7 +49,7 @@ td.levelname{
     color: #555;
     text-transform: uppercase;
     clear:none;
-    font-size:0.8em;
+    font-size:0.85em;
 }
 .events h5 a{
     color: #555;
@@ -324,4 +324,14 @@ td.other_month a{
 }
 .special-event .description p{
     margin-bottom:0;
+}
+.badge{
+    background-color: #e7e7e7;
+    font-weight: normal;
+    color:#777;
+    border-radius:5px;
+    padding-left:5px;
+    padding-right:5px;
+    font-size:0.9em;
+    margin-top:4px;
 }

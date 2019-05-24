@@ -78,6 +78,8 @@ class AgendaController extends Controller{
             $event->uploadFiles();
             if($event->save()){
                 Yii::$app->getSession()->setFlash('success', ['title' => 'Event created']);
+                $this->redirect(['update', 'id' => $event->id]);
+                return;
             }
         }
 
