@@ -14,8 +14,7 @@ function cmp($a, $b) {
 ?>
 
 I want more tango !<br/>
-This week milongas : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br>
-http://www.milonga.be/dancing/<br><br>
+This week milongas : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br><br>
 
 <?php
 foreach ( $events as $weekday => $events ) {
@@ -25,9 +24,16 @@ foreach ( $events as $weekday => $events ) {
 		$datetime = new Datetime($event['start']['dateTime']);
 		echo $datetime->format('H:i').' - ';
 		echo ucwords(strtolower(str_replace('@', ' @ ', $event['summary'])));
+		if(isset($event['city']) && !empty($event['city'])){
+			echo ' @ '.$event['city'];
+		}
 
 		echo '<br>';
 	}
 	echo '<br>';
 }
 
+?>
+Know more : http://www.milonga.be/dancing/ <br>
+Subscribe to the weekly newsletter :
+http://www.milonga.be/about/newsletter/

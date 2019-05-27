@@ -273,7 +273,10 @@ class AgendaController extends Controller{
 
 		$events_filtered = array();
 		foreach ($events as $event) {
-			$event_text = $event['summary'];
+			if(isset($event['original']))
+				$event_text = $event['original'];
+			else
+				$event_text = $event['summary'];
 			$fits = FALSE;
 			foreach( $filters as $filter ){
 				$filter_without_semicolons = str_replace([' :',':'], '', $filter );
@@ -288,9 +291,11 @@ class AgendaController extends Controller{
     						break;
 						}
 					}
+					// echo 'fits filter '.$filter.'<br>';
 					// $event['summary'] = $event_text;
 					$fits = TRUE;
 					$analyse_summary = Event::filterType($event_text);
+					$event['original'] = $event_text;
 					$event['summary'] = $analyse_summary['summary'];
 					$event['city'] = isset($analyse_summary['city'])?$analyse_summary['city']:'';
 					$event['category'] = isset($analyse_summary['type'])?$analyse_summary['type']:'';
