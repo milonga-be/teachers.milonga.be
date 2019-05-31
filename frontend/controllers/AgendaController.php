@@ -386,6 +386,7 @@ class AgendaController extends Controller{
 
 		
 		$events = $this->getEvents( 9 , self::ALL_FILTER, $startDate );
+		$events_per_email = array();
 
     	foreach ($events as $event) {
     		// var_dump($event);
@@ -393,6 +394,7 @@ class AgendaController extends Controller{
     		if( isset($event['creator']['email']) ){
     			$email = $event['creator']['email'];
     			$emails[ $email ] = $email;
+    			$events_per_email[$email][$event['id']] = $event;
     		}
     		
     		// Mailto in the event
@@ -404,8 +406,9 @@ class AgendaController extends Controller{
 				if($matches){
 					foreach($matches as $match){
 						$email = $match[0];
-						if( strlen($email)>5 ){
+						if( strlen($email) > 5 ){
 							$emails[$email] = $email;
+							$events_per_email[$email][$event['id']] = $event;
 						}
 					}
 				}
@@ -415,7 +418,7 @@ class AgendaController extends Controller{
 
 
     	$emails = array_filter( $emails , function($email){
-    		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com' );
+    		$excludes = array( 'bverdeye@gmail.com' , 'peter.forret@gmail.com', 'backend@milongabe-177114.iam.gserviceaccount.com', 'milonga@milonga.be');
     		if( !in_array( $email, $excludes ) ){
     			return true;
     		}
@@ -424,13 +427,14 @@ class AgendaController extends Controller{
 
     	var_dump(array_values($emails));
     	// die();
-
-        Yii::$app->mailer->compose('alert',[ 'events' => $events])
-            ->setFrom('milonga@milonga.be')
-            ->setBcc(array_values($emails))
-        	->setTo('milonga@milonga.be')
-            ->setSubject('Milonga.be : please check your events')
-            ->send();
+    	foreach ($emails as $email) {
+    		Yii::$app->mailer->compose('alert',[ 'events' => $events_per_email[$email]])
+	            ->setFrom('milonga@milonga.be')
+	            ->setBcc('milonga@milonga.be')
+	        	->setTo($email)
+	            ->setSubject('Milonga.be : please check your events')
+	            ->send();
+    	}
 	}
 
 	/**

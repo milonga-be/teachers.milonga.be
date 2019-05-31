@@ -16,8 +16,7 @@ $schools = array();
 ?>
 
 A workshop, pleaaase ! <br/>
-This week tango workshops : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br>
-http://www.milonga.be/dancing/<br><br>
+This week tango workshops : <?= $startDate->format('M j') ?> &rarr; <?= $endDate->format('M j') ?><br><br>
 
 <?php
 foreach ( $events as $weekday => $events ) {
@@ -34,7 +33,11 @@ foreach ( $events as $weekday => $events ) {
 	}
 	echo '<br>';
 }
-echo 'KNOW MORE<br>';
+/*echo 'KNOW MORE<br>';
 foreach ($schools as $school) {
 	echo $school.' : <br/>';
-}
+}*/
+?>
+Know more : http://www.milonga.be/dancing/ <br>
+Subscribe to the newsletter :
+http://www.milonga.be/about/newsletter/

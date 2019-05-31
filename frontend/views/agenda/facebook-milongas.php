@@ -35,5 +35,5 @@ foreach ( $events as $weekday => $events ) {
 
 ?>
 Know more : http://www.milonga.be/dancing/ <br>
-Subscribe to the weekly newsletter :
+Subscribe to the newsletter :
 http://www.milonga.be/about/newsletter/
