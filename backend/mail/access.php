@@ -2,7 +2,7 @@
 Hello dear Tango teachers,
 </p>
 <p>
-It's time to update your regular classes on milonga.be and as always you can do this yourself with the online tool. 
+It's time to update your regular classes on milonga.be ! 
 </p>
 <p>
 Go to : <a href="http://teachers.milonga.be/backend/web/index.php">teachers.milonga.be/backend</a><br>
@@ -11,10 +11,9 @@ Password : <?= $user->clear_password ?><br>
 </p>
 <p>
 You'll be able to add new classes or check the existing one.<br>
-You can also add a text to present your school (you can now enter longer texts).
+You can also add a text to present your school.
 </p>
 <p>
-A newsletter will soon be sent to our subscribers, listing all the schools before September.<br>
 If you have any question, feel free to ask.
 </p>
 <p>
