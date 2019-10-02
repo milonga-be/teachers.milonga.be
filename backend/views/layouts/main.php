@@ -59,7 +59,7 @@ AppAsset::register($this);
                                 <?php if(\Yii::$app->user->identity){ ?>
                                 <li class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item <?= Yii::$app->controller->id=='site'?'active':''?>"><a title="Classes" href="<?= Url::to(['site/index']) ?>">Welcome</a></li>
                                 <?php if(\Yii::$app->user->identity->school && !\Yii::$app->user->identity->isAdmin()){ ?>
-                                <li class="menu-item menu-item-type-post_type menu-item-object-page page_item current_page_item <?= Yii::$app->controller->id=='schools'?'active':''?>"><a title="Classes" href="<?= Url::to(['schools/update']) ?>">Your school</a></li>
+                                <li class="menu-item menu-item-type-post_type menu-item-object-page page_item current_page_item <?= Yii::$app->controller->id=='schools'?'active':''?>"><a title="Classes" href="<?= Url::to(['schools/update']) ?>">Organization</a></li>
                                 <li class="menu-item menu-item-type-post_type menu-item-object-page page_item current_page_item <?= (Yii::$app->controller->id=='lessons' || Yii::$app->controller->id=='venues') ?'active':''?>"><a title="Classes" href="<?= Url::to(['venues/index']) ?>">Classes</a></li>
                                 <?php } ?>
                                 <li class="menu-item menu-item-type-post_type menu-item-object-page page_item current_page_item <?= (Yii::$app->controller->id=='agenda') ?'active':''?>"><a title="Agenda" href="<?= Url::to(['agenda/index']) ?>">Agenda</a></li>

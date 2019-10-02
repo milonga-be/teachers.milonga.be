@@ -23,11 +23,11 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
         <div class="row">
             <?php if(Yii::$app->user->identity->school){ ?>
             <div class="col-lg-4">
-                <h2>School</h2>
+                <h2>Organization</h2>
 
-                <p>Here you can manage the informations about your school</p>
+                <p>Here you can manage the informations about your organization</p>
 
-                <p><a class="" href="<?= Url::to(['schools/update']) ?>">Edit the information about my school</a></p>
+                <p><a class="" href="<?= Url::to(['schools/update']) ?>">Edit the information about my organization</a></p>
             </div>
             <div class="col-lg-4">
                 <h2>Classes</h2>

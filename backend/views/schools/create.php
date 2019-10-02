@@ -7,8 +7,8 @@ use yii\widgets\ActiveForm;
 $form = ActiveForm::begin([
 		'options' => ['enctype' => 'multipart/form-data']
 	]);
-$this->title = 'New school';
-echo '<h1>New school</h1>';
+$this->title = 'New organization';
+echo '<h1>New organization</h1>';
 
 echo $this->render('_form', ['form' => $form, 'school' => $school]);
 echo '<p class="text-right"><button type="submit" class="btn btn-success">Create</button></p>';
