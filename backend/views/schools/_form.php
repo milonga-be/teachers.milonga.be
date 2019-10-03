@@ -1,8 +1,18 @@
 <?php
 use kartik\file\FileInput;
+use kartik\widgets\DatePicker;
 
-if(\Yii::$app->user->identity->isAdmin())
+if(\Yii::$app->user->identity->isAdmin()){
+	$datepicker_options = [
+		'pluginOptions' => [
+	        'autoclose'=>true,
+	        'format' => 'yyyy-mm-dd',
+	        'weekStart' => 1
+	    ]
+	];
 	echo $form->field($school, 'active')->checkbox(); 
+	echo $form->field($school, 'expiration')->widget(DatePicker::classname(), $datepicker_options); 
+}
 echo $form->field($school, 'name'); 
 echo $form->field($school, 'address');
 echo $form->field($school, 'email');

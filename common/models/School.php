@@ -21,7 +21,8 @@ class School extends ActiveRecord{
 			[['name','address','email','facebook','phone','website'],'safe'],
             [['pictureFile', 'flyerFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
             [['description'],'string','max' => 1000],
-            [['active'], 'boolean']
+            [['active'], 'boolean'],
+            [['expiration'], 'date', 'format' => 'php:Y-m-d']
 		];
 	}
 

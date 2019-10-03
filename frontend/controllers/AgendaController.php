@@ -391,8 +391,8 @@ class AgendaController extends Controller{
     	foreach ($events as $event) {
     		// var_dump($event);
     		// Official creator of the event
-    		if( isset($event['creator']['email']) ){
-    			$email = $event['creator']['email'];
+    		if( isset($event['email']) ){
+    			$email = $event['email'];
     			$emails[ $email ] = $email;
     			$events_per_email[$email][$event['id']] = $event;
     		}

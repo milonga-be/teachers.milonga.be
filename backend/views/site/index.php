@@ -22,6 +22,21 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
 
         <div class="row">
             <?php if(Yii::$app->user->identity->school){ ?>
+                <?php
+                    if(isset(Yii::$app->user->identity->school->expiration)){
+                        $oneMonth = new \Datetime();
+                        $today = new \Datetime();
+                        $expirationDate = new \Datetime(Yii::$app->user->identity->school->expiration);
+                        $oneMonth->modify('+1 month');
+                        if($expirationDate < $oneMonth){
+                            ?>
+                            <div class="col-lg-12">
+                                <p class="alert alert-danger"><?= $expirationDate < $today?'Your subscription is expired':'Your subscription is almost expired'?> (<?= $expirationDate->format('d/m/Y') ?>)<br> Please take contact with <a href="mailto:milonga@milonga.be">milonga@milonga.be</a> to renew !</p>
+                            </div>
+                            <?php
+                        }
+                    }
+                ?>
             <div class="col-lg-4">
                 <h2>Organization</h2>
 
