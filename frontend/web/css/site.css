@@ -81,9 +81,10 @@ td.levelname{
     font-size: 1.17em;
 }
 .agenda-set h2.date{
-    text-align: left;
+    text-align: center;
     font-size:1.6em;
-    display: none;
+    /*display: none;*/
+    margin-bottom: 20px;
 }
 .agenda-set h2{
     margin-bottom: 10px;
@@ -334,4 +335,29 @@ td.other_month a{
     padding-right:5px;
     font-size:0.9em;
     margin-top:4px;
+}
+.quicklinks{
+    text-align: center;
+    min-height:70px;
+}
+.quicklinks .quicklink{
+    display: inline-block;
+    color:#666;
+    font-size:10px;
+}
+.quicklinks .quicklink img{
+    width:30px;
+    height:30px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left:4px;
+    margin-right:4px;
+    margin-top:4px;
+    margin-bottom:1px;
+}
+@media screen and (max-width: 480px) {
+    .quicklinks .quicklink img{
+        width:20px;
+        height:20px;
+    }
 }

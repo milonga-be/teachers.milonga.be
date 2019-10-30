@@ -56,6 +56,15 @@ echo '<h1>' . $this->title . '</h1>';
 			 		'visible' => Yii::$app->user->identity->isAdmin()
 			 	],
 			 	[
+			 		'attribute' => 'created',
+			 		'format' => 'raw',
+			 		'value' => function($data){
+			 			$dateTime = new \Datetime($data['created']);
+			 			return $dateTime->format('D d M');
+			 		},
+			 		'visible' => Yii::$app->user->identity->isAdmin()
+			 	],
+			 	[
 			 		'format' => 'raw',
 			 		'value' => function($data){
 			 			return Html::a('<span class="glyphicon glyphicon-remove"></span>', ['agenda/delete', 'id' => $data['id']], ['onclick' => 'return confirm(\'Do you really want to delete this event ?\');']);

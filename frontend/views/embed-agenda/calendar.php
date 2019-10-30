@@ -128,6 +128,20 @@ if($this->context->embedded == true){
 					<div <?= $set_index>0?'style="display:none;"':'' ?>class="set" id="set-<?= $eventDate->format('Ymd') ?>-<?= $set_name?>">
 					<h3><?= $set_name ?></h3>
 					<?php
+					if(sizeof($events) > 2){
+						echo '<div class="quicklinks">';
+						foreach ($events as $event) {
+							if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
+								echo '<a data-toggle="popover" data-container="body" data-trigger="hover" data-placement="bottom" data-content="'.$event['summary'].'" class="quicklink" href="#'.$event['id'].'">';
+								echo '<img src="'.$event['school']['picture'].'"><br>';
+								echo (new Datetime($event['start']['dateTime']))->format('H:i');
+								echo '</a>';
+							}
+						}
+						echo '</div><div class="clear"></div>';
+					}
+					?>
+					<?php
 					foreach ($events as $event) {
 						echo $this->render('_event', ['event' => $event]);
 					}
