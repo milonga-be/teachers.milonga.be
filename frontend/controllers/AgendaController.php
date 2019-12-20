@@ -339,6 +339,9 @@ class AgendaController extends Controller{
 					if($school->email){
 						$event['email'] = $school->email;
 					}
+					if($school->active == false){
+						$fits = FALSE;
+					}
 				}
 			}
 
