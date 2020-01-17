@@ -309,7 +309,7 @@ td.other_month a{
         top:5px;
     }
 }
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 480px) {
     #navbar-agenda li em{
         display: none;
     }
@@ -343,11 +343,11 @@ td.other_month a{
 .quicklinks .quicklink{
     display: inline-block;
     color:#666;
-    font-size:10px;
+    font-size:11px;
 }
 .quicklinks .quicklink img{
-    width:30px;
-    height:30px;
+    width:35px;
+    height:35px;
     border-radius: 50%;
     overflow: hidden;
     margin-left:4px;
@@ -356,6 +356,9 @@ td.other_month a{
     margin-bottom:1px;
 }
 @media screen and (max-width: 480px) {
+    .quicklinks{
+        display: none;
+    }
     .quicklinks .quicklink img{
         width:20px;
         height:20px;

@@ -344,11 +344,12 @@ class AgendaController extends Controller{
 					}
 				}
 			}
-
+			if(isset($event['extendedProperties']['shared']['disabled']) && $event['extendedProperties']['shared']['disabled'] == 1){
+				$fits = FALSE;
+			}
 			if( $fits == TRUE ){
 				$events_filtered[$event['id']] = $event;
 			}
-
 
 		}
 		return $events_filtered;

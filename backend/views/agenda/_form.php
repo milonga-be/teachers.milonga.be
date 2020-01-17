@@ -55,7 +55,18 @@ $timepicker_options =
 	<div class="col-md-12">
 		<?= $form->field($event, 'organizer')->dropDownList(ArrayHelper::map(User::find()->orderBy('email')->all(), 'email', 'email'), ['prompt' => 'Select the organizer']) ?>
 	</div>
+	<div class="col-md-12">
+		<?= $form->field($event, 'disabled')->checkbox() ?>
+	</div>
+	<div class="col-md-12">
+		<?= $form->field($event, 'disabled_reason')->textInput() ?>
+	</div>
 </div>
+<?php } ?>
+<?php if(!\Yii::$app->user->identity->isAdmin() && !empty($event->disabled_reason)){ ?>
+<p class="bg-danger" style="padding:15px">
+	<?= $event->disabled_reason ?>
+</p>
 <?php } ?>
 <?php if(!$event->isRecurrent()){ ?>
 <div class="row">
@@ -114,7 +125,7 @@ var_dump($event->raw_recurrence);
 </div>
 <?php } ?>
 <?php
-echo $form->field($event, 'type')->dropDownList(Event::getTypes()); 
+echo $form->field($event, 'type')->dropDownList(Event::getTypes());
 echo $form->field($event, 'summary');
 echo $form->field($event, 'city')->dropDownList(Event::getCities()); 
 echo $form->field($event, 'location'); 

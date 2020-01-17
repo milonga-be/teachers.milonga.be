@@ -26,6 +26,8 @@ class Event extends Model{
 	var $start_hour;
 	var $end_hour;
 	var $masterId;
+	var $disabled;
+	var $disabled_reason;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -101,12 +103,12 @@ class Event extends Model{
 	/** Which attributes can be modified and how **/
 	public function rules(){
 		return [
-			[['type', 'summary', 'city', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday', 'organizer'], 'safe'],
+			[['type', 'summary', 'city', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday', 'organizer', 'disabled_reason'], 'safe'],
 			[['summary', 'description', 'start', 'end', 'location'], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
-			[['pictureRemove'], 'boolean'],
+			[['pictureRemove', 'disabled'], 'boolean'],
 		];
 	}
 
@@ -146,6 +148,8 @@ class Event extends Model{
 			$datas['location'] = $this->location;
 			$datas['picture'] = $this->picture;
 			$datas['description'] = $this->description;
+			$datas['disabled'] = $this->disabled;
+			$datas['disabled_reason'] = $this->disabled_reason;
 			$startDateTime = new \DateTime($this->start);
 			if($this->from){
 				$startDateTime = new \DateTime($this->from);
@@ -191,6 +195,12 @@ class Event extends Model{
 			}
 			if($datas['picture'] || $this->pictureRemove){
 				$sharedProperties['picture'] = $datas['picture'];
+			}
+			if(isset($datas['disabled'])){
+				$sharedProperties['disabled'] = $datas['disabled'];
+			}
+			if(isset($datas['disabled_reason'])){
+				$sharedProperties['disabled_reason'] = $datas['disabled_reason'];
 			}
 
 			$extentedProperties->setShared($sharedProperties);
@@ -286,6 +296,12 @@ class Event extends Model{
 		}
 		if(isset($result->getExtendedProperties()->shared['organizer'])){
 			$event->organizer = $result->getExtendedProperties()->shared['organizer'];
+		}
+		if(isset($result->getExtendedProperties()->shared['disabled'])){
+			$event->disabled = $result->getExtendedProperties()->shared['disabled'];
+		}
+		if(isset($result->getExtendedProperties()->shared['disabled_reason'])){
+			$event->disabled_reason = $result->getExtendedProperties()->shared['disabled_reason'];
 		}
 		if(!isset($event->organizer) && isset($result->creator->email)){
 			$event->organizer = $result->creator->email;

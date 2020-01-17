@@ -132,9 +132,11 @@ if($this->context->embedded == true){
 						echo '<div class="quicklinks">';
 						foreach ($events as $event) {
 							if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
-								echo '<a data-toggle="popover" data-container="body" data-trigger="hover" data-placement="bottom" data-content="'.$event['summary'].'" class="quicklink" href="#'.$event['id'].'">';
+								$start = (new Datetime($event['start']['dateTime']))->format('H:i');
+								$end = (new Datetime($event['end']['dateTime']))->format('H:i');
+								echo '<a data-toggle="popover" data-container="body" data-trigger="hover" data-placement="bottom" data-html="true" data-content="'.htmlentities((isset($event['school']['name'])?'<small>'.mb_strtoupper($event['school']['name']).'</small><br>':'').'<b>'.mb_strtoupper($event['summary']).'</b><br>'.$start.' - '.$end).'" class="quicklink" href="#'.$event['id'].'">';
 								echo '<img src="'.$event['school']['picture'].'"><br>';
-								echo (new Datetime($event['start']['dateTime']))->format('H:i');
+								echo $start;
 								echo '</a>';
 							}
 						}
