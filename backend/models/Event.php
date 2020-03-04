@@ -49,6 +49,7 @@ class Event extends Model{
 	const CITY_BW = 'Brabant Wallon';
 	const CITY_HASSELT = 'Hasselt';
 	const CITY_MOUSCRON = 'Mouscron';
+	const CITY_LEUVEN = 'Leuven';
 
 	const EVERY = 'WEEKLY';
 	const EVERY_MONDAY = 'MO';
@@ -604,6 +605,7 @@ class Event extends Model{
 			self::CITY_BW => self::CITY_BW,
 			self::CITY_HASSELT => self::CITY_HASSELT,
 			self::CITY_MOUSCRON => self::CITY_MOUSCRON,
+			self::CITY_LEUVEN => self::CITY_LEUVEN,
 		);
 	}
 
