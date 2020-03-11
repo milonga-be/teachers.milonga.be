@@ -63,6 +63,7 @@ $timepicker_options =
 	</div>
 </div>
 <?php } ?>
+<?php if($event->cancelled){ echo '<h3 class="text-danger">Canceled</h3>';}?>
 <?php if(!\Yii::$app->user->identity->isAdmin() && !empty($event->disabled_reason)){ ?>
 <p class="bg-danger" style="padding:15px">
 	<?= $event->disabled_reason ?>
@@ -166,7 +167,10 @@ echo $form->field($event, 'description')->widget(TinyMce::className(),
     	'content_css' => '/backend/web/css/tinymce.css'
       ],
     ]);
-echo '<p class="text-right">'.(($event->id)?'<a onclick="return confirm(\'Do you really want to delete this event ?\');" href="'.Url::to(['delete', 'id' => $event->id]).'" class="btn btn-danger">Delete</a> <a href="'.Url::to(['agenda/duplicate', 'id' => $event->id]).'" class="btn btn-primary">Copy</a>':'').'  <button type="submit" class="btn btn-success">'.($event->id?'Save':'Create').'</button></p>';
+echo '<div class="row">';
+echo '<div class="text-left col-md-6">'.(($event->id)?'<a onclick="return confirm(\'Do you really want to delete this event ?\');" href="'.Url::to(['delete', 'id' => $event->id]).'" class="btn btn-danger">Delete</a> <a onclick="return confirm(\'Do you really want to show this event as canceled ?\');" href="'.Url::to(['cancel', 'id' => $event->id]).'" class="btn btn-warning">Cancel</a>':'').'</div>';
+echo '<div class="text-right col-md-6">'.(($event->id)?'<a href="'.Url::to(['agenda/duplicate', 'id' => $event->id]).'" class="btn btn-primary">Copy</a>':'').'  <button type="submit" class="btn btn-success">'.($event->id?'Save':'Create').'</button></div>';
+echo '</div>';
 
 if(isset($event->id)){
 ?>

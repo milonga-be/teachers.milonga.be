@@ -28,6 +28,7 @@ class Event extends Model{
 	var $masterId;
 	var $disabled;
 	var $disabled_reason;
+	var $cancelled;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -150,6 +151,7 @@ class Event extends Model{
 			$datas['picture'] = $this->picture;
 			$datas['description'] = $this->description;
 			$datas['disabled'] = $this->disabled;
+			$datas['cancelled'] = $this->cancelled;
 			$datas['disabled_reason'] = $this->disabled_reason;
 			$startDateTime = new \DateTime($this->start);
 			if($this->from){
@@ -199,6 +201,9 @@ class Event extends Model{
 			}
 			if(isset($datas['disabled'])){
 				$sharedProperties['disabled'] = $datas['disabled'];
+			}
+			if(isset($datas['cancelled'])){
+				$sharedProperties['cancelled'] = $datas['cancelled'];
 			}
 			if(isset($datas['disabled_reason'])){
 				$sharedProperties['disabled_reason'] = $datas['disabled_reason'];
@@ -300,6 +305,9 @@ class Event extends Model{
 		}
 		if(isset($result->getExtendedProperties()->shared['disabled'])){
 			$event->disabled = $result->getExtendedProperties()->shared['disabled'];
+		}
+		if(isset($result->getExtendedProperties()->shared['cancelled'])){
+			$event->cancelled = $result->getExtendedProperties()->shared['cancelled'];
 		}
 		if(isset($result->getExtendedProperties()->shared['disabled_reason'])){
 			$event->disabled_reason = $result->getExtendedProperties()->shared['disabled_reason'];
@@ -703,4 +711,21 @@ class Event extends Model{
 		return 1;
     }
 
+    /**
+     * Mark the event as cancelled
+     */
+    public function cancel(){
+    	$this->cancelled = true;
+    	$this->save();
+    }
+
+    /**
+     * Give the school it belongs
+     */
+    public function getSchool(){
+    	$user = User::findOne(['email' => $this->organizer]);
+    	if($user->school)
+    		return $user->school;
+    	return null;
+    }
 }

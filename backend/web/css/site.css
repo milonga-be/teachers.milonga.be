@@ -145,3 +145,6 @@ a.desc:after {
     font-size:1.5em;
     cursor:pointer;
 }
+.cancelled{
+    text-decoration:line-through;
+}

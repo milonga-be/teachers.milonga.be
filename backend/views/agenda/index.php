@@ -38,7 +38,7 @@ echo '<h1>' . $this->title . '</h1>';
 			 			if(strlen($summary) > 60){
 			 				$summary = substr($summary, 0, 60).'...';
 			 			}
-			 			return Html::a($summary, ['agenda/update', 'id' => $data['id'], 'page' => isset(Yii::$app->request->queryParams['page'])?Yii::$app->request->queryParams['page']:1]);
+			 			return Html::a($summary, ['agenda/update', 'id' => $data['id'], 'page' => isset(Yii::$app->request->queryParams['page'])?Yii::$app->request->queryParams['page']:1], ['class' => (isset($data->getExtendedProperties()->shared['cancelled']) && $data->getExtendedProperties()->shared['cancelled'])?'cancelled':'']);
 			 		}
 			 	],
 			 	[

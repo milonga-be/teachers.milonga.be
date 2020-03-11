@@ -506,4 +506,9 @@ class AgendaController extends Controller{
 
 		return $this->render('special-events', [ 'events' => $events ]);
 	}
+
+	public function actionSpecialEvent($id){
+		$event = \backend\models\Event::findOne($id);
+		return $this->render('special-event', ['event' => $event]);
+	}
 }

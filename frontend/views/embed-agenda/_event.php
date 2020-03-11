@@ -2,7 +2,7 @@
 use yii\web\View;
 use common\components\Htmlizer;
 ?>
-<div class="V13">
+<div class="V13 <?= (isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))?'cancelled':''?>">
 	<?php 
 	if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
 		echo '<a class="swipebox" title="'.$event['school']['name'].'" href="'.$event['school']['picture'].'"><img class="event_icon" src="'.$event['school']['picture'].'"></a>';
@@ -22,7 +22,8 @@ use common\components\Htmlizer;
 	<?php } ?>
 	<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= $event['email']?>" data-id="<?= $event['id']?>">
 		
-		<?= $event['summary'] ?>
+		<span><?= $event['summary'] ?></span>
+		<?= (isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))?'<i> Canceled !</i>':'' ?>
 	</h4>
 	<?php } ?>
 	<div class="milonga-data">

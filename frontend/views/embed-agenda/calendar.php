@@ -131,10 +131,13 @@ if($this->context->embedded == true){
 					if(sizeof($events) > 2){
 						echo '<div class="quicklinks">';
 						foreach ($events as $event) {
+							$canceled = false;
+							if(isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))
+								$canceled = true;
 							if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
 								$start = (new Datetime($event['start']['dateTime']))->format('H:i');
 								$end = (new Datetime($event['end']['dateTime']))->format('H:i');
-								echo '<a data-toggle="popover" data-container="body" data-trigger="hover" data-placement="bottom" data-html="true" data-content="'.htmlentities((isset($event['school']['name'])?'<small>'.mb_strtoupper($event['school']['name']).'</small><br>':'').'<b>'.mb_strtoupper($event['summary']).'</b><br>'.$start.' - '.$end).'" class="quicklink" href="#'.$event['id'].'">';
+								echo '<a data-toggle="popover" data-container="body" data-trigger="hover" data-placement="bottom" data-html="true" data-content="'.htmlentities((isset($event['school']['name'])?'<small>'.mb_strtoupper($event['school']['name']).'</small><br>':'').'<b '.($canceled?'class="title_canceled"':'').'>'.mb_strtoupper($event['summary']).'</b>'.($canceled?'<i class="text-danger"> CANCELED !</i>':'').'<br>'.$start.' - '.$end).'" class="quicklink" href="#'.$event['id'].'">';
 								echo '<img src="'.$event['school']['picture'].'"><br>';
 								echo $start;
 								echo '</a>';

@@ -20,7 +20,7 @@ class AgendaController extends Controller{
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate' ],
+                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate', 'cancel' ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -121,6 +121,18 @@ class AgendaController extends Controller{
         $event = Event::findOne($id);
 
         $event->delete();
+        $this->redirect(['index']);
+        return;
+    }
+
+    /**
+     * Cancel an event
+     * @return  mixed
+     */
+    public function actionCancel($id){
+        $event = Event::findOne($id);
+
+        $event->cancel();
         $this->redirect(['index']);
         return;
     }

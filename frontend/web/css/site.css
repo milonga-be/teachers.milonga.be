@@ -364,3 +364,30 @@ td.other_month a{
         height:20px;
     }
 }
+.cancelled{
+    opacity:0.7;
+}
+.cancelled h4 span{
+    text-decoration: line-through;
+}
+.cancelled h4 i{
+    color:red;
+}
+b.title_canceled{
+    text-decoration: line-through;
+}
+.special-event h3,.special-event h5{
+    clear:none;
+}
+.special-event h5{
+    color: #555;
+    text-transform: uppercase;
+    clear:none;
+    font-size:0.85em;
+}
+.special-event h5 a{
+    color: #555;
+}
+.post-list .post-block img.event_icon{
+    margin-top:4px;
+}
