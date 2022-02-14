@@ -15,6 +15,7 @@ class AgendaController extends Controller{
 	// public $layout = 'embed';
 	var $embedded = false;
 	const DEFAULT_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
+	// const DEFAULT_FILTER = 'online:';
 	const ALL_FILTER = 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:';
 	const MILONGAS_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
 	const WORKSHOPS_FILTER = 'workshop:';
@@ -126,6 +127,7 @@ class AgendaController extends Controller{
 			$milongas = $this->filterEvents(self::DEFAULT_FILTER, $events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
+				// $events_by_date[$date]['Online'] = $milongas;
 			$workshops = $this->filterEvents('workshop:,workhop:', $events);
 			if(sizeof($workshops))
 				$events_by_date[$date]['Workshops'] = $workshops;
@@ -448,13 +450,15 @@ class AgendaController extends Controller{
 	public function actionFacebookMilongas(){
 		$startDate = new \Datetime();
 		$endDate = clone $startDate;
-		$endDate->modify('next sunday');
-		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
+		$endDate->modify('next friday');
+		$events = $this->getEvents( 7 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
 
 		$events_by_days = array();
 
 		foreach ($events as $event) {
-			$events_by_weekdays[$event['start']['weekday']][] = $event;
+			if( !(isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled'])) ){
+				$events_by_weekdays[substr($event['start']['dateTime'],0, 10)][] = $event;
+			}
 		}
 
 		return $this->render('facebook-milongas', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
@@ -492,7 +496,8 @@ class AgendaController extends Controller{
 		$events_by_days = array();
 
 		foreach ($events as $event) {
-			$events_by_weekdays[$event['start']['weekday']][] = $event;
+			if( !(isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled'])) )
+				$events_by_weekdays[$event['start']['weekday']][] = $event;
 		}
 
 		return $this->render('facebook-workshops', ['events' => $events_by_weekdays, 'startDate' => $startDate, 'endDate' => $endDate]);
@@ -510,5 +515,18 @@ class AgendaController extends Controller{
 	public function actionSpecialEvent($id){
 		$event = \backend\models\Event::findOne($id);
 		return $this->render('special-event', ['event' => $event]);
+	}
+
+	public function actionAppEvents($date = null){
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		header('Access-Control-Allow-Origin: *');
+		header('Access-Control-Allow-Methods: GET, POST');
+		if( is_null($date) )
+			$startDate = new \Datetime();
+		else
+			$startDate = new \Datetime($date);
+		$events = $this->getEvents( 0, null, $startDate);
+		$events = array_values($this->filterEvents(self::DEFAULT_FILTER, $events));
+		return $events;
 	}
 }

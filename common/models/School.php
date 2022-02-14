@@ -73,7 +73,7 @@ class School extends ActiveRecord{
      */
     public function getThumbUrl(){
         if($this->thumb)
-            return 'http://'.\Yii::$app->getRequest()->serverName.'/uploads/'.$this->thumb;
+            return 'https://'.\Yii::$app->getRequest()->serverName.'/uploads/'.$this->thumb;
         else
             return null;
     }
@@ -84,7 +84,7 @@ class School extends ActiveRecord{
      */
     public function getPictureUrl(){
         if($this->picture)
-            return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->picture;
+            return 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->picture;
         else
             return null;
     }
@@ -94,7 +94,7 @@ class School extends ActiveRecord{
      * @return string
      */
     public function getFlyerUrl(){
-        return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->flyer;
+        return 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/'.$this->flyer;
     }
 
 	/**

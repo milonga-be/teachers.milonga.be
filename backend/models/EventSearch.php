@@ -17,7 +17,12 @@ class EventSearch extends Event
     	$user = Yii::$app->user->identity;
     	$events = $this->getEvents();
 
-    	return new ArrayDataProvider(['allModels' => $events]);
+    	return new ArrayDataProvider([
+    		'allModels' => $events,
+    		'pagination' => [
+		        'pageSize' => 20,
+		    ],
+    	]);
     }
 
     /**
@@ -38,7 +43,8 @@ class EventSearch extends Event
 		  'maxResults' => 1000,
 		  'orderBy' => 'startTime',
 		  'singleEvents' => TRUE,
-		  'timeMin' => date('c'),
+		  'timeMin' => date('c'/*, gmmktime(9,0,0,3,14,2020)*/),
+		  // 'timeMax' => date('c', gmmktime(9,0,0,6,14,2020)),
 		);
 		$results = $service->events->listEvents($google_calendar_id, $optParams);
 		return $this->filterEvents($results->items);
@@ -63,7 +69,8 @@ class EventSearch extends Event
 
 		foreach ($events as $event) {
 			if(in_array($event->creator->email, $authorized_emails) || (isset($event->getExtendedProperties()->shared['organizer']) && in_array($event->getExtendedProperties()->shared['organizer'], $authorized_emails)) || $user->isAdmin()){
-				$filtered_events[] = $event;
+				// if(substr($event->summary, 0, 7) == 'ONLINE:')
+					$filtered_events[] = $event;
 			}
 		}
 		return $filtered_events;

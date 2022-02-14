@@ -20,7 +20,7 @@ class AgendaController extends Controller{
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate', 'cancel' ],
+                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate', 'cancel', 'delete-confinement' ],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -93,6 +93,7 @@ class AgendaController extends Controller{
     public function actionCreate($recurring = 0){
         $event = new Event();
         $event->type = 'MILONGA';
+        // $event->type = 'ONLINE';
         if($recurring){
             $event->recurrence_every = Event::EVERY_MONDAY;
             $event->start_hour = '20:00';
@@ -123,6 +124,18 @@ class AgendaController extends Controller{
         $event->delete();
         $this->redirect(['index']);
         return;
+    }
+
+    public function actionDeleteConfinement(){
+        $eventSearchModel = new EventSearch();
+        $eventDataProvider = $eventSearchModel->search(Yii::$app->request->queryParams);
+
+        foreach ($eventDataProvider->getModels() as $model) {
+            echo $model->id.' '.$model->summary.' '.$model->start['dateTime'].'<br>';
+            $event = Event::findOne($model->id);
+            $event->delete();
+            // break;
+        }
     }
 
     /**

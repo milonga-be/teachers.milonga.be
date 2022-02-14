@@ -148,3 +148,8 @@ a.desc:after {
 .cancelled{
     text-decoration:line-through;
 }
+.alert-primary {
+color: #004085;
+background-color: #cce5ff;
+border-color: #b8daff;
+}

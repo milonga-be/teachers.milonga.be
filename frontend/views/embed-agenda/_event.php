@@ -65,7 +65,7 @@ use common\components\Htmlizer;
 		if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 			$otherClass = '';
 			$ratio = '';
-			$pictureUrl = 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
+			$pictureUrl = 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
 			$sizes = @getimagesize(Yii::getAlias('@webroot').'/../../uploads/events/'.$event['extendedProperties']['shared']['picture']);
 			if(is_array($sizes)){
 				$ratio = $sizes[0]/$sizes[1];

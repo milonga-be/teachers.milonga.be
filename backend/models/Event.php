@@ -33,6 +33,7 @@ class Event extends Model{
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
 	const TYPE_MILONGA = 'MILONGA';
+	const TYPE_ONLINE = 'ONLINE';
 	const TYPE_PRACTICA = 'PRACTICA';
 	const TYPE_WORKSHOP = 'WORKSHOP';
 	const TYPE_CONCERT = 'CONCERT';
@@ -106,7 +107,7 @@ class Event extends Model{
 	public function rules(){
 		return [
 			[['type', 'summary', 'city', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday', 'organizer', 'disabled_reason'], 'safe'],
-			[['summary', 'description', 'start', 'end', 'location'], 'required'],
+			[['summary', 'description', 'start', 'end'/*, 'location'*/], 'required'],
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
@@ -585,7 +586,8 @@ class Event extends Model{
 	 */
 	public static function getTypes(){
 		return array(
-			'' => '',
+			// '' => '',
+			// self::TYPE_ONLINE => self::TYPE_ONLINE,
 			self::TYPE_MILONGA => self::TYPE_MILONGA,
 			self::TYPE_PRACTICA => self::TYPE_PRACTICA,
 			self::TYPE_WORKSHOP => self::TYPE_WORKSHOP,
@@ -693,7 +695,7 @@ class Event extends Model{
      * @return string
      */
     public function getPictureUrl(){
-        return 'http://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$this->picture;
+        return 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$this->picture;
     }
 
     /**

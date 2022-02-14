@@ -67,7 +67,7 @@ echo '<h1>' . $this->title . '</h1>';
 			 	[
 			 		'format' => 'raw',
 			 		'value' => function($data){
-			 			return Html::a('<span class="glyphicon glyphicon-remove"></span>', ['agenda/delete', 'id' => $data['id']], ['onclick' => 'return confirm(\'Do you really want to delete this event ?\');']);
+			 			return Html::a('<span class="glyphicon glyphicon-remove"></span>', ['agenda/delete', 'id' => $data['id']], ['oonclick' => 'return confirm(\'Do you really want to delete this event ?\');']);
 			 		}
 			 	]
 			 ]

@@ -209,11 +209,11 @@ class SiteController extends Controller
         $users = User::find()->where(['!=','clear_password',''])->andWhere(['status' => User::STATUS_ACTIVE])->all();
         foreach ($users as $user) {
             if($user->school && $user->status == User::STATUS_ACTIVE && $user->school->venues && !in_array($user->email, $excludes) ){
-                Yii::$app->mailer->compose('access', ['user' => $user])
+                Yii::$app->mailer->compose('@backend/mail/access', ['user' => $user])
                     ->setFrom('milonga@milonga.be')
                     ->setTo($user->email)
                     // ->setCc('milonga@milonga.be')
-                    ->setSubject('Update your classes for September')
+                    ->setSubject('Milonga.be is open (and free)')
                     ->send();
                 echo 'Sent access to '. $user->email.'<br>';
                 // die();

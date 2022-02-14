@@ -31,7 +31,18 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                         if($expirationDate < $oneMonth){
                             ?>
                             <div class="col-lg-12">
-                                <p class="alert alert-danger"><?= $expirationDate < $today?'Your subscription is expired':'Your subscription is almost expired'?> (<?= $expirationDate->format('d/m/Y') ?>)<br> Please take contact with <a href="mailto:milonga@milonga.be">milonga@milonga.be</a> to renew !</p>
+                                <p class="alert alert-danger" style="font-size:1.1em"><strong><?= $expirationDate < $today?'Your subscription is expired':'Your subscription is almost expired'?> (<?= $expirationDate->format('d/m/Y') ?>)</strong><br> 
+                                    Your account will close very soon !<br>
+                                    Please take contact with <a href="mailto:milonga@milonga.be">milonga@milonga.be</a> to renew your subscription</p>
+                            </div>
+                            <?php
+                        }else{
+                            ?>
+                            <div class="col-lg-12">
+                                <p class="alert alert-success" style="font-size:1.1em">
+                                    <strong>Thank you</strong> for your contribution to milonga.be ! <br>
+                                    With your help, the website can stay alive.
+                                </p>
                             </div>
                             <?php
                         }
