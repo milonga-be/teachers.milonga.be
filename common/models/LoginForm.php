@@ -56,7 +56,14 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            $user = $this->getUser();
+            $oneMonth = new \Datetime();
+            $oneMonth->modify('-2 month');
+            if(isset($user->school) && !empty($user->school->expiration) && $user->school->expiration < $oneMonth->format('Y-m-d')){
+                $this->addError('password', 'Your subscription has expired. Please contact milonga@milonga.be to renew');
+                return false;
+            }
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
             return false;
         }

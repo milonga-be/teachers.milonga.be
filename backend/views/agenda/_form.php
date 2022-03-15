@@ -180,7 +180,7 @@ if(isset($event->id)){
 			<?php
 			$start = new \DateTime($event->start);
 			?>
-			<a href="http://www.milonga.be/dancing/?u-year=<?= $start->format('Y') ?>&u-month=<?= $start->format('m') ?>&u-selected=<?= $start->format('Y-m-d') ?>#<?= $event->id ?>" target="_blank" class=""><?= FA::icon('eye')?> Click here to see on milonga.be</a>
+			<a href="https://www.milonga.be/dancing/?u-year=<?= $start->format('Y') ?>&u-month=<?= $start->format('m') ?>&u-selected=<?= $start->format('Y-m-d') ?>#<?= $event->id ?>" target="_blank" class=""><?= FA::icon('eye')?> Click here to see on milonga.be</a>
 		</div>
 	</div>
 </p>

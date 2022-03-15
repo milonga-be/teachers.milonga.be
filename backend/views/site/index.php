@@ -40,8 +40,7 @@ rmrevin\yii\fontawesome\AssetBundle::register($this);
                             ?>
                             <div class="col-lg-12">
                                 <p class="alert alert-success" style="font-size:1.1em">
-                                    <strong>Thank you</strong> for your contribution to milonga.be ! <br>
-                                    With your help, the website can stay alive.
+                                    Your subscription is in order. <strong>Thank you</strong> for contributing to milonga.be ! 
                                 </p>
                             </div>
                             <?php
