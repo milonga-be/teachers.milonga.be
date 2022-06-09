@@ -59,7 +59,8 @@ class UsersController extends Controller{
         }
 
         if ($user->load(Yii::$app->request->post())) {
-            $user->setPassword($user->clear_password);
+            if(!empty($user->clear_password))
+                $user->setPassword($user->clear_password);
             if($user->save()){
                 if(isset($user->school))
                     $user->unlink('school', $user->school, true);
@@ -83,7 +84,8 @@ class UsersController extends Controller{
         $user = new User();
 
         if ($user->load(Yii::$app->request->post())) {
-            $user->setPassword($user->clear_password);
+            if(!empty($user->clear_password))
+                $user->setPassword($user->clear_password);
             if($user->save()){
                 if(isset(Yii::$app->request->post()['User']['school'])){
                     $user->link('school', School::findOne(Yii::$app->request->post()['User']['school']));

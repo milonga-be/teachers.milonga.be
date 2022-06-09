@@ -113,6 +113,10 @@ class AgendaController extends Controller{
 		$weeks = $this->weeks_in_month($month, $year);
 		$events_sets = array();
 		$events = $this->getEvents( $weeks * 7, $filter, $start);
+		// if(isset($_GET['debug'])){
+		// 	var_dump($events);
+		// 	die();
+		// }
 		$events_by_date = array();
 		foreach ($events as $event) {
 			if(isset($event['start']['date'])){
@@ -120,23 +124,35 @@ class AgendaController extends Controller{
 			}else{
 				$date = (new \Datetime($event['start']['dateTime']))->format('Ymd');
 			}
+			
 			$events_by_date[$date][] = $event;
 		}
-		foreach ($events_by_date as $date => $events) {
+		foreach ($events_by_date as $date => $date_events) {
 			$events_by_date[$date] = array();
-			$milongas = $this->filterEvents(self::DEFAULT_FILTER, $events);
+			$milongas = $this->filterEvents(self::DEFAULT_FILTER, $date_events);
 			if(sizeof($milongas))
 				$events_by_date[$date]['Milongas'] = $milongas;
-				// $events_by_date[$date]['Online'] = $milongas;
-			$workshops = $this->filterEvents('workshop:,workhop:', $events);
+			$workshops = $this->filterEvents('workshop:,workhop:', $date_events);
 			if(sizeof($workshops))
 				$events_by_date[$date]['Workshops'] = $workshops;
 		}
 
-		if(isset($_GET['debug'])){
-			var_dump($events_by_date);
-			die();
+		$festivals = $this->filterEvents('FESTIVAL:', $events);
+		foreach($festivals as $event){
+			if(isset($event['start']['dateTime'])){
+				$start_datetime = new \Datetime($event['start']['dateTime']);
+				$end_datetime = new \Datetime($event['end']['dateTime']);
+				while($start_datetime <= $end_datetime){
+					$date = $start_datetime->format('Ymd');
+					if(isset($events_by_date[$date]['Milongas']))
+						array_unshift($events_by_date[$date]['Milongas'], $event);
+					else
+						$events_by_date[$date]['Milongas'][] = $event;
+					$start_datetime->modify('+1 day');
+				}
+			}
 		}
+
 
 		return $this->render('calendar', [ 'events_by_date' => $events_by_date , 'start' => $start, 'month_first_day' => $month_first_day , 'weeks' => $weeks, 'selected_day' => $selected_day ]);
 	}

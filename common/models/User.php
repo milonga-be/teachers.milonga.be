@@ -26,6 +26,8 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+    var $clear_password;
+
 
     /**
      * @inheritdoc
@@ -53,7 +55,8 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
-            [['username', 'email', 'clear_password'], 'string']
+            [['username', 'email', 'clear_password'], 'string'],
+            ['auth_key', 'default', 'value' => '']
         ];
     }
 

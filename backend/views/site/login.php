@@ -5,6 +5,7 @@
 /* @var $model \common\models\LoginForm */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
@@ -18,7 +19,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="row">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'login-form', 'enableClientScript' => false]); ?>
-
+                
                 <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
@@ -28,7 +29,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="form-group">
                     <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                 </div>
-
+                <p>
+                    <a href="<?= Url::to(['site/request-password-reset'])?>">You have forgotten your password ?</a>
+                </p>
             <?php ActiveForm::end(); ?>
         </div>
     </div>

@@ -117,6 +117,7 @@ class Lesson extends ActiveRecord{
 			"T" => "Technique",
 			"TW" => "Technique for women",
 			"TM" => "Technique for men",
+			"MIL" => "Milonga",
 		);
 	}
 
