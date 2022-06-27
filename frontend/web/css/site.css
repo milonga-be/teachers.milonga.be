@@ -391,3 +391,16 @@ b.title_canceled{
 .post-list .post-block img.event_icon{
     margin-top:4px;
 }
+.cities{
+    padding-bottom: 20px;
+    text-align: center;
+}
+.cities a.selected img{
+    border: 2px solid #F66062;
+    border-radius: 32px;
+}
+#empty-set{
+    text-align: center;
+    padding: 15px;
+    margin-bottom: 45px;
+}

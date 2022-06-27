@@ -3,6 +3,7 @@ namespace backend\models;
 
 use Yii;
 use yii\base\Model;
+use common\models\User;
 
 class Event extends Model{
 
@@ -52,6 +53,18 @@ class Event extends Model{
 	const CITY_HASSELT = 'Hasselt';
 	const CITY_MOUSCRON = 'Mouscron';
 	const CITY_LEUVEN = 'Leuven';
+	const CITY_KORTRIJK = 'Kortrijk';
+	const CITY_ARLON = 'Arlon';
+	const CITY_CHARLEROI = 'Charleroi';
+	const CITY_MONS = 'Mons';
+
+	const REGION_WESTVLANDEREN = 'West-Vlaanderen';
+	const REGION_OOSTVLANDEREN = 'Oost-Vlaanderen';
+	const REGION_VLAAMSBRABANT = 'Vlaams-Brabant';
+	const REGION_LIMBURG = 'Limburg';
+	const REGION_LUXEMBOURG = 'Province de Luxembourg';
+	const REGION_LIEGE = 'Province de Liège';
+	const REGION_HAINAUT = 'Hainaut';
 
 	const EVERY = 'WEEKLY';
 	const EVERY_MONDAY = 'MO';
@@ -126,6 +139,7 @@ class Event extends Model{
 			'summary' => "Title",
 			'recurrence_every' => "Recurrence",
 			'weekday' => "Weekday",
+			'city' => 'City/Region'
 		];
 	}
 
@@ -197,6 +211,18 @@ class Event extends Model{
 			if(isset($this->organizer) && $this->organizer != $user->email){
 				$sharedProperties['organizer'] = $this->organizer;
 			}
+			// Also saving the organization id
+			$organizer_user = User::findOne(['email' => $sharedProperties['organizer']]);
+			if($organizer_user && $organizer_user->school){
+				$school = $organizer_user->school;
+				$sharedProperties['organizer_id'] = $school->id;
+			}
+
+			if(!empty($this->city))
+				$sharedProperties['city'] = $this->city;
+			if(!empty($this->type))
+				$sharedProperties['type'] = $this->type;
+
 			if($datas['picture'] || $this->pictureRemove){
 				$sharedProperties['picture'] = $datas['picture'];
 			}
@@ -606,16 +632,23 @@ class Event extends Model{
 	public static function getCities(){
 		return array(
 			'' => '',
-			self::CITY_BRUSSELS => self::CITY_BRUSSELS,
 			self::CITY_ANTWERPEN => self::CITY_ANTWERPEN,
+			self::CITY_BW => self::CITY_BW,
+			self::CITY_BRUSSELS => self::CITY_BRUSSELS,
 			self::CITY_BRUGGE => self::CITY_BRUGGE,
 			self::CITY_GENT => self::CITY_GENT,
-			self::CITY_LIEGE => self::CITY_LIEGE,
-			self::CITY_NAMUR => self::CITY_NAMUR,
-			self::CITY_BW => self::CITY_BW,
+			self::REGION_HAINAUT => self::REGION_HAINAUT,
 			self::CITY_HASSELT => self::CITY_HASSELT,
-			self::CITY_MOUSCRON => self::CITY_MOUSCRON,
 			self::CITY_LEUVEN => self::CITY_LEUVEN,
+			self::CITY_LIEGE => self::CITY_LIEGE,
+			self::REGION_LIMBURG => self::REGION_LIMBURG,
+			self::CITY_MOUSCRON => self::CITY_MOUSCRON,
+			self::CITY_NAMUR => self::CITY_NAMUR,
+			self::REGION_OOSTVLANDEREN => self::REGION_OOSTVLANDEREN,
+			self::REGION_LUXEMBOURG => self::REGION_LUXEMBOURG,
+			self::REGION_LIEGE => self::REGION_LIEGE,
+			self::REGION_VLAAMSBRABANT => self::REGION_VLAAMSBRABANT,
+			self::REGION_WESTVLANDEREN => self::REGION_WESTVLANDEREN,
 		);
 	}
 

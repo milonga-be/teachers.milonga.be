@@ -89,9 +89,10 @@ class AgendaController extends Controller{
 	 * List the events in the agenda with a calendar
 	 * @param  integer $weeks  the number of weeks to display
 	 * @param  string  $filter a filter e.g. MILONGA: , PRACTICA: etc
+	 * @param  string  $location a city or region to filter
 	 * @return string
 	 */
-	public function actionCalendar( $month = null, $year = null, $selected = null, $filter = null){
+	public function actionCalendar( $month = null, $year = null, $selected = null, $filter = null, $city = null){
 		if(!$month){
 			$month = date('m');
 			$year = date('Y');
@@ -112,7 +113,7 @@ class AgendaController extends Controller{
 		$end->modify('4 weeks');
 		$weeks = $this->weeks_in_month($month, $year);
 		$events_sets = array();
-		$events = $this->getEvents( $weeks * 7, $filter, $start);
+		$events = $this->getEvents( $weeks * 7, $filter, $start, null, $city);
 		// if(isset($_GET['debug'])){
 		// 	var_dump($events);
 		// 	die();
@@ -154,7 +155,7 @@ class AgendaController extends Controller{
 		}
 
 
-		return $this->render('calendar', [ 'events_by_date' => $events_by_date , 'start' => $start, 'month_first_day' => $month_first_day , 'weeks' => $weeks, 'selected_day' => $selected_day ]);
+		return $this->render('calendar', [ 'events_by_date' => $events_by_date , 'start' => $start, 'month_first_day' => $month_first_day , 'weeks' => $weeks, 'selected_day' => $selected_day, 'city' => $city]);
 	}
 
 	/**
@@ -237,7 +238,7 @@ class AgendaController extends Controller{
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $days , $filter = null , $startDate = null, $q = null ){
+	private function getEvents( $days , $filter = null , $startDate = null, $q = null, $city = null ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
@@ -257,6 +258,9 @@ class AgendaController extends Controller{
 			$google_url = 'https://www.googleapis.com/calendar/v3/calendars/' . urlencode($google_calendar_id) . '/events?key=' . urlencode($google_api_key) . '&maxResults=2500&orderBy=startTime&singleEvents=true&timeMin=' . urlencode( $startDate->format($format)  . 'T07:00:00+00:00') . '&timeMax=' . urlencode( $endPeriod->format($format) . 'T23:59:59+00:00' );
 			if(isset($q)){
 				$google_url.='&q='.urlencode($q);
+			}
+			if(isset($city) && !empty($city)){
+				$google_url.='&sharedExtendedProperty=city%3D'.urlencode($city);
 			}
 			$json_array = $this->getFromApi( $google_url );
 

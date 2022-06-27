@@ -38,16 +38,20 @@ class EventSearch extends Event
 		$client->useApplicationDefaultCredentials();
 		$client->addScope(\Google_Service_Calendar::CALENDAR);
 		$service = new \Google_Service_Calendar($client);
-		
 		$optParams = array(
 		  'maxResults' => 1000,
 		  'orderBy' => 'startTime',
 		  'singleEvents' => TRUE,
 		  'timeMin' => date('c'/*, gmmktime(9,0,0,3,14,2020)*/),
+		  // 'sharedExtendedProperty' => 'organizer_id=6'
 		  // 'timeMax' => date('c', gmmktime(9,0,0,6,14,2020)),
 		);
+		$user = Yii::$app->user->identity;
+		if(!$user->isAdmin() && $user->school){
+			$optParams['sharedExtendedProperty'] = 'organizer_id='.$user->school->id;
+		}
 		$results = $service->events->listEvents($google_calendar_id, $optParams);
-		return $this->filterEvents($results->items);
+		return /*$this->filterEvents(*/$results->items/*)*/;
 	}
 
 	/**
@@ -55,24 +59,24 @@ class EventSearch extends Event
 	 * @param  array  $items The events
 	 * @return array
 	 */
-	private function filterEvents(array $events){
-		// var_dump($events);
-		$filtered_events = array();
-		$authorized_emails = array();
-		$user = Yii::$app->user->identity;
-		if($user->school && $user->school->email){
-			$authorized_emails[] = $user->school->email;
-		}
-		foreach ($user->school->users as $authorized_user) {
-			$authorized_emails[] = $authorized_user->email;
-		}
+	// private function filterEvents(array $events){
+	// 	// var_dump($events);
+	// 	$filtered_events = array();
+	// 	$authorized_emails = array();
+	// 	$user = Yii::$app->user->identity;
+	// 	if($user->school && $user->school->email){
+	// 		$authorized_emails[] = $user->school->email;
+	// 	}
+	// 	foreach ($user->school->users as $authorized_user) {
+	// 		$authorized_emails[] = $authorized_user->email;
+	// 	}
 
-		foreach ($events as $event) {
-			if(in_array($event->creator->email, $authorized_emails) || (isset($event->getExtendedProperties()->shared['organizer']) && in_array($event->getExtendedProperties()->shared['organizer'], $authorized_emails)) || $user->isAdmin()){
-				// if(substr($event->summary, 0, 7) == 'ONLINE:')
-					$filtered_events[] = $event;
-			}
-		}
-		return $filtered_events;
-	}
+	// 	foreach ($events as $event) {
+	// 		if(in_array($event->creator->email, $authorized_emails) || (isset($event->getExtendedProperties()->shared['organizer']) && in_array($event->getExtendedProperties()->shared['organizer'], $authorized_emails)) || $user->isAdmin()){
+	// 			// if(substr($event->summary, 0, 7) == 'ONLINE:')
+	// 				$filtered_events[] = $event;
+	// 		}
+	// 	}
+	// 	return $filtered_events;
+	// }
 }

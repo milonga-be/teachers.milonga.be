@@ -3,36 +3,6 @@ use yii\web\View;
 use yii\helpers\Url;
 use common\components\Htmlizer;
 
-// $this->registerJs(
-// 	'$(".milonga-description .more-link").on("click",function(e){
-// 		e.preventDefault();
-// 		var desc_elt = $(this).parent();
-// 		$(this).hide();
-// 		desc_elt.find(".more-content").css("opacity", 0).slideDown("normal",function(){
-// 			desc_elt.find(".less-link").show();
-// 			window.parent.resizeIframe();
-// 		}).animate(
-//     		{ opacity: 1 },
-//     		{ queue: false, duration: "normal" }
-//   		);
-// 	});
-
-// 	$(".milonga-description .less-link").on("click",function(e){
-// 		e.preventDefault();
-// 		var desc_elt = $(this).parent();
-// 		$(this).fadeOut();
-// 		desc_elt.find(".more-content").slideUp("normal",function(){ 
-// 			desc_elt.find(".more-link").show();
-			
-// 			window.parent.resizeIframe();
-// 		}).animate(
-//     		{ opacity: 0 },
-//     		{ queue: false, duration: "normal" }
-//   		);
-// 	});'
-// );
-// 
-// var_dump($events_by_date);
 $prev_month = clone $month_first_day;
 $prev_month->modify('-1 month');
 $prev_month->modify('first day');
@@ -41,19 +11,28 @@ $next_month->modify('+1 month');
 $next_month->modify('first day');
 
 if($this->context->embedded == true){
-	$url_prev = '/dancing/?u-year='.$prev_month->format('Y').'&u-month='.$prev_month->format('m');
+	$url_prev = '/dancing/?u-year='.$prev_month->format('Y').'&u-month='.$prev_month->format('m').'&u-city='.$city;
 }else{
-	$url_prev = Url::to(["agenda/calendar","year" => $prev_month->format('Y'), "month" => $prev_month->format('m')]);
+	$url_prev = Url::to(["agenda/calendar","year" => $prev_month->format('Y'), "month" => $prev_month->format('m'), 'city' => $city]);
 }
 
 if($this->context->embedded == true){
-	$url_next = '/dancing/?u-year='.$next_month->format('Y').'&u-month='.$next_month->format('m');
+	$url_next = '/dancing/?u-year='.$next_month->format('Y').'&u-month='.$next_month->format('m').'&u-city='.$city;
 }else{
-	$url_next = Url::to(["agenda/calendar","year" => $next_month->format('Y'), "month" => $next_month->format('m')]);
+	$url_next = Url::to(["agenda/calendar","year" => $next_month->format('Y'), "month" => $next_month->format('m'), 'city' => $city]);
 }
 
+$current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$month_first_day->format('m');
 
 ?>
+<p class="hidden-xs cities">
+	<a class="<?= (($city == '')?'selected':'') ?>" href="<?= $current_url.'&u-city=' ?>"><img class="alignnone wp-image-4622" src="<?= Url::to('@web/img/milonga.be-all.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
+	<a class="<?= (($city == 'Brussels')?'selected':'') ?>" href="<?= $current_url.'&u-city=Brussels' ?>"><img class="alignnone wp-image-4622" src="<?= Url::to('@web/img/milonga.be-brussels-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
+	<a class="<?= (($city == 'Antwerpen')?'selected':'') ?>" href="<?= $current_url.'&u-city=Antwerpen' ?>"><img class="alignnone wp-image-4619" src="<?= Url::to('@web/img/milonga.be-antwerpen-300x300.png', true)?>" alt="" width="64" height="64"></a> 
+	<a class="<?= (($city == 'Gent')?'selected':'') ?>" href="<?= $current_url.'&u-city=Gent' ?>"><img class="alignnone wp-image-4623" src="<?= Url::to('@web/img/milonga.be-gent-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
+	<a class="<?= (($city == 'Liège')?'selected':'') ?>" href="<?= $current_url.'&u-city=Liège' ?>"><img class="alignnone size-medium wp-image-4624" src="<?= Url::to('@web/img/milonga.be-liege-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
+	<a class="<?= (($city == 'Brugge')?'selected':'') ?>" href="<?= $current_url.'&u-city=Brugge' ?>"><img class="alignnone size-medium wp-image-4625" src="<?= Url::to('@web/img/milonga.be-brugge-300x300.png', true)?>" alt="" width="64" height="64"></a>
+</p>
 <div class="agenda-set">
 	<h2>
 		<a tabindex="0" id="search-icon" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<form action=&quot;/dancing/agenda/search/&quot;><input class=&quot;form-control&quot; name=&quot;u-q&quot;></form>" data-html="true" class="glyphicon glyphicon-search pull-right"></a>
@@ -105,6 +84,9 @@ if($this->context->embedded == true){
 			?>
 		</table>
 		<div class="events">
+			<div id="empty-set" class="agenda-day <?= (!isset($events_by_date[$selected_day->format('Ymd')]))?'':'hidden' ?>">
+				No event on this day
+			</div>
 		<?php
 		
 		foreach ($events_by_date as $date => $events_sets) {

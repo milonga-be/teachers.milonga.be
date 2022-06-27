@@ -20,7 +20,7 @@ class AgendaController extends Controller{
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate', 'cancel', 'delete-confinement' ],
+                        'actions' => ['index', 'create' , 'delete' , 'update', 'duplicate', 'cancel', 'delete-confinement' ,'update-all'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -41,6 +41,28 @@ class AgendaController extends Controller{
         $eventDataProvider = $eventSearchModel->search(Yii::$app->request->queryParams);
         
         return $this->render('index', ['dataProvider' => $eventDataProvider]);
+    }
+
+    public function actionUpdateAll(){
+        $eventSearchModel = new EventSearch();
+        $eventDataProvider = $eventSearchModel->search(Yii::$app->request->queryParams);
+        $eventDataProvider->pagination->pageSize = 50;
+        $events = $eventDataProvider->getModels();
+        foreach($events as $google_event){
+            echo $google_event->summary;
+            if(!isset($google_event->extendedProperties->shared['organizer_id'])){
+                if($google_event->recurringEventId){
+                    $master = Event::findOne($google_event->recurringEventId);
+                    $master->save();
+                }else{
+                    $event = Event::findOne($google_event->id);
+                    $event->save();
+                }
+                echo 'Updated <br>';
+            }else{
+                echo '<br>';
+            }
+        }
     }
 
     /**
