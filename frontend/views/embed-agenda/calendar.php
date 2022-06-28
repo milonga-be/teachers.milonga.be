@@ -68,7 +68,7 @@ $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$mo
 					for ($j=0; $j < 7; $j++) {
 						$selected = ($selected_day->format('Ymd') == $start->format('Ymd'));
 						$other_month = ($start->format('m') != $month_first_day->format('m'));
-						echo '<td class="agenda-day-' . $start->format('D') . (($selected)?' selected':'').(($other_month)?' other_month':'').'">';
+						echo '<td class="agenda-day-' . $start->format('D') . (($selected)?' selected':'').(($other_month)?' other_month':'').' '.(isset($events_by_date[$start->format('Ymd')])?'has-event':'').'">';
 							// if($yesterday > $start){
 							// 	echo '<span class="text-muted">' . $start->format('d') . '</span>';
 							// }else{
