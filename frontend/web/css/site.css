@@ -420,6 +420,15 @@ b.title_canceled{
     z-index: -1;
     opacity: 0.7;
 }
+@media screen and (max-width: 480px) {
+    .has-event::before{
+        bottom: -5px;
+        font-size: 1.2em;
+    }
+    .agenda-set h2,.agenda-set h2.date{
+        font-size: 1.4em;
+    }
+}
 .has-event.selected::before{
     color: white;
 }

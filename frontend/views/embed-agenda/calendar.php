@@ -33,6 +33,18 @@ $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$mo
 	<a class="<?= (($city == 'Liège')?'selected':'') ?>" href="<?= $current_url.'&u-city=Liège' ?>"><img class="alignnone size-medium wp-image-4624" src="<?= Url::to('@web/img/milonga.be-liege-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
 	<a class="<?= (($city == 'Brugge')?'selected':'') ?>" href="<?= $current_url.'&u-city=Brugge' ?>"><img class="alignnone size-medium wp-image-4625" src="<?= Url::to('@web/img/milonga.be-brugge-300x300.png', true)?>" alt="" width="64" height="64"></a>
 </p>
+<form id="city-selector" class="visible-xs-block cities" action="/dancing/" method="GET">
+	<input type="hidden" name="u-year" value="<?= $month_first_day->format('Y') ?>">
+	<input type="hidden" name="u-month" value="<?= $month_first_day->format('m') ?>">
+	<select  class="form-control" name="u-city" onchange="jQuery('#city-selector').submit();">
+		<option value="">All</option>
+		<option value="Brussels" <?= ($city =='Brussels')?'selected':''?> >Brussels</option>
+		<option value="Antwerpen" <?= ($city =='Antwerpen')?'selected':''?> >Antwerpen</option>
+		<option value="Gent" <?= ($city == 'Gent')?'selected':''?> >Gent</option>
+		<option value="Liège" <?= ($city == 'Liège')?'selected':''?> >Liège</option>
+		<option value="Brugge" <?= ($city == 'Brugge')?'selected':''?> >Brugge</option>
+	</select>
+</form>
 <div class="agenda-set">
 	<h2>
 		<a tabindex="0" id="search-icon" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<form action=&quot;/dancing/agenda/search/&quot;><input class=&quot;form-control&quot; name=&quot;u-q&quot;></form>" data-html="true" class="glyphicon glyphicon-search pull-right"></a>
