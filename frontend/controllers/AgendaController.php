@@ -145,10 +145,10 @@ class AgendaController extends Controller{
 				$end_datetime = new \Datetime($event['end']['dateTime']);
 				while($start_datetime <= $end_datetime){
 					$date = $start_datetime->format('Ymd');
-					if(isset($events_by_date[$date]['Milongas']))
-						array_unshift($events_by_date[$date]['Milongas'], $event);
+					if(isset($events_by_date[$date]['Festivals']))
+						array_unshift($events_by_date[$date]['Festivals'], $event);
 					else
-						$events_by_date[$date]['Milongas'][] = $event;
+						$events_by_date[$date]['Festivals'][] = $event;
 					$start_datetime->modify('+1 day');
 				}
 			}
