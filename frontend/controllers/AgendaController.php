@@ -6,7 +6,7 @@ use yii\web\Controller;
 use common\models\User;
 use common\models\School;
 use backend\models\Event;
-
+use yii\helpers\ArrayHelper;
 /**
  * Site controller
  */
@@ -537,16 +537,56 @@ class AgendaController extends Controller{
 		return $this->render('special-event', ['event' => $event]);
 	}
 
-	public function actionAppEvents($date = null){
+	/**
+	 * Milongas for the app
+	 * @param  [type]  $month [description]
+	 * @param  [type]  $year  [description]
+	 * @param  boolean $all   [description]
+	 * @return [type]         [description]
+	 */
+	public function actionApiMilongas($month = null, $year = null, $all = false){
+		return $this->_apiEvents(self::DEFAULT_FILTER, $month, $year, $all);
+	}
+
+	/**
+	 * Workshops for the app
+	 * @param  [type]  $month [description]
+	 * @param  [type]  $year  [description]
+	 * @param  boolean $all   [description]
+	 * @return [type]         [description]
+	 */
+	public function actionApiWorkshops($month = null, $year = null, $all = false){
+		return $this->_apiEvents(self::WORKSHOPS_FILTER, $month, $year, $all);
+	}
+
+	public function _apiEvents($filter, $month = null, $year = null, $all = false){
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Methods: GET, POST');
-		if( is_null($date) )
-			$startDate = new \Datetime();
-		else
-			$startDate = new \Datetime($date);
-		$events = $this->getEvents( 0, null, $startDate);
-		$events = array_values($this->filterEvents(self::DEFAULT_FILTER, $events));
-		return $events;
+		if(!$month){
+			$month = date('m');
+			$year = date('Y');
+		}
+		$start = new \Datetime($year.'-'.$month.'-01');
+		$month_first_day = clone $start;
+		if($start->format('w') != 1){
+			$start->modify('previous monday');
+		}
+		if(!empty($selected)){
+			$selected_day = new \Datetime($selected);
+		}else if($month == date('m') && $year == date('Y')){
+			$selected_day = new \Datetime();
+		}else{
+			$selected_day = clone $month_first_day;
+		}
+		$end = clone $start;
+		$end->modify('4 weeks');
+		$weeks = $this->weeks_in_month($month, $year);
+		$events_sets = array();
+		$events = $this->getEvents( $weeks * 7, null, $start, null, null);
+		$events = array_values($this->filterEvents($filter, $events));
+		if($all)
+			return $events;
+		return array_map(function(&$item){ return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location']);}, $events);
 	}
 }
