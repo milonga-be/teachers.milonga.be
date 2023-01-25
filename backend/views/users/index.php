@@ -35,7 +35,12 @@ echo '<h1>' . $this->title . '</h1>';
 				 ],
 				 [
 				 	'attribute' => 'schoolname',
-				 	'value' => 'school.name'
+				 	'format' => 'raw',
+				 	'value' => function($data){
+				 		if($data->school)
+				 			return Html::a($data->school->name,['schools/update','id' => $data->school->id]);
+				 		return null;
+				 	}
 				 ]
 				 // [
     	// 			'class' => 'yii\grid\ActionColumn',
