@@ -47,7 +47,7 @@ $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$mo
 </form>
 <div class="agenda-set">
 	<h2>
-		<a tabindex="0" id="search-icon" data-container="body" data-toggle="popover" data-placement="bottom" data-content="<form action=&quot;/dancing/agenda/search/&quot;><input class=&quot;form-control&quot; name=&quot;u-q&quot;></form>" data-html="true" class="glyphicon glyphicon-search pull-right"></a>
+		<a tabindex="0" id="search-icon" data-container="body" data-toggle="popover" data-placement="bottom" data-content="&lt;form action=&quot;/dancing/agenda/search/&quot;&gt;&lt;input class=&quot;form-control&quot; name=&quot;u-q&quot;/&gt;&lt;/form&gt;" data-html="true" class="glyphicon glyphicon-search pull-right"></a>
 
 		<a class="prev-month glyphicon glyphicon-chevron-left" href="<?= $url_prev ?>"></a>
 		<span><?= $month_first_day->format('F') ?></span>

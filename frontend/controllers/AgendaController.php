@@ -138,6 +138,8 @@ class AgendaController extends Controller{
 				$events_by_date[$date]['Workshops'] = $workshops;
 		}
 
+		// Adding festivals in their own special categories
+		// There must be an instance on all days of the festival
 		$festivals = $this->filterEvents('FESTIVAL:', $events);
 		foreach($festivals as $event){
 			if(isset($event['start']['dateTime'])){
@@ -149,6 +151,24 @@ class AgendaController extends Controller{
 						array_unshift($events_by_date[$date]['Festivals'], $event);
 					else
 						$events_by_date[$date]['Festivals'][] = $event;
+					$start_datetime->modify('+1 day');
+				}
+			}
+		}
+
+		// Adding the holidays in the workshops
+		// There must be an instance on all days of the holidays
+		$holidays = $this->filterEvents('HOLIDAYS:', $events);
+		foreach($holidays as $event){
+			if(isset($event['start']['dateTime'])){
+				$start_datetime = new \Datetime($event['start']['dateTime']);
+				$end_datetime = new \Datetime($event['end']['dateTime']);
+				while($start_datetime <= $end_datetime){
+					$date = $start_datetime->format('Ymd');
+					if(isset($events_by_date[$date]['Workshops']))
+						array_unshift($events_by_date[$date]['Workshops'], $event);
+					else
+						$events_by_date[$date]['Workshops'][] = $event;
 					$start_datetime->modify('+1 day');
 				}
 			}
@@ -559,6 +579,17 @@ class AgendaController extends Controller{
 		return $this->_apiEvents(self::WORKSHOPS_FILTER, $month, $year, $all);
 	}
 
+	/**
+	 * All events for the app
+	 * @param  [type]  $month [description]
+	 * @param  [type]  $year  [description]
+	 * @param  boolean $all   [description]
+	 * @return [type]         [description]
+	 */
+	public function actionApi($month = null, $year = null, $all = false){
+		return $this->_apiEvents(self::ALL_FILTER, $month, $year, $all);
+	}
+
 	public function _apiEvents($filter, $month = null, $year = null, $all = false){
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 		header('Access-Control-Allow-Origin: *');
@@ -588,5 +619,17 @@ class AgendaController extends Controller{
 		if($all)
 			return $events;
 		return array_map(function(&$item){ return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location']);}, $events);
+	}
+
+	/**
+	 * Returns a list of cities
+	 * @return mixed
+	 */
+	public function actionApiCities(){
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		header('Access-Control-Allow-Origin: *');
+		header('Access-Control-Allow-Methods: GET, POST');
+
+		return array_keys(\backend\models\Event::getCities());
 	}
 }

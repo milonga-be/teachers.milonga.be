@@ -28,7 +28,7 @@ use common\components\Htmlizer;
 	<?php } ?>
 	<div class="milonga-data">
 		<div class="hours">
-			<?php if(isset($event['category']) && strtoupper($event['category']) != 'FESTIVAL'){ ?>
+			<?php if(isset($event['category']) && strtoupper($event['category']) != 'FESTIVAL' && strtoupper($event['category']) != 'HOLIDAYS'){ ?>
 				<?php if(isset($event['start']['dateTime'])){ ?>
 					<?= (new Datetime($event['start']['dateTime']))->format('H:i') ?>
 					<?php if(isset($event['end']['dateTime'])){ ?>
@@ -37,8 +37,10 @@ use common\components\Htmlizer;
 					 <?php } ?>
 					 <br/>
 				<?php }else if(isset($event['start']['date'])){ ?>
-				<?= (new Datetime($event['start']['date']))->format('D, F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format('D, F j')?><br/>
+				<?= (new Datetime($event['start']['date']))->format('D, F j') ?> <span class="glyphicon glyphicon-chevron-right"></span> <?= (new Datetime($event['end']['date']))->format('D, F j')?><br/>
 				<?php } ?>
+			<?php }else if(strtoupper($event['category']) == 'FESTIVAL' || strtoupper($event['category']) == 'HOLIDAYS'){ ?>
+				<?= (new Datetime($event['start']['dateTime']))->format('D, F j') ?> <span class="glyphicon glyphicon-chevron-right"></span> <?= (new Datetime($event['end']['dateTime']))->format('D, F j')?><br/>
 			<?php } ?>
 		</div>
 		<?php if( isset($event['location']) ){ ?>
