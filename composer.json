@@ -15,10 +15,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.4.0",
+        "yidas/yii2-bower-asset": "2.0.13.1",
         "yiisoft/yii2": "~2.0.6",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0",
-        "fxp/composer-asset-plugin": "^1.2",
         "rmrevin/yii2-fontawesome": "2.*",
         "kartik-v/yii2-widgets": "^3.4",
         "simplepie/simplepie": "^1.4",

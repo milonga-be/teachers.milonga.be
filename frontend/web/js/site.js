@@ -40,4 +40,7 @@ jQuery('#navbar-agenda li a').on('click',function(e){
 	jQuery(this).parents('.navbar-nav').find('li').removeClass('active');
 	jQuery(this).parent().addClass('active');
 });
-jQuery('[data-toggle="popover"]').popover();
+jQuery('[data-toggle="popover"]').popover({
+    html: true,
+	sanitize: false,
+});

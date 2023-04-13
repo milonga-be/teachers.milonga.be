@@ -2,6 +2,7 @@
 use yii\web\View;
 use yii\helpers\Url;
 use common\components\Htmlizer;
+use backend\models\Event;
 
 $prev_month = clone $month_first_day;
 $prev_month->modify('-1 month');
@@ -25,24 +26,15 @@ if($this->context->embedded == true){
 $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$month_first_day->format('m');
 
 ?>
-<p class="hidden-xs cities">
-	<a class="<?= (($city == '')?'selected':'') ?>" href="<?= $current_url.'&u-city=' ?>"><img class="alignnone wp-image-4622" src="<?= Url::to('@web/img/milonga.be-all.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
-	<a class="<?= (($city == 'Brussels')?'selected':'') ?>" href="<?= $current_url.'&u-city=Brussels' ?>"><img class="alignnone wp-image-4622" src="<?= Url::to('@web/img/milonga.be-brussels-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
-	<a class="<?= (($city == 'Antwerpen')?'selected':'') ?>" href="<?= $current_url.'&u-city=Antwerpen' ?>"><img class="alignnone wp-image-4619" src="<?= Url::to('@web/img/milonga.be-antwerpen-300x300.png', true)?>" alt="" width="64" height="64"></a> 
-	<a class="<?= (($city == 'Gent')?'selected':'') ?>" href="<?= $current_url.'&u-city=Gent' ?>"><img class="alignnone wp-image-4623" src="<?= Url::to('@web/img/milonga.be-gent-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
-	<a class="<?= (($city == 'Liège')?'selected':'') ?>" href="<?= $current_url.'&u-city=Liège' ?>"><img class="alignnone size-medium wp-image-4624" src="<?= Url::to('@web/img/milonga.be-liege-300x300.png', true)?>" alt="" width="64" height="64"></a>&nbsp;
-	<a class="<?= (($city == 'Brugge')?'selected':'') ?>" href="<?= $current_url.'&u-city=Brugge' ?>"><img class="alignnone size-medium wp-image-4625" src="<?= Url::to('@web/img/milonga.be-brugge-300x300.png', true)?>" alt="" width="64" height="64"></a>
-</p>
-<form id="city-selector" class="visible-xs-block cities" action="/dancing/" method="GET">
+<form id="city-selector" class="visible-block cities" action="/dancing/" method="GET">
 	<input type="hidden" name="u-year" value="<?= $month_first_day->format('Y') ?>">
 	<input type="hidden" name="u-month" value="<?= $month_first_day->format('m') ?>">
 	<select  class="form-control" name="u-city" onchange="jQuery('#city-selector').submit();">
-		<option value="">All</option>
-		<option value="Brussels" <?= ($city =='Brussels')?'selected':''?> >Brussels</option>
-		<option value="Antwerpen" <?= ($city =='Antwerpen')?'selected':''?> >Antwerpen</option>
-		<option value="Gent" <?= ($city == 'Gent')?'selected':''?> >Gent</option>
-		<option value="Liège" <?= ($city == 'Liège')?'selected':''?> >Liège</option>
-		<option value="Brugge" <?= ($city == 'Brugge')?'selected':''?> >Brugge</option>
+		<?php foreach(Event::getCities() as $city_item => $city_label){ 
+			if($city_item == '') $city_label = 'All Belgium';
+			?>
+			<option value="<?= $city_item ?>" <?= ($city == $city_item)?'selected':''?> ><?= $city_label ?></option>
+		<?php } ?>
 	</select>
 </form>
 <div class="agenda-set">
