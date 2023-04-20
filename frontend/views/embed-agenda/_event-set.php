@@ -5,7 +5,7 @@
 		echo '<div class="quicklinks">';
 		foreach ($events as $event) {
 			$canceled = false;
-			$festival = $event['category']=='FESTIVAL';
+			$festival = ($event['category']=='FESTIVAL' || $event['category']=='MARATHON');
 			if(isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))
 				$canceled = true;
 			if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){

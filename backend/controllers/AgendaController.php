@@ -40,7 +40,7 @@ class AgendaController extends Controller{
         $eventSearchModel = new EventSearch();
         $eventDataProvider = $eventSearchModel->search(Yii::$app->request->queryParams);
         
-        return $this->render('index', ['dataProvider' => $eventDataProvider]);
+        return $this->render('index', ['dataProvider' => $eventDataProvider, 'searchModel' => $eventSearchModel]);
     }
 
     public function actionUpdateAll(){

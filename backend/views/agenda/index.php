@@ -20,7 +20,7 @@ echo '<h1>' . $this->title . '</h1>';
 </p>
 <?= GridView::widget([
 			 'dataProvider' => $dataProvider,
-			 // 'filterModel' => $searchModel,
+			 'filterModel' => $searchModel,
 			 'columns' => [
 			 	[
 			 		'attribute' => 'start.dateTime',

@@ -140,7 +140,7 @@ class AgendaController extends Controller{
 
 		// Adding festivals in their own special categories
 		// There must be an instance on all days of the festival
-		$festivals = $this->filterEvents('FESTIVAL:', $events);
+		$festivals = $this->filterEvents('FESTIVAL:,MARATHON:', $events);
 		foreach($festivals as $event){
 			if(isset($event['start']['dateTime'])){
 				$start_datetime = new \Datetime($event['start']['dateTime']);
@@ -150,7 +150,7 @@ class AgendaController extends Controller{
 					if(isset($events_by_date[$date]['Festivals']))
 						array_unshift($events_by_date[$date]['Festivals'], $event);
 					else
-						$events_by_date[$date]['Festivals'][] = $event;
+						$events_by_date[$date]['Festivals/Marathons'][] = $event;
 					$start_datetime->modify('+1 day');
 				}
 			}

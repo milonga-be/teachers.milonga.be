@@ -15,6 +15,7 @@ class EventSearch extends Event
 	public function search( $params )
     {
     	$user = Yii::$app->user->identity;
+    	$this->load($params);
     	$events = $this->getEvents();
 
     	return new ArrayDataProvider([
@@ -46,6 +47,12 @@ class EventSearch extends Event
 		  // 'sharedExtendedProperty' => 'organizer_id=6'
 		  // 'timeMax' => date('c', gmmktime(9,0,0,6,14,2020)),
 		);
+		if(!empty($this->summary)){
+			$optParams['q'] = $this->summary;
+		}
+		if(!empty($this->organizer)){
+			$optParams['sharedExtendedProperty'] = 'organizer='.$this->organizer;
+		}
 		$user = Yii::$app->user->identity;
 		if(!$user->isAdmin() && $user->school){
 			$optParams['sharedExtendedProperty'] = 'organizer_id='.$user->school->id;
