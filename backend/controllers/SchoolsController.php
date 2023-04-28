@@ -7,6 +7,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\Lesson;
 use common\models\School;
+use common\models\User;
 use backend\models\SchoolSearch;
 use yii\data\ActiveDataProvider;
 use yii\web\UploadedFile;
@@ -22,6 +23,10 @@ class SchoolsController extends Controller{
             'access' => [
                 'class' => AccessControl::className(),
                 'rules' => [
+                    [
+                        'actions' => ['message-before-expiration'],
+                        'allow' => true,
+                    ],
                     [
                         'actions' => ['index', 'create', 'update' ],
                         'allow' => true,
@@ -94,5 +99,23 @@ class SchoolsController extends Controller{
         }
 
         return $this->render('create',[ 'school' => $school ]);
+    }
+
+    /**
+     * Send a message to an account admin before expiration
+     */
+    function actionMessageBeforeExpiration(){
+        $datetime = new \Datetime();
+        $datetime->modify('+1 month');
+        $schools = School::find()->where(['=', 'expiration', $datetime->format('Y-m-d')])->all();
+        foreach($schools as $school){
+            $users_emails = \yii\helpers\ArrayHelper::getColumn($school->getUsers()->where(['status' => User::STATUS_ACTIVE])->all(), 'email');
+            $message = Yii::$app->mailer->compose('@backend/mail/expiring', ['school' => $school])
+                    ->setFrom('milonga@milonga.be')
+                    ->setCc('milonga@milonga.be')
+                    ->setTo($users_emails)
+                    ->setSubject('Your account on milonga.be is about to expire')
+                    ->send();
+        }
     }
 }
