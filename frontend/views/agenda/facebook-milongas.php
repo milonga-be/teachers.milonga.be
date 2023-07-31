@@ -14,7 +14,10 @@ function cmp($a, $b) {
 ?>
 
 Let's get some TANGO !<br/>
-Milongas from <?= $startDate->format('M j') ?> to <?= $endDate->format('M j') ?><br><br>
+Milongas from <?= $startDate->format('M j') ?> to <?= $endDate->format('M j') ?><br>
+Know more : http://www.milonga.be/dancing/ <br>
+Subscribe to the newsletter :
+http://www.milonga.be/about/newsletter/<br><br>
 
 <?php
 foreach ( $events as $weekday_events ) {
@@ -36,6 +39,3 @@ foreach ( $events as $weekday_events ) {
 }
 
 ?>
-Know more : http://www.milonga.be/dancing/ <br>
-Subscribe to the newsletter :
-http://www.milonga.be/about/newsletter/

@@ -352,24 +352,15 @@ class AgendaController extends Controller{
 			$event['start']['weekday'] = $datetime->format('N');
 
 			// Adding the picture
-			$creator_email = isset($event['creator']['email'])?$event['creator']['email']:null;
-			$organizer_email = isset($event['extendedProperties']['shared']['organizer'])?$event['extendedProperties']['shared']['organizer']:null;
-			if($organizer_email){
-				$school_email = $organizer_email;
-			}else{
-				$school_email = $creator_email;
-			}
-			if($school_email && !isset($event['school'])){
-				$event['email'] = $school_email;
-				$school = School::findOne(['email' => $school_email]);
-				if(!$school){
-					$user = User::findOne(['email' => $school_email]);
-					if($user){
-						$school = $user->school;
-					}
-				}
+			// $creator_email = isset($event['creator']['email'])?$event['creator']['email']:null;
+			$organizer_id = isset($event['extendedProperties']['shared']['organizer_id'])?$event['extendedProperties']['shared']['organizer_id']:null;
+			
+			if(!is_null($organizer_id) && !isset($event['school'])){
+				
+				$school = School::findOne($organizer_id);
 
 				if($school){
+					$event['email'] = $school->email;
 					$event['school'] = array();
 					$event['school']['picture'] = $school->getPictureUrl();
 					$event['school']['thumb'] = $school->getThumbUrl();
@@ -490,8 +481,8 @@ class AgendaController extends Controller{
 	public function actionFacebookMilongas(){
 		$startDate = new \Datetime();
 		$endDate = clone $startDate;
-		$endDate->modify('next friday');
-		$events = $this->getEvents( 7 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
+		$endDate->modify('next sunday');
+		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
 
 		$events_by_days = array();
 
