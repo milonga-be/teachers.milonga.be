@@ -572,44 +572,45 @@ class AgendaController extends Controller{
 
 	/**
 	 * All events for the app
-	 * @param  [type]  $month [description]
-	 * @param  [type]  $year  [description]
+	 * @param  string  $month [description]
+	 * @param  string  $year  [description]
 	 * @param  boolean $all   [description]
 	 * @return [type]         [description]
 	 */
-	public function actionApi($month = null, $year = null, $all = false){
-		return $this->_apiEvents(self::ALL_FILTER, $month, $year, $all);
+	public function actionApi($day = null, $month = null, $year = null, $all = false){
+		return $this->_apiEvents(self::ALL_FILTER, $day, $month, $year, $all);
 	}
 
-	public function _apiEvents($filter, $month = null, $year = null, $all = false){
+	public function _apiEvents($filter, $day = null, $month = null, $year = null, $all = false){
 		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+		// Checking that there is a api-key in the headers
+		if(Yii::$app->request->headers->get('Api-Key') != Yii::$app->params['app-api-key']){
+			return [];
+		}
+		
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Methods: GET, POST');
+
 		if(!$month){
 			$month = date('m');
 			$year = date('Y');
+			$day = date('d');
 		}
-		$start = new \Datetime($year.'-'.$month.'-01');
-		$month_first_day = clone $start;
-		if($start->format('w') != 1){
-			$start->modify('previous monday');
-		}
-		if(!empty($selected)){
-			$selected_day = new \Datetime($selected);
-		}else if($month == date('m') && $year == date('Y')){
-			$selected_day = new \Datetime();
-		}else{
-			$selected_day = clone $month_first_day;
-		}
-		$end = clone $start;
-		$end->modify('4 weeks');
-		$weeks = $this->weeks_in_month($month, $year);
-		$events_sets = array();
-		$events = $this->getEvents( $weeks * 7, null, $start, null, null);
+		$start = new \Datetime($year.'-'.$month.'-'.$day);
+		$events = $this->getEvents( 0, null, $start, null, null);
 		$events = array_values($this->filterEvents($filter, $events));
 		if($all)
 			return $events;
-		return array_map(function(&$item){ return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location']);}, $events);
+		return [
+			'items' => array_map(
+				function(&$item){ 
+					$item['description'] = \common\components\Htmlizer::execute($item); 
+					$item['picture'] = isset($item['extendedProperties']['shared']['picture'])?'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events'.$item['extendedProperties']['shared']['picture']:''; 
+					return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location', 'picture']);
+				}, 
+			$events)
+		];
 	}
 
 	/**
