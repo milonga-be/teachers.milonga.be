@@ -26,7 +26,8 @@
         "google/apiclient": "^2.2",
         "marqu3s/yii2-summernote": "dev-master",
         "omnilight/yii2-momentjs": "^1.0",
-        "2amigos/yii2-tinymce-widget": "^1.1"
+        "2amigos/yii2-tinymce-widget": "^1.1",
+        "facebook/php-business-sdk": "^16.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
