@@ -20,10 +20,10 @@ class FacebookController extends Controller{
      * Post Weekly Milongas
      */
     public function actionPostMilongas(){
-        $app_id = "1275475786660941";
-        $app_secret = "";
+        $app_id = Yii::$app->params['facebook']['app_id'];
+        $app_secret = Yii::$app->params['facebook']['app_secret'];
         $access_token = "";
-        $id = "272158899527489";
+        $id = Yii::$app->params['facebook']['page_id'];
 
         $api = Api::init($app_id, $app_secret, $access_token);
         $api->setLogger(new CurlLogger());
