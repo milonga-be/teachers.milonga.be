@@ -106,7 +106,7 @@ class SchoolsController extends Controller{
      */
     function actionMessageBeforeExpiration(){
         $datetime = new \Datetime();
-        $datetime->modify('+1 month');
+        $datetime->modify('+30 days');
         $schools = School::find()->where(['=', 'expiration', $datetime->format('Y-m-d')])->all();
         foreach($schools as $school){
             $users_emails = \yii\helpers\ArrayHelper::getColumn($school->getUsers()->where(['status' => User::STATUS_ACTIVE])->all(), 'email');

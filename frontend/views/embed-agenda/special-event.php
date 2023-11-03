@@ -1,9 +1,11 @@
 <?php
 use common\components\Htmlizer;
 ?>
+<?php if(!$event->sponsored): ?>
 <p>
 	<a href="/events/"><span class="glyphicon glyphicon-chevron-left"></span> Back to the special events</a>
 </p>
+<?php endif ?>
 <?php if(isset($event->picture) && !empty($event->picture)){
 
 		$pictureUrl = 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event->picture;

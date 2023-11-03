@@ -1,8 +1,15 @@
 <?php
 use yii\web\View;
 use common\components\Htmlizer;
+use common\components\Sponsorship;
+
+$sponsored = Sponsorship::isEventSponsored($event);
+
 ?>
-<div class="V13 <?= (isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))?'cancelled':''?>">
+<div class="V13 <?= $sponsored?'sponsored':'' ?> <?= (isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))?'cancelled':''?>">
+	<?php if($sponsored): ?>
+		<div class="label label-pink pull-right">In the spotlight</div>
+	<?php endif ?>
 	<?php 
 	if(isset($event['school']) && isset($event['school']['picture']) && !empty($event['school']['picture'])){
 		echo '<a class="swipebox" title="'.$event['school']['name'].'" href="'.$event['school']['picture'].'"><img class="event_icon" src="'.$event['school']['picture'].'"></a>';
@@ -56,16 +63,12 @@ use common\components\Htmlizer;
 	<div class="milonga-description">
 		<?php
 		$html = Htmlizer::execute($event);
-		// $html_lines = explode('<br />', $html);
-		// if(sizeof($html_lines) > 5){
-		// 	echo implode('<br />', array_slice($html_lines, 0, 5));
-		// 	echo '<a class="more-link" href="#">... READ MORE ...</a>';
-		// 	echo '<p class="more-content">'.implode('<br />', array_slice($html_lines, 5)).'</p>';
-		// 	echo '<a class="less-link" href="#"> -- LESS -- </a>';
-		// }else{
+		if($sponsored){
+			echo '<div>'.$html.'</div>';
+		}else{
 			echo '<div class="more-link">'.$html.'</div>';
 			echo '<div class="more-content less-link" style="display:none;">'.$html.'</div>';
-		// }
+		}
 		if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 			$otherClass = '';
 			$ratio = '';

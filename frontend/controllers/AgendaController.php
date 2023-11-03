@@ -258,7 +258,7 @@ class AgendaController extends Controller{
 	 * @param  string $filter a comma separated list of values that must be in the event title
 	 * @return array         the events
 	 */
-	private function getEvents( $days , $filter = null , $startDate = null, $q = null, $city = null ){
+	private function getEvents( $days , $filter = null , $startDate = null, $q = null, $city = null, $sponsored = false ){
 		$events = array();
 		$google_calendar_id = Yii::$app->params['google-calendar-id'];
 		$google_api_key = Yii::$app->params['google-api-key'];
@@ -281,6 +281,9 @@ class AgendaController extends Controller{
 			}
 			if(isset($city) && !empty($city)){
 				$google_url.='&sharedExtendedProperty=city%3D'.urlencode($city);
+			}
+			if(isset($sponsored) && $sponsored == true){
+				$google_url.='&sharedExtendedProperty=sponsored%3D1';
 			}
 			$json_array = $this->getFromApi( $google_url );
 
@@ -543,6 +546,15 @@ class AgendaController extends Controller{
 		return $this->render('special-events', [ 'events' => $events ]);
 	}
 
+	public function actionSponsoredEvents(){
+		$startDate = new \Datetime();
+		$events = $this->getEvents( 8*7 , self::ALL_FILTER, $startDate, null, null, true );
+		// var_dump($events);
+		// die();
+
+		return $this->render('special-events', [ 'events' => $events ]);
+	}
+
 	public function actionSpecialEvent($id){
 		$event = \backend\models\Event::findOne($id);
 		return $this->render('special-event', ['event' => $event]);
@@ -606,7 +618,7 @@ class AgendaController extends Controller{
 			'items' => array_map(
 				function(&$item){ 
 					$item['description'] = \common\components\Htmlizer::execute($item); 
-					$item['picture'] = isset($item['extendedProperties']['shared']['picture'])?'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events'.$item['extendedProperties']['shared']['picture']:''; 
+					$item['picture'] = isset($item['extendedProperties']['shared']['picture']) && !empty($item['extendedProperties']['shared']['picture'])?'https://'.\Yii::$app->getRequest()->serverName.'/uploads/events/'.$item['extendedProperties']['shared']['picture']:''; 
 					return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location', 'picture']);
 				}, 
 			$events)

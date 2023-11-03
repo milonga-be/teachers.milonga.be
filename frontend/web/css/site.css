@@ -51,6 +51,9 @@ td.levelname{
     clear:none;
     font-size:0.85em;
 }
+.V13.sponsored h5{
+    margin-top: 8px;
+}
 .events h5 a{
     color: #555;
 }
@@ -102,12 +105,21 @@ td.levelname{
     margin-left:48px;
     color: #777;
 }
+.events .sponsored .milonga-description{
+    margin-bottom: 8px;
+}
 .V13{
     margin-bottom: 10px;
     padding-top: 6px;
     padding-bottom: 6px;
     /*border-top: 1px #BBB dashed;*/
     line-height: 1.2;
+}
+.V13.sponsored{
+    background-color:#F6606214;
+}
+.V13.sponsored .label-pink{
+    margin-top: -6px;
 }
 .milonga-description img{   
     max-width: 100%;
@@ -336,6 +348,16 @@ td.other_month a{
 .special-event .description p{
     margin-bottom:0;
 }
+.post-list .post-block.sponsored{
+    background-color:#F6606214;
+}
+.post-list .post-block.sponsored{
+    color:black;
+}
+.label-pink{
+    background-color: #F66062;
+    font-size: 14px;
+}
 .badge{
     background-color: #e7e7e7;
     font-weight: normal;
@@ -429,6 +451,9 @@ b.title_canceled{
     left: 0px;
     z-index: -1;
     opacity: 0.7;
+}
+td.has-event.sponsored{
+    background-color: #F6606214;
 }
 @media screen and (max-width: 480px) {
     .has-event::before{

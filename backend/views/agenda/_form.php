@@ -61,6 +61,9 @@ $timepicker_options =
 	<div class="col-md-12">
 		<?= $form->field($event, 'disabled_reason')->textInput() ?>
 	</div>
+	<div class="col-md-12">
+		<?= $form->field($event, 'sponsored')->checkbox() ?>
+	</div>
 </div>
 <?php } ?>
 <?php if($event->cancelled){ echo '<h3 class="text-danger">Canceled</h3>';}?>

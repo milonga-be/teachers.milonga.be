@@ -1,15 +1,27 @@
 <?php
 use common\components\Htmlizer;
+use common\components\Sponsorship;
+
 ?>
 <div class="row post-list">
 <?php
-foreach ($events as $event) { ?>
+foreach ($events as $event) { 
+	$sponsored = Sponsorship::isEventSponsored($event);
+	if($sponsored){
+		$link = '/sponsored-event?u-id='.$event['id'];
+	}else{
+		$link = '/special-event?u-id='.$event['id'];
+	}
+	?>
 	<div class="col-lg-4 col-md-6">
-		<div class="post-block eq-blocks">
+		<div class="post-block eq-blocks <?= $sponsored ? 'sponsored':'' ?>">
+			<?php if($sponsored){ ?>
+				<div class="label label-pink pull-right">In the spotlight</div>
+			<?php } ?>
 			<?php if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 
 					$pictureUrl = 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
-					echo '<a href="/special-event?u-id='.$event['id'].'" style="display:block;width:100%;height:275px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
+					echo '<a href="'.$link.'" style="display:block;width:100%;height:275px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
 				}
 			?>
 			<div class="summary special-event">
@@ -30,7 +42,7 @@ foreach ($events as $event) { ?>
 					</h5>
 				<?php } ?>
 				<h3><?= $event['summary']?></h3>
-				<h4 style="margin-top:0px;margin-bottom:5px;"><?= $event['category']?><br/> 
+				<h4 style="margin-top:0px;margin-bottom:5px;"><?= isset($event['category'])?$event['category']:''?><br/> 
 					<?php if(isset($event['start']['dateTime'])){ ?>
 						<?= (new Datetime($event['start']['dateTime']))->format('F j') ?>
 						<?php if(isset($event['end']['dateTime'])){ ?>
@@ -46,7 +58,7 @@ foreach ($events as $event) { ?>
 					<?php
 						if(strlen($event['description']) > 250){
 							echo '<p>'.substr(strip_tags($event['description']), 0, 500).'...</p>';
-							echo '<p><br><a href="/special-event?u-id='.$event['id'].'">More info ...</a></p>';
+							echo '<p><br><a href="'.$link.'">More info ...</a></p>';
 						}else{
 							echo Htmlizer::execute($event);
 						}

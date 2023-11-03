@@ -1,3 +1,6 @@
+<?php
+use common\components\Sponsorship;
+?>
 <div <?= $set_index>0?'style="display:none;"':'' ?>class="set" id="set-<?= $eventDate->format('Ymd') ?>-<?= $set_name?>">
 	<h3><?= $set_name ?></h3>
 	<?php
@@ -24,8 +27,15 @@
 	}
 	?>
 	<?php
+	// First displaying the sponsored events
 	foreach ($events as $event) {
-		echo $this->render('_event', ['event' => $event]);
+		if(Sponsorship::isEventSponsored($event))
+			echo $this->render('_event', ['event' => $event]);
+	}
+	// Then the normal list
+	foreach ($events as $event) {
+		if(!Sponsorship::isEventSponsored($event))
+			echo $this->render('_event', ['event' => $event]);
 	}
 	?>
 </div>

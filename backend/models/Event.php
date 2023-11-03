@@ -30,6 +30,7 @@ class Event extends Model{
 	var $disabled;
 	var $disabled_reason;
 	var $cancelled;
+	var $sponsored;
 
 	const GOOGLE_CAL_API = 'https://www.googleapis.com/calendar/v3/calendars/';
 
@@ -124,7 +125,7 @@ class Event extends Model{
 			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
-			[['pictureRemove', 'disabled'], 'boolean'],
+			[['pictureRemove', 'disabled', 'sponsored'], 'boolean'],
 		];
 	}
 
@@ -168,6 +169,7 @@ class Event extends Model{
 			$datas['disabled'] = $this->disabled;
 			$datas['cancelled'] = $this->cancelled;
 			$datas['disabled_reason'] = $this->disabled_reason;
+			$datas['sponsored'] = $this->sponsored;
 			$startDateTime = new \DateTime($this->start);
 			if($this->from){
 				$startDateTime = new \DateTime($this->from);
@@ -234,6 +236,9 @@ class Event extends Model{
 			}
 			if(isset($datas['disabled_reason'])){
 				$sharedProperties['disabled_reason'] = $datas['disabled_reason'];
+			}
+			if(isset($datas['sponsored'])){
+				$sharedProperties['sponsored'] = $datas['sponsored'];
 			}
 
 			$extentedProperties->setShared($sharedProperties);
@@ -338,6 +343,9 @@ class Event extends Model{
 		}
 		if(isset($result->getExtendedProperties()->shared['disabled_reason'])){
 			$event->disabled_reason = $result->getExtendedProperties()->shared['disabled_reason'];
+		}
+		if(isset($result->getExtendedProperties()->shared['sponsored'])){
+			$event->sponsored = $result->getExtendedProperties()->shared['sponsored'];
 		}
 		if(!isset($event->organizer) && isset($result->creator->email)){
 			$event->organizer = $result->creator->email;
