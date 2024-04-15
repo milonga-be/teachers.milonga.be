@@ -1,5 +1,14 @@
 <?php
 use common\components\Htmlizer;
+use backend\models\Event;
+
+$date_format_start = 'F j, H:i';
+$date_format_end = 'H:i';
+if($event->type == Event::TYPE_FESTIVAL || $event->type == Event::TYPE_HOLIDAYS || $event->type == Event::TYPE_MARATHON){
+	$date_format_start = 'F j';
+	$date_format_end = 'F j';
+}
+
 ?>
 <?php if(!$event->sponsored): ?>
 <p>
@@ -16,14 +25,14 @@ use common\components\Htmlizer;
 	<h3><?= $event->summary?></h3>
 	<h4 style="margin-top:0px;margin-bottom:5px;"><?= $event->type?><br/> 
 		<?php if(isset($event->start)){ ?>
-			<?= (new Datetime($event->start))->format('F j') ?>
+			<?= (new Datetime($event->start))->format($date_format_start) ?>
 			<?php if(isset($event->end)){ ?>
 			  - 
-			 <?= (new Datetime($event->end))->format('F j')?>
+			 <?= (new Datetime($event->end))->format($date_format_end)?>
 			 <?php } ?>
 			 <br/>
 		<?php }else if(isset($event->start)){ ?>
-		<?= (new Datetime($event->start))->format('F j') ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event->end))->format('F j'); 
+		<?= (new Datetime($event->start))->format($date_format_start) ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event->end))->format($date_format_end); 
 	} ?>
 	</h4><br/>
 	<div class="description">

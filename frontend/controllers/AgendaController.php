@@ -548,11 +548,18 @@ class AgendaController extends Controller{
 
 	public function actionSponsoredEvents(){
 		$startDate = new \Datetime();
-		$events = $this->getEvents( 8*7 , self::ALL_FILTER, $startDate, null, null, true );
+		$events = $this->getEvents( 48*7 , self::ALL_FILTER.',festival:,holidays:,marathon:', $startDate, null, null, true );
 		// var_dump($events);
 		// die();
 
 		return $this->render('special-events', [ 'events' => $events ]);
+	}
+
+	public function actionSponsoredEventsWidget(){
+		$startDate = new \Datetime();
+		$events = $this->getEvents( 48*7 , self::ALL_FILTER.',festival:,holidays:,marathon:', $startDate, null, null, true );
+
+		return $this->render('sponsored-events-widget', [ 'events' => $events ]);
 	}
 
 	public function actionSpecialEvent($id){

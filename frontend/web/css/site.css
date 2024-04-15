@@ -348,7 +348,7 @@ td.other_month a{
 .special-event .description p{
     margin-bottom:0;
 }
-.post-list .post-block.sponsored{
+.post-list .post-block.sponsored, .widget.sponsored{
     background-color:#F6606214;
 }
 .post-list .post-block.sponsored{

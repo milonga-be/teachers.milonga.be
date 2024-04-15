@@ -3,15 +3,16 @@ use common\components\Htmlizer;
 use common\components\Sponsorship;
 use backend\models\Event;
 
+$date_format_start = 'F j, H:i';
+$date_format_end = 'H:i';
+if($event['category'] == Event::TYPE_FESTIVAL || $event['category'] == Event::TYPE_HOLIDAYS || $event['category'] == Event::TYPE_MARATHON){
+	$date_format_start = 'F j';
+	$date_format_end = 'F j';
+}
+
 ?>
 <?php
-foreach ($events as $event) {
-	$date_format_start = 'F j, H:i';
-	$date_format_end = 'H:i';
-	if($event['category'] == Event::TYPE_FESTIVAL || $event['category'] == Event::TYPE_HOLIDAYS || $event['category'] == Event::TYPE_MARATHON){
-		$date_format_start = 'F j';
-		$date_format_end = 'F j';
-	}
+foreach ($events as $event) { 
 	$sponsored = Sponsorship::isEventSponsored($event);
 	if($sponsored){
 		$link = '/sponsored-event?u-id='.$event['id'];
@@ -19,15 +20,14 @@ foreach ($events as $event) {
 		$link = '/special-event?u-id='.$event['id'];
 	}
 	?>
-	<div class="col-lg-4 col-md-6 eq-blocks">
-		<div class="post-block <?= $sponsored ? 'sponsored':'' ?>">
+	<div class="widget <?= $sponsored ? 'sponsored':'' ?>">
 			<?php if($sponsored){ ?>
 				<div class="label label-pink pull-right">In the spotlight</div>
 			<?php } ?>
 			<?php if(isset($event['extendedProperties']['shared']['picture']) && !empty($event['extendedProperties']['shared']['picture'])){
 
 					$pictureUrl = 'https://'.\Yii::$app->getRequest()->serverName.\Yii::$app->request->BaseUrl.'/../../uploads/events/'.$event['extendedProperties']['shared']['picture'];
-					echo '<a href="'.$link.'" style="display:block;width:100%;height:275px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
+					echo '<a href="'.$link.'" style="display:block;width:100%;height:120px;background-size:cover;background-position: center;background-image:url('.$pictureUrl.');"></a><br/>';
 				}
 			?>
 			<div class="summary special-event">
@@ -73,5 +73,4 @@ foreach ($events as $event) {
 				</div>
 			</div>
 		</div>
-	</div>
 <?php }
