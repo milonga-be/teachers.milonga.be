@@ -3,16 +3,16 @@ use common\components\Htmlizer;
 use common\components\Sponsorship;
 use backend\models\Event;
 
-$date_format_start = 'F j, H:i';
-$date_format_end = 'H:i';
-if($event['category'] == Event::TYPE_FESTIVAL || $event['category'] == Event::TYPE_HOLIDAYS || $event['category'] == Event::TYPE_MARATHON){
-	$date_format_start = 'F j';
-	$date_format_end = 'F j';
-}
 
 ?>
 <?php
 foreach ($events as $event) { 
+	$date_format_start = 'F j, H:i';
+	$date_format_end = 'H:i';
+	if($event['category'] == Event::TYPE_FESTIVAL || $event['category'] == Event::TYPE_HOLIDAYS || $event['category'] == Event::TYPE_MARATHON){
+		$date_format_start = 'F j';
+		$date_format_end = 'F j';
+	} 
 	$sponsored = Sponsorship::isEventSponsored($event);
 	if($sponsored){
 		$link = '/sponsored-event?u-id='.$event['id'];
