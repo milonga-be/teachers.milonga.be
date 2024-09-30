@@ -67,6 +67,11 @@ class Event extends Model{
 	const REGION_LIEGE = 'Province de Liège';
 	const REGION_HAINAUT = 'Hainaut';
 
+	const COUNTRY_FRANCE = 'France';
+	const COUNTRY_GERMANY = 'Germany';
+	const COUNTRY_LUXEMBURG = 'Luxemburg';
+	const COUNTRY_NETHERLANDS = 'Netherlands';
+
 	const EVERY = 'WEEKLY';
 	const EVERY_MONDAY = 'MO';
 	const EVERY_TUESDAY = 'TU';
@@ -122,7 +127,15 @@ class Event extends Model{
 		return [
 			[['type', 'summary', 'city', 'description', 'location', 'start','end', 'from', 'until', 'recurrence_every', 'weekday', 'organizer', 'disabled_reason'], 'safe'],
 			[['summary', 'description', 'start', 'end'/*, 'location'*/], 'required'],
-			[['start', 'end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
+			[['start'], 'datetime', 'format' => 'php:d-m-Y H:i'],
+			[['end'], 'datetime', 'format' => 'php:d-m-Y H:i'],
+            ['end', function ($attribute, $params, $validator) {
+            	$startDateTime = new \DateTime($this->start);
+            	$endDateTime = new \DateTime($this->end);
+                if ($endDateTime < $startDateTime) {
+                    $this->addError($attribute, 'End date has to be greater than Start date');
+                }
+            }],
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
 			[['pictureRemove', 'disabled', 'sponsored'], 'boolean'],
@@ -140,7 +153,8 @@ class Event extends Model{
 			'summary' => "Title",
 			'recurrence_every' => "Recurrence",
 			'weekday' => "Weekday",
-			'city' => 'City/Region'
+			'city' => 'City/Region/Country',
+			'location' => 'Address'
 		];
 	}
 
@@ -644,14 +658,18 @@ class Event extends Model{
 			self::CITY_BW => self::CITY_BW,
 			self::CITY_BRUSSELS => self::CITY_BRUSSELS,
 			self::CITY_BRUGGE => self::CITY_BRUGGE,
+			self::COUNTRY_FRANCE => self::COUNTRY_FRANCE,
 			self::CITY_GENT => self::CITY_GENT,
+			self::COUNTRY_GERMANY => self::COUNTRY_GERMANY,
 			self::REGION_HAINAUT => self::REGION_HAINAUT,
 			self::CITY_HASSELT => self::CITY_HASSELT,
 			self::CITY_LEUVEN => self::CITY_LEUVEN,
 			self::CITY_LIEGE => self::CITY_LIEGE,
 			self::REGION_LIMBURG => self::REGION_LIMBURG,
+			self::COUNTRY_LUXEMBURG => self::COUNTRY_LUXEMBURG,
 			self::CITY_MOUSCRON => self::CITY_MOUSCRON,
 			self::CITY_NAMUR => self::CITY_NAMUR,
+			self::COUNTRY_NETHERLANDS => self::COUNTRY_NETHERLANDS,
 			self::REGION_OOSTVLANDEREN => self::REGION_OOSTVLANDEREN,
 			self::REGION_LUXEMBOURG => self::REGION_LUXEMBOURG,
 			self::REGION_LIEGE => self::REGION_LIEGE,

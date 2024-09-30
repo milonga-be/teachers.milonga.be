@@ -131,11 +131,19 @@ class AgendaController extends Controller{
 		foreach ($events_by_date as $date => $date_events) {
 			$events_by_date[$date] = array();
 			$milongas = $this->filterEvents(self::DEFAULT_FILTER, $date_events);
-			if(sizeof($milongas))
+			if(sizeof($milongas)){
 				$events_by_date[$date]['Milongas'] = $milongas;
+			}
 			$workshops = $this->filterEvents('workshop:,workhop:', $date_events);
 			if(sizeof($workshops))
 				$events_by_date[$date]['Workshops'] = $workshops;
+			if(sizeof($milongas)){
+				// Put the milongas outside of Belgium apart
+				list($events_by_date[$date]['Milongas'], $events_by_date[$date]['Outside Belgium']) = $this->filterOutsideEvents($events_by_date[$date]['Milongas']);
+				if(sizeof($events_by_date[$date]['Outside Belgium']) == 0){
+					unset($events_by_date[$date]['Outside Belgium']);
+				}
+			}
 		}
 
 		// Adding festivals in their own special categories
@@ -389,6 +397,29 @@ class AgendaController extends Controller{
 
 		}
 		return $events_filtered;
+	}
+
+	/**
+	 * Filter the events that are outside of Belgium
+	 * @param  array $events The array of events to filter
+	 * @return array 	The array of events that are outside
+	 */
+	function filterOutsideEvents(&$events){
+		$outsideEvents = array();
+		$insideEvents = array();
+		$outsideLocations = [\backend\models\Event::COUNTRY_FRANCE, \backend\models\Event::COUNTRY_GERMANY, \backend\models\Event::COUNTRY_LUXEMBURG, \backend\models\Event::COUNTRY_NETHERLANDS];
+		foreach ($events as $key => $event) {
+			$fits = true;
+			if(isset($event['extendedProperties']['shared']['city']) && in_array($event['extendedProperties']['shared']['city'], $outsideLocations)){
+				$fits = FALSE;
+			}
+			if( $fits == TRUE ){
+				$insideEvents[$event['id']] = $event;
+			}else{
+				$outsideEvents[$event['id']] = $event;
+			}
+		}
+		return [$insideEvents, $outsideEvents];
 	}
 
 	/**

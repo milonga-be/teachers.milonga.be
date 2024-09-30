@@ -107,7 +107,7 @@ $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$mo
 				$set_index = 0;
 				$menu_item_size = (sizeof($events_sets)>2)?floor(100 / sizeof($events_sets)) - sizeof($events_sets) + 1 :48;
 				foreach ($events_sets as $set_name => $events) {
-					echo '<li style="width:'.$menu_item_size.'%;" class="menu-item '.(($set_index==0)?'active':'').'"><a href="#" data-set="set-'.$eventDate->format('Ymd').'-'.$set_name.'">'.((sizeof($events_sets)>2 && strlen($set_name) > 10)?substr($set_name, 0, 8).'...':$set_name).'</a><em>'.sizeof($events).'</em></li>';
+					echo '<li style="width:'.$menu_item_size.'%;" class="menu-item '.(($set_index==0)?'active':'').'"><a href="#" data-set="set-'.$eventDate->format('Ymd').'-'.$set_name.'">'.((sizeof($events_sets)>2 && strlen($set_name) > 15)?substr($set_name, 0, 8).'...':$set_name).'</a><em>'.sizeof($events).'</em></li>';
 					$set_index++;
 				}
 				?>

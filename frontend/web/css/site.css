@@ -190,6 +190,11 @@ div.single-post .milonga-description p{
         text-align: justify;
     }
 }*/
+table#agenda-calendar{
+    max-width:500px;
+    margin:0 auto;
+    margin-bottom: 20px;
+}
 #agenda-calendar td.selected a{
     font-weight: bold;
     color:white;
@@ -287,6 +292,8 @@ td.other_month a{
     width:99%;
     margin-bottom: 15px;
     margin-left: 1%;
+    display: flex;
+    align-items: center;
 }
 #navbar-agenda li{
     width:50%;
@@ -295,10 +302,14 @@ td.other_month a{
     border-radius: 5px;
     background-color: #e7e7e7;
     margin-right: 1%;
+    display: flex;
+    align-items: center;
 }
 
 #navbar-agenda li a{
     text-transform: uppercase;
+    width: 100%;
+    border-radius: 5px;
 }
 #navbar-agenda li em{
     position: absolute;
@@ -319,7 +330,8 @@ td.other_month a{
         margin:0;
     }
     #navbar-agenda li{
-        float:left;
+/*        float:none;*/
+        height:44px;
     }
     #navbar-agenda li em{
         top:5px;
@@ -344,6 +356,7 @@ td.other_month a{
 }
 #navbar-agenda li.active a{
     color:white;
+    background-color: #F66062;
 }
 .special-event .description p{
     margin-bottom:0;
@@ -454,6 +467,13 @@ b.title_canceled{
 }
 td.has-event.sponsored{
     background-color: #F6606214;
+}
+.agenda-set h2, form#city-selector{
+    max-width:500px;
+    margin:0 auto;
+}
+.agenda-set h2{
+    margin-bottom:20px;
 }
 @media screen and (max-width: 480px) {
     .has-event::before{
