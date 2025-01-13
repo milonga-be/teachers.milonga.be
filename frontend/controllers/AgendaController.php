@@ -579,7 +579,7 @@ class AgendaController extends Controller{
 
 	public function actionSponsoredEvents(){
 		$startDate = new \Datetime();
-		$events = $this->getEvents( 48*7 , self::ALL_FILTER.',festival:,holidays:,marathon:', $startDate, null, null, true );
+		$events = $this->getEvents( 48*7 , self::ALL_FILTER.',festival:,holidays:,marathon:,class:', $startDate, null, null, true );
 		// var_dump($events);
 		// die();
 

@@ -43,6 +43,7 @@ class Event extends Model{
 	const TYPE_FESTIVAL = 'FESTIVAL';
 	const TYPE_HOLIDAYS = 'HOLIDAYS';
 	const TYPE_MARATHON = 'MARATHON';
+	const TYPE_CLASS = 'CLASS';
 
 	const CITY_BRUSSELS = 'Brussels';
 	const CITY_ANTWERPEN = 'Antwerpen';
@@ -644,6 +645,7 @@ class Event extends Model{
 			self::TYPE_FESTIVAL => self::TYPE_FESTIVAL,
 			self::TYPE_MARATHON => self::TYPE_MARATHON,
 			self::TYPE_HOLIDAYS => self::TYPE_HOLIDAYS,
+			self::TYPE_CLASS => self::TYPE_CLASS,
 		);
 	}
 
