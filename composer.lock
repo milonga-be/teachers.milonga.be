@@ -3021,16 +3021,16 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "4.9.2",
+            "version": "6.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "f2b1a9b593f6b5d5453af16f726a34fd364bbb1f"
+                "reference": "b2327c03fba64f8c47ec030c1f3bce98da8f7596"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/f2b1a9b593f6b5d5453af16f726a34fd364bbb1f",
-                "reference": "f2b1a9b593f6b5d5453af16f726a34fd364bbb1f",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/b2327c03fba64f8c47ec030c1f3bce98da8f7596",
+                "reference": "b2327c03fba64f8c47ec030c1f3bce98da8f7596",
                 "shasum": ""
             },
             "type": "component",
@@ -3039,31 +3039,44 @@
                     "scripts": [
                         "tinymce.js",
                         "plugins/*/plugin.js",
-                        "themes/*/theme.js"
+                        "themes/*/theme.js",
+                        "models/*/model.js",
+                        "icons/*/icons.js"
                     ],
                     "files": [
                         "tinymce.min.js",
                         "plugins/*/plugin.min.js",
                         "themes/*/theme.min.js",
-                        "skins/**"
+                        "models/*/model.min.js",
+                        "skins/**",
+                        "icons/*/icons.min.js"
                     ]
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-2.1-only"
+                "MIT-only"
             ],
             "description": "Web based JavaScript HTML WYSIWYG editor control.",
-            "homepage": "http://www.tinymce.com",
+            "homepage": "https://www.tiny.cloud/",
             "keywords": [
-                "editor",
+                "contenteditable",
+                "editing",
                 "html",
                 "javascript",
+                "rich editor",
+                "rich text",
+                "rich text editor",
                 "richtext",
+                "rte",
+                "text",
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2018-12-17T11:59:26+00:00"
+            "support": {
+                "source": "https://github.com/tinymce/tinymce-dist/tree/6.4.1"
+            },
+            "time": "2023-03-29T01:33:40+00:00"
         },
         {
             "name": "yidas/yii2-bower-asset",
@@ -5670,5 +5683,5 @@
         "php": ">=5.4.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
