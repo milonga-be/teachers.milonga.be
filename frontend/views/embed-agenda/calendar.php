@@ -73,9 +73,9 @@ $current_url = '/dancing/?u-year='.$month_first_day->format('Y').'&u-month='.$mo
 					for ($j=0; $j < 7; $j++) {
 						$selected = ($selected_day->format('Ymd') == $start->format('Ymd'));
 						$other_month = ($start->format('m') != $month_first_day->format('m'));
-						$sponsored = Sponsorship::isDaySponsored($events_by_date[$start->format('Ymd')]);
+						$sponsored = isset($events_by_date[$start->format('Ymd')])?Sponsorship::isDaySponsored($events_by_date[$start->format('Ymd')]):false;
 						// Checking if there is a sponsored event on this day
-						echo '<!-- '.json_encode($event).' -->';
+						//echo '<!-- '.json_encode($event).' -->';
 						echo '<td class="agenda-day-' . $start->format('D') . (($selected)?' selected':'').(($other_month)?' other_month':'').' '.(isset($events_by_date[$start->format('Ymd')])?'has-event':'').' '.($sponsored?'sponsored':'').'">';
 							// if($yesterday > $start){
 							// 	echo '<span class="text-muted">' . $start->format('d') . '</span>';

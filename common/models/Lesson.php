@@ -138,6 +138,7 @@ class Lesson extends ActiveRecord{
 			"T" => "Tech.",
 			"TW" => "Tech. 4 women",
 			"TM" => "Tech. 4 men",
+			"MIL" => "Mil"
 		);
 	}
 
