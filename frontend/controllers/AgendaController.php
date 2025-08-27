@@ -654,7 +654,7 @@ class AgendaController extends Controller{
 			return $events;
 		return [
 			'items' => array_map(
-				function(&$item){ 
+				function($item){ 
 					$item['description'] = \common\components\Htmlizer::execute($item); 
 					$item['picture'] = isset($item['extendedProperties']['shared']['picture']) && !empty($item['extendedProperties']['shared']['picture'])?'https://'.\Yii::$app->getRequest()->serverName.'/uploads/events/'.$item['extendedProperties']['shared']['picture']:''; 
 					return ArrayHelper::filter($item, ['id', 'summary', 'category', 'city', 'school', 'description', 'start', 'end', 'location', 'picture']);
