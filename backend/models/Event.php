@@ -185,7 +185,10 @@ class Event extends Model{
 			$datas['cancelled'] = $this->cancelled;
 			$datas['disabled_reason'] = $this->disabled_reason;
 			$datas['sponsored'] = $this->sponsored;
-			$startDateTime = new \DateTime($this->start);
+			if(is_null($this->start))
+				$startDateTime = new \DateTime('now');
+			else
+				$startDateTime = new \DateTime($this->start);
 			if($this->from){
 				$startDateTime = new \DateTime($this->from);
 			}
@@ -194,7 +197,10 @@ class Event extends Model{
 				$startDateTime->setTime($time[0], $time[1]);
 			}
 			$datas['start']['dateTime'] = $startDateTime->format(\DateTime::RFC3339);
-			$endDateTime = new \DateTime($this->end);
+			if(is_null($this->end))
+				$endDateTime = new \DateTime('now');
+			else
+				$endDateTime = new \DateTime($this->end);
 			if($this->from){
 				$endDateTime = new \DateTime($this->from);
 			}

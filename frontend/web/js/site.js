@@ -27,7 +27,7 @@ jQuery(".milonga-description .less-link").on("click",function(e){
 	// e.preventDefault();
 	var desc_elt = jQuery(this).parent();
 	desc_elt.find(".more-content").animate(
-		{ opacity: 0, height: "5.1em" },
+		{ opacity: 0, height: "9.1em" },
 		{ queue: false, duration: "normal", complete: function(){ desc_elt.find(".more-link").show();jQuery(this).hide();} }
 	);
 });

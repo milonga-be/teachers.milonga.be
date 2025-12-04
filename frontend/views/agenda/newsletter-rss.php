@@ -5,6 +5,7 @@ function generateEventsCData( $events ){
 	$events_cdata = '';
 	foreach($events as $event){
 		$new_day = false;
+		$cancelled = isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']);
 		if(!isset($event['start']['dateTime'])){
 			$event['start']['dateTime'] = $event['start']['date'];
 		}
@@ -30,9 +31,9 @@ function generateEventsCData( $events ){
 				}
 			$events_cdata.='</h6>';
 		}
-		$events_cdata.='<a style="text-transform:uppercase;text-decoration:none;color:black;" target="_blank" href="http://www.milonga.be/dancing/?u-selected='.(new Datetime($event['start']['dateTime']))->format('Y-m-d').'#'.$event['id'].'">';
+		$events_cdata.='<a style="text-transform:uppercase;text-decoration:none;'.($cancelled?'text-decoration: line-through;':'').'color:black;" target="_blank" href="http://www.milonga.be/dancing/?u-selected='.(new Datetime($event['start']['dateTime']))->format('Y-m-d').'#'.$event['id'].'">';
 		
-		$events_cdata.=htmlspecialchars($event['summary']) . '</a><br />';
+		$events_cdata.=htmlspecialchars($event['summary']) . '</a>'.($cancelled?'<i> Canceled !</i>':'').'<br />';
 		$events_cdata.='<div style="padding-bottom:3px;">';
 		if(!isset($event['start']['date']))
 			$events_cdata.='<span style="font-size:0.8em;color:#777;">' . (new Datetime($event['start']['dateTime']))->format('H:i').' - '.(new Datetime($event['end']['dateTime']))->format('H:i').'</span> ';

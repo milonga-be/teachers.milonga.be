@@ -27,7 +27,7 @@ $sponsored = Sponsorship::isEventSponsored($event);
 			<?php } ?>
 		</h5>
 	<?php } ?>
-	<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= $event['email']?>" data-id="<?= $event['id']?>">
+	<h4 data-creator="<?= $event['creator']['email']?>" data-organizer="<?= isset($event['email'])?$event['email']:''?>" data-id="<?= $event['id']?>">
 		
 		<span><?= $event['summary'] ?></span>
 		<?= (isset($event['extendedProperties']['shared']['cancelled']) && !empty($event['extendedProperties']['shared']['cancelled']))?'<i> Canceled !</i>':'' ?>
