@@ -16,9 +16,9 @@ class AgendaController extends Controller{
 	var $embedded = false;
 	const DEFAULT_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
 	// const DEFAULT_FILTER = 'online:';
-	const ALL_FILTER = 'milonga:,practica:,millonga:,workshop:,concert:,show:,film:,practilonga:';
+	const ALL_FILTER = 'milonga:,practica:,millonga:,workshop:,class:,concert:,show:,film:,practilonga:';
 	const MILONGAS_FILTER = 'milonga:,practica:,millonga:,concert:,show:,film:,practilonga:';
-	const WORKSHOPS_FILTER = 'workshop:';
+	const WORKSHOPS_FILTER = 'workshop:,class:';
 
 	/**
 	 * List the events in the agenda
@@ -134,9 +134,9 @@ class AgendaController extends Controller{
 			if(sizeof($milongas)){
 				$events_by_date[$date]['Milongas'] = $milongas;
 			}
-			$workshops = $this->filterEvents('workshop:,workhop:', $date_events);
+			$workshops = $this->filterEvents('workshop:,workhop:,class:', $date_events);
 			if(sizeof($workshops))
-				$events_by_date[$date]['Workshops'] = $workshops;
+				$events_by_date[$date]['Classes'] = $workshops;
 			if(sizeof($milongas)){
 				// Put the milongas outside of Belgium apart
 				list($events_by_date[$date]['Milongas'], $events_by_date[$date]['Outside Belgium']) = $this->filterOutsideEvents($events_by_date[$date]['Milongas']);
@@ -173,10 +173,10 @@ class AgendaController extends Controller{
 				$end_datetime = new \Datetime($event['end']['dateTime']);
 				while($start_datetime <= $end_datetime){
 					$date = $start_datetime->format('Ymd');
-					if(isset($events_by_date[$date]['Workshops']))
-						array_unshift($events_by_date[$date]['Workshops'], $event);
+					if(isset($events_by_date[$date]['Classes']))
+						array_unshift($events_by_date[$date]['Classes'], $event);
 					else
-						$events_by_date[$date]['Workshops'][] = $event;
+						$events_by_date[$date]['Classes'][] = $event;
 					$start_datetime->modify('+1 day');
 				}
 			}

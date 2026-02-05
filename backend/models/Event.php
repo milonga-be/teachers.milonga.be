@@ -14,6 +14,7 @@ class Event extends Model{
 	var $summary;
 	var $location;
 	var $description;
+	var $url;
 	var $weekday;
 	var $start;
 	var $end;
@@ -140,6 +141,7 @@ class Event extends Model{
 			[['start_hour', 'end_hour'], 'datetime', 'format' => 'php:H:i'],
 			[['pictureFile'], 'file', 'extensions' => 'png, jpg, jpeg'],
 			[['pictureRemove', 'disabled', 'sponsored'], 'boolean'],
+			['url', 'url']
 		];
 	}
 
@@ -185,6 +187,7 @@ class Event extends Model{
 			$datas['cancelled'] = $this->cancelled;
 			$datas['disabled_reason'] = $this->disabled_reason;
 			$datas['sponsored'] = $this->sponsored;
+			$datas['url'] = $this->url;
 			if(is_null($this->start))
 				$startDateTime = new \DateTime('now');
 			else
@@ -260,6 +263,9 @@ class Event extends Model{
 			}
 			if(isset($datas['sponsored'])){
 				$sharedProperties['sponsored'] = $datas['sponsored'];
+			}
+			if(isset($datas['url'])){
+				$sharedProperties['url'] = $datas['url'];
 			}
 
 			$extentedProperties->setShared($sharedProperties);
@@ -367,6 +373,9 @@ class Event extends Model{
 		}
 		if(isset($result->getExtendedProperties()->shared['sponsored'])){
 			$event->sponsored = $result->getExtendedProperties()->shared['sponsored'];
+		}
+		if(isset($result->getExtendedProperties()->shared['url'])){
+			$event->url = $result->getExtendedProperties()->shared['url'];
 		}
 		if(!isset($event->organizer) && isset($result->creator->email)){
 			$event->organizer = $result->creator->email;

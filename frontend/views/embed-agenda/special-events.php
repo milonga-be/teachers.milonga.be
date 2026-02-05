@@ -14,9 +14,13 @@ foreach ($events as $event) {
 	}
 	$sponsored = Sponsorship::isEventSponsored($event);
 	if($sponsored){
-		$link = '/sponsored-event?u-id='.$event['id'];
+		$more_link = '/sponsored-event?u-id='.$event['id'];
+		$link = $more_link;
+		if(isset($event['extendedProperties']['shared']['url']) && !empty($event['extendedProperties']['shared']['url']))
+			$link = $event['extendedProperties']['shared']['url'];
 	}else{
-		$link = '/special-event?u-id='.$event['id'];
+		$more_link = '/special-event?u-id='.$event['id'];
+		$link = $more_link;
 	}
 	?>
 	<div class="col-lg-4 col-md-6 eq-blocks">
@@ -49,14 +53,14 @@ foreach ($events as $event) {
 				<?php } ?>
 				<h3><?= $event['summary']?></h3>
 				<h4 style="margin-top:0px;margin-bottom:5px;"><?= isset($event['category'])?$event['category']:''?><br/> 
-					<?php if(isset($event['start']['dateTime'])){ ?>
+					<?php if(isset($event['start']['dateTime']) && $event['category'] != Event::TYPE_CLASS){ ?>
 						<?= (new Datetime($event['start']['dateTime']))->format($date_format_start) ?>
-						<?php if(isset($event['end']['dateTime'])){ ?>
+						<?php if(isset($event['end']['dateTime']) && $event['end']['dateTime'] != $event['start']['dateTime']){ ?>
 						  - 
 						 <?= (new Datetime($event['end']['dateTime']))->format($date_format_end)?>
 						 <?php } ?>
 						 <br/>
-					<?php }else if(isset($event['start']['date'])){ ?>
+					<?php }else if(isset($event['start']['date']) && $event['category'] != Event::TYPE_CLASS){ ?>
 					<?= (new Datetime($event['start']['date']))->format($date_format_start) ?> <span class="glyphicon glyphicon-arrow-right"></span> <?= (new Datetime($event['end']['date']))->format($date_format_end); 
 				} ?>
 				</h4><br/>
@@ -64,7 +68,7 @@ foreach ($events as $event) {
 					<?php
 						if(strlen($event['description']) > 250){
 							echo '<p>'.substr(strip_tags($event['description']), 0, 500).'...</p>';
-							echo '<p><br><a href="'.$link.'">More info ...</a></p>';
+							echo '<p><br><a href="'.$more_link.'">More info ...</a></p>';
 						}else{
 							echo Htmlizer::execute($event);
 						}

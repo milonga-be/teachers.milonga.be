@@ -15,7 +15,7 @@ foreach($schools as $school){
     	<?php
 		if($school->picture){
 		?>
-    	<a class="swipebox" title="<?= $school->name ?>"  href="<?= $school->pictureUrl ?>" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url(<?= $school->pictureUrl ?>);">
+    	<a title="<?= $school->name ?>"  href="<?= $school->website?$school->website:$school->facebook ?>" style="display:block;width:100%;height:250px;background-size:cover;background-position: center;background-image:url(<?= $school->pictureUrl ?>);">
 
     	</a>
     	<?php } ?>
