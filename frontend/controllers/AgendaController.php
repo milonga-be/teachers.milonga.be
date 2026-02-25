@@ -516,7 +516,7 @@ class AgendaController extends Controller{
 		$startDate = new \Datetime();
 		$endDate = clone $startDate;
 		$endDate->modify('next sunday');
-		$events = $this->getEvents( 6 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
+		$events = $this->getEvents( 14 , 'milonga:,practica:,millonga:,concert:,show:,practilonga:' , $startDate );
 
 		$events_by_days = array();
 

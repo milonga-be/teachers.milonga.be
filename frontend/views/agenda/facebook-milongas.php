@@ -22,19 +22,21 @@ http://www.milonga.be/about/newsletter/<br><br>
 <?php
 foreach ( $events as $weekday_events ) {
 	if(sizeof($weekday_events)){
-		echo $weekdays[$weekday_events[0]['start']['weekday']].'<br>';
+		$day_datetime = new Datetime($weekday_events[0]['start']['dateTime']);
+		echo '<strong>'.$weekdays[$weekday_events[0]['start']['weekday']].' '.$day_datetime->format('M j').'</strong><br>----------------<br>';
 		uasort($weekday_events, 'cmp');
 		foreach ($weekday_events as $event) {
 			$datetime = new Datetime($event['start']['dateTime']);
 			echo $datetime->format('H:i').' - ';
 			echo ucwords(strtolower(str_replace('@', ' @ ', $event['summary'])));
-			if(isset($event['city']) && !empty($event['city'])){
+			/*if(isset($event['city']) && !empty($event['city'])){
 				echo ' @ '.$event['city'];
-			}
+			}*/
+			echo '<br>'.$event['location'].'<br>';
 
 			echo '<br>';
 		}
-		echo '<br>';
+		//echo '<br>';
 	}
 }
 

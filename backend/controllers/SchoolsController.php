@@ -105,10 +105,11 @@ class SchoolsController extends Controller{
      * Send a message to an account admin before expiration
      */
     function actionMessageBeforeExpiration(){
-        $datetime = new \Datetime();
-        $datetime->modify('+30 days');
-        $schools = School::find()->where(['=', 'expiration', $datetime->format('Y-m-d')])->all();
+        $firstOfNextMonth = new \DateTime('first day of next month');
+        $lastOfNextMonth = new \DateTime('last day of next month');
+        $schools = School::find()->where(['between', 'expiration', $firstOfNextMonth->format('Y-m-d'), $lastOfNextMonth->format('Y-m-d')])->all();
         foreach($schools as $school){
+            //echo $school->name." is about to expire<br>";
             $users_emails = \yii\helpers\ArrayHelper::getColumn($school->getUsers()->where(['status' => User::STATUS_ACTIVE])->all(), 'email');
             $message = Yii::$app->mailer->compose('@backend/mail/expiring', ['school' => $school])
                     ->setFrom('milonga@milonga.be')
